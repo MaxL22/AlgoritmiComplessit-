@@ -33,6 +33,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{tikz}
+\usepackage{xfrac}
 
 \DeclareMathOperator*{\opt}{opt}
 
@@ -46,6 +47,7 @@
 	%\newcommand{\myfont}{\fontfamily{lmtt}\selectfont } 				%Font BDD
 	%\newcommand{\notimplies}{\;\not\!\!\!\implies} %Comando not implies corretto
 	%\newcommand{\ts}{\hspace*{0.666cm}}
+	\newcommand{\NP}{\mathcal{NP}}
 	
 	\tableofcontents
 	
@@ -1744,6 +1746,187 @@
 	\newpage
 	
 	% End L10
+	
+	\subsubsection{Inapprossimabilità del TSP}
+	
+	TSP Metrico è approssimabile, \textbf{quello generale no}.\\
+	
+	\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+	\paragraph{Teorema:} Non esiste $\alpha>1$ tale che TSP sia $\alpha$-approssimabile (se $\mathcal{P} \neq \mathcal{NP}$). Il problema sta fuori da APX.\\
+	
+	\begin{proof}
+		Fact: Il problema di \textbf{decidere se un grafo ammetta un circuito hamiltoniano} è $\mathcal{NP}$-Completo (problema di decisione).\\
+		
+		Supponiamo per assurdo di \textbf{avere un algoritmo $\alpha$-approssimante per TSP}. \\
+		
+		Supponendo di avere un grafo $G=(V,E)$ e voler sapere se questo grafo ha un circuito hamiltoniano. Per \textbf{trasformarlo in un'istanza di TSP}, dobbiamo \textbf{aggiungere pesi} e \textbf{trasformarlo in una clique}
+		$$ G' = \left(V, \left(
+		\begin{array}{c}
+			V\\
+			2
+		\end{array}
+		\right), d \right)$$
+		
+		Bisogna aggiungere le \textbf{distanze}, dove
+		$$ 
+		d(x,y) = \begin{cases}
+			1 & \text{ se } \; \{x,y\} \in E \\
+			\lceil \alpha n \rceil + 1 & \text{ altrimenti}
+		\end{cases}
+		$$
+		
+		Si tratta di una clique, quindi per forza c'è un circuito hamiltoniano su $G'$, ma se $G$ \textbf{ammetteva} un circuito hamiltoniano allora $G'$ ne B $\leq n$.\\
+		Se $G$ \textbf{non ha un circuito hamiltoniano}, qualunque circuito hamiltoniano viene trovato \textbf{su} $G'$ ha \textbf{lunghezza} $\geq \lceil \alpha n\rceil + 1$.\\
+		
+		\newpage
+		
+		Diamo $G'$ come \textbf{input dell'algoritmo} $\alpha$-approssimante per TSP, questo \textbf{emetterà} nei casi:
+		\begin{itemize}
+			\item $G$ ha un c.H.: l'algoritmo emette un output $\leq \alpha n$ (dato che si tratta di una $\alpha$-approssimazione)
+			\item $G$ non ha un c.H.: l'algoritmo emette un output $\geq \lceil \alpha n \rceil + 1$
+		\end{itemize}
+		
+		Quindi possiamo avere output $\leq \alpha n$ e  $\geq \lceil \alpha n \rceil + 1$, ma \textit{è possibile che questi due intervalli si sovrappongano}?
+		$$ \alpha n \geq \lceil \alpha n \rceil + 1 $$
+		$$ \implies \alpha \geq \frac{\lceil \alpha n \rceil + 1}{n} \geq \frac{\alpha n + 1}{n} = \alpha + \frac{1}{n}$$
+		$$ \alpha \geq \alpha + \frac{1}{n}$$
+		
+		Quindi sono \textbf{intervalli sempre disgiunti} e di conseguenza le soluzioni sono ben distinte.\\
+		
+		Questo vorrebbe dire risolvere il problema di decidere se un grafo ammetta un circuito hamiltoniano efficientemente, che sappiano non essere possibile essendo in $\NP$.\\
+	\end{proof}
+	
+	\newpage
+	
+	\section{Schemi di approssimazione PTAS e FPTAS}
+	\subsection{PTAS per 2-LoadBalancing}
+	
+	Ricordando cos'è un PTAS: problemi approssimabile a meno di una costante desiderata (arriva al tasso di approssimazione desiderato).\\
+	
+	LoadBalancing già visto, quello delle macchine e task, bla bla bla. 2-LoadBalancing è la stessa cosa ma ha \textbf{solo 2 macchine}.\\
+	
+	\textbf{Definizione} del problema:
+	\begin{itemize}
+		\item \textbf{Input}: sequenza di $n$ task $t_0, \, \dots \, , t_{n-1}$
+		\item \textbf{Soluzioni ammissibili}: assegnamenti dei task su 2 macchine, una funzione $\alpha: n \rightarrow 2$
+		\item \textbf{Funzione obiettivo}: massimo carico tra le due macchine 
+		$$ \max \left(\sum_{i: \alpha(i)=0} t_i , \sum_{i: \alpha(i)=0} t_a\right) $$
+		\item \textbf{Tipo}: minimizzazione, $\min$
+	\end{itemize}
+	
+	\nn
+	
+	Per l'\textbf{algoritmo PTAS}: 
+	\begin{itemize}
+		\item \textbf{Input}:  i task $t_0, \, \dots \, , t_{n-1}$ ed un \textbf{costante di approssimazione} (circa) $\epsilon > 0$ (per avere una $1+\epsilon$-approssimazione)
+	\end{itemize}
+	
+	\newpage
+	
+	\paragraph{Passaggi:}
+	\begin{itemize}
+		\item If $\epsilon \geq 1$: 
+		\begin{itemize}
+			\item Assegna tutti i task alla prima macchina 
+			\item Termina
+		\end{itemize}
+		\nn
+		
+		\item Altrimenti, ordina i $t_i$ in \textbf{ordine decrescente}.\\
+		
+		\item \textbf{Fase 1}:
+		\begin{itemize}
+			\item \textbf{Calcola} $k \leftarrow \lceil \frac{1}{\epsilon} -1 \rceil$
+			\item Si \textbf{cerca esaustivamente} l'assegnamento ottimo dei task $t_0, \, \dots \, , t_{k-1}$ (primi $k$ task, $2^k$ assegnamenti possibili)
+		\end{itemize}
+		\nn
+		
+		\item \textbf{Fase 2}:
+		\begin{itemize}
+			\item I \textbf{restanti task}  $t_k, \, \dots \, , t_{n-1}$ sono \textbf{assegnati} in modo \textbf{greedy} (sempre alla macchina più scarica)
+		\end{itemize}
+		\nn
+	\end{itemize}
+	
+	L'assegnamento dei task "grossi" (i primi) viene risolto a forza bruta, il resto greedy.\\
+	
+	\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+	\paragraph{Teorema:} l'algoritmo è una $(1+ \epsilon)$-approssimazione di $2$-LoadBalancing.\\
+	
+	\begin{proof}
+		Chiamando la \textbf{somma dei task}
+		$$ T := \sum_{i \in n} t_i$$
+		
+		Se $\epsilon \geq 1$, otteniamo una 2-Approssimazione (butto tutto su una, di sicuro non può essere peggio di 2 volte la soluzione ottima).
+		$$ L^\ast \geq \frac{T}{2}, \;\;\;\;\; L = T $$
+		$$\implies \frac{L}{L^\ast} \leq \frac{T}{\sfrac{T}{2}}$$
+		
+		Nel caso in cui $\epsilon < 1$: alla \textbf{fine della prima fase} abbiamo l'\textbf{assegnamento ottimo} per i primi $k$ task ed un carico sulle macchine 0 e 1, rispettivamente $y_0$ e $y_1$. \\
+		
+		Rimangono \textbf{da assegnare} i task $t_k, \, \dots \, , t_{n-1}$ per arrivare agli \textbf{assegnamenti finali} $L_0$ e $L_1$.\\
+		
+		Assumiamo (senza perdita di generalità) che $L_0 \geq L_1$ (\textbf{alla fine} la macchina con il \textbf{carico maggiore} è \textbf{la prima}).\\
+		
+		Due casi: 
+		\begin{enumerate}
+			\item $L_0 = y_0$, dopo la prima fase tutti i restanti task sono stati attribuiti alla seconda macchina.\\
+			$\implies$ abbiamo \textbf{ottenuto l'assegnamento ottimo}, per costruzione dell'algoritmo.\\
+			
+			\item Uno o più task di $t_k, \, \dots \, , t_{n-1}$ sono stati assegnati alla prima macchina, sia $t_h$ l'\textbf{ultimo assegnato} a suddetta macchina (il più piccolo). Di conseguenza
+			$$ L_0 - t_h \leq L_1' \leq L_1$$
+			
+			(dove $L_1'$ è il carico della seconda macchina prima dell'assegnamento di $t_h$). Ovviamente prima di assegnare $t_h$ il carico sulla prima macchina era minore del carico sulla seconda macchina
+			$$ \implies 2L_0 - t_h \leq L_0 + L_1 $$
+			$$ T = L_0 + L_1$$
+			$$ \implies L_0 - \frac{t_h}{2} \leq \frac{T}{2} $$
+			$$ L_0 \leq \frac{T}{2} + \frac{t_h}{2} $$
+			
+			Ricordiamo che \textbf{i primi $k$ task sono} $\geq (k+1) t_h$, in quanto ordinati in ordine decrescente
+			$$ T \geq (k+1) t_h $$
+			
+			I task dopo $t_h$ li minoriamo con 0.
+			$$ \frac{T}{2} \geq (k+1) \frac{t_h}{2} $$
+			
+			\textbf{Quindi}
+			$$ \frac{L_0}{L^\ast} \leq \frac{L_0}{\sfrac{T}{2}} \leq \frac{\frac{T}{2} + \frac{t_h}{2}}{\sfrac{T}{2}} = 1 + \frac{t_h}{T} \leq 1 + \frac{t_h}{(k+1) t_h} = 1 + \frac{1}{(k+1)} $$
+			
+			Ma \textbf{per definizione di} $k$ 
+			$$ \frac{L_0}{L^\ast} \leq 1 + \frac{1}{(k+1)} \leq 1 + \frac{1}{\frac{1}{\epsilon} - 1 + 1} = 1 + \epsilon $$
+		\end{enumerate}
+		$$ \implies  \frac{L_0}{L^\ast} \leq 1 + \epsilon $$
+	\end{proof}
+	
+	\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+	\paragraph{Teorema:} Il PTAS \textbf{richiede tempo} $O\left(n \log n + 2^{\min \left(\frac{1}{\epsilon}, n\right)}\right)$.\\
+	
+	\begin{proof}
+		$n \log n$ è il \textbf{tempo} per l'\textbf{ordinamento}.\\
+		
+		L'\textbf{esponenziale} è la \textbf{fase di assegnamento esatto}.\\
+		
+		Abbiamo $2^k$ assegnamenti ma 
+		$$ 2^k = 2^{\lceil \frac{1}{\epsilon} - 1\rceil} \sim 2^{\frac{1}{\epsilon}}$$
+		
+		Ci sarebbe anche la parte di assegnamento greedy ma talmente breve che non conta.\\
+	\end{proof}
+	
+	Quindi abbiamo un algoritmo PTAS, con un \textbf{tasso di approssimazione arbitrariamente preciso} ma con \textbf{tempo che peggiora esponenzialmente} in base a quest'ultimo.\\
+	
+	\newpage
+	
+	\subsection{Knapsack Problem}
+	
+	I pirati arrivano in una grotta con degli oggetti, ognuno di questi $n$ oggetti ha un valore 
+	$$ v_0, \, \dots \, , v_{n-1} $$
+	
+	ed i pirati vogliono portarsi a casa il maggior valore possibile, ma per portarli hanno solo uno zaino con una capacità $W$ ed ogni oggetto ha un peso  
+	$$ w_0, \, \dots \, , w_{n-1} $$
+	
+	I pirati vogliono portare a casa il maggior valore possibile con un peso che rientra nello zaino.\\
+	
+	% End L11
+	
+	
 	
 	
 \end{document}
