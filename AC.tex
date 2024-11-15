@@ -1926,6 +1926,213 @@
 	
 	% End L11
 	
+	\paragraph{Definizione del problema: }
+	\begin{itemize}
+		\item \textbf{Input}: $n>0$ numero di oggetti, $v_i, w_i \in \mathbb{N}^+$ valori e pesi associati agli oggetti, $i <n$, capacità dello zaino $W>0$
+		\item \textbf{Soluzioni ammissibili}: $X \subseteq n$ tale che 
+		$$ \sum_{i \in X} w_i \leq W $$
+		\item \textbf{Funzione obiettivo}: la somma dei valori 
+		$$v = \sum_{i \in X} v_i$$
+		\item \textbf{Tipo}: massimizzazione, $\max$
+	\end{itemize}
+	
+	\newpage
+	
+	\paragraph{Side quest: Programmazione Dinamica:} vogliamo risolvere un certo problema $\pi$, nel quale sono presenti dei parametri $\pi [\overline{a},\overline{b}]$, ma il problema si può presentare in varianti con valori diversi da $\overline{a}$ e $\overline{b}$.\\
+	
+	Voglio poter \textbf{risolvere} una certa \textbf{istanza di un problema a partire da istanze precedenti}/più semplici/con valori più semplici risolte in precedenza.\\
+	Devo quindi risolvere soluzioni più semplici per arrivare a quelle più grosse, le soluzioni dipendono da quelle prima.\\
+	
+	Il numero di problemi da risolvere prima della soluzione che cerco è pari a tutte le possibili combinazioni di valori di parametri fino a $\overline{a}$ e $\overline{b}$. Si possono pensare le diverse istanze da risolvere come se fossero in una tabella con da un lato tutti i valori possibili del parametro $\overline{a}$ e dell'altro i possibili valori di $\overline{b}$.
+	
+	$$
+	\begin{array}{c | c | c | c | c }
+		& 0 & 1 & \dots & \overline{a} \\
+		\hline
+		0 & & & & \\
+		\hline
+		1 & & & & \\
+		\hline
+		\dots & & & & \\
+		\hline
+		\overline{b} & & & &
+	\end{array}
+	$$
+	
+	In ognuna delle celle la soluzione dell'istanza di $\pi$ con i relativi valori dei parametri.\\
+	
+	Fondamentale i parametri siano valori interi, altrimenti si può risolvere tutto in tempo polinomiale.\\
+	
+	\paragraph{Side-side-quest: pseudopolinomialità:} Un algoritmo è pseudopolinomiale quando il suo \textbf{tempo di esecuzione dipende dal valore numerico degli input} considerati, al posto che dalla grandezza della rappresentazione. Un valore $n$ in binario richiede $b = \lceil \log_2 n \rceil$ bit, ma il valore considerato è $n \leq 2^b$, quindi il tempo d'esecuzione è esponenziale rispetto alla dimensione dell'input.\\
+	
+	\newpage
+	
+	\subsubsection{Soluzione di Programmazione Dinamica: Versione A}
+	
+	Partendo dalle $n$ coppie di valori-pesi.\\
+	
+	I parametri secondo cui iterare con la programmazione dinamica (righe e colonne della tabella) sono: 
+	\begin{itemize}
+		\item $W$, \textbf{capienza dello zaino}, risolvo il problema per tutti i valori da 0 a $W$
+		\item \textbf{Numero di oggetti}, considero solo i primi $i$ oggetti, variando il valore di $i$ tra 0 e $n$
+	\end{itemize}
+	
+	Posso costruire una tabella con in \textbf{ogni riga tutte le soluzione per un possibile valore per la capienza dello zaino} $W$ e la colonna $i$ contiene le soluzioni considerando solo i primi $i$ oggetti. Quindi la cella $3,2$ contiene il valore massimo ottenibile con i primi $3$ oggetti e capienza $2$.\\
+	
+	\textbf{Ogni cella} della tabella contiene il valore massimo che i pirati si portano a casa, i.e., il risultato del problema, i.e., il \textbf{valore della funzione obiettivo}.\\
+	
+	La prima riga, non importa  quanti oggetti considero, se lo zaino ha capienza 0 non posso metterci nulla.\\
+	La prima colonna anch'essa è tutti zero, in quanto non ho oggetti, anche con un camion al posto dello zaino nella grotta non trovo nulla.\\
+	
+	Quindi come posso trovare il \textbf{valore} $v(w,i)$ \textbf{per una qualsiasi cella?} Presupponendo di riempire la tabella da sinistra verso destra, dall'alto verso il basso. La $w$ rappresenta la capienza considerata, la funzione $v$ rappresenta il valore portato a casa e la $i$ indica che abbiamo considerato i primi $i$ oggetti, quelli che hanno da indice 0 a $i-1$.\\
+	
+	Guardo \textbf{i valori precedenti}, partendo da $v(w,i-1)$:
+	\begin{itemize}
+		\item Se decido di non aggiungere l'$i$-esimo elemento il risultato non cambia, in quanto ho già trovato il risultato migliore per quello stesso spazio
+		\item Altrimenti, se voglio aggiungere l'$i$-esimo elemento con valore $v_i$, aggiungo il suo valore, ma lo zaino deve essere abbastanza capiente
+	\end{itemize}
+	
+	Formalmente:
+	$$
+	v (w,i) = \begin{cases}
+		v (w, i-1) & \text{ se } w < w_{i-1} \\
+		\max \left(v(w,i-1), v_{i-1} + v (w - w_{i-1}, i-1)\right) & \text{ altrimenti }
+	\end{cases}
+	$$
+	Quindi, se non c'è abbastanza spazio ($w < w_{i-1}$) per aggiungere l'$i$-esimo elemento il valore rimane lo stesso.\\
+	
+	Altrimenti prendo il massimo tra il valore della cella subito a sinistra e il valore della migliore cella la cui capienza associata mi permette di aggiungere l'$i$-esimo elemento.\\
+	
+	Il numero di colonne è $n$, ma tutti i possibili valori di $W$ sono pseudo-polinomiali $\implies$ complessità esponenziale.\\
+	
+	\newpage
+	
+	\subsubsection{Soluzione di Programmazione Dinamica: Versione B}
+	
+	Tengo la nostra tabella per la programmazione dinamica, in riga sempre il numero di oggetti considerati, ma \textbf{in colonna metto il valore che i pirati vogliono portarsi a casa}, di conseguenza \textbf{nelle celle} calcolo \textbf{la minima capacità di uno zaino per ottenere quel valore}. Stesso problema, stiamo solo cambiando la rappresentazione.\\
+	
+	Se il valore obiettivo è 0, la dimensione necessaria è sempre 0, si tratta di un pirata molto umile.\\
+	Se voglio portare a casa un valore $>0$, ma sto considerando $0$ elementi risulta difficile $\implies$ la prima colonna è tutta $+ \infty$ (tranne la prima cella a zero).\\
+	
+	Come ottengo \textbf{una cella qualunque} $w(v,i)$?\\
+	
+	Se decido di non portare a casa anche l'$i$-esimo oggetto rimane tutto come $w(v, i-1)$, altrimenti diventa $w_{i-1} + w (v - v_{i-1}, i-1)$, quindi
+	$$ w (v,i) = \begin{cases}
+		\min \left(w (v, i-1), w_{i-1}\right) & \text { se } v < v_{i-1} \\
+		\min \left(w (v, i-1), w_{i-1} + w (v - v_{i-1}, i-1) \right) & \text{ altrimenti }
+	\end{cases}$$
+	Se il valore cercato è minore del valore dell'oggetto che ho appena introdotto posso scegliere di prendere solo quest'ultimo.\\
+	
+	Altrimenti prendo il minimo tra il valore subito a sinistra e la somma tra il peso dell'$i$-esimo oggetto e il peso della cella contenente il valore minimo necessario per arrivare al nostro obiettivo una volta sommato il valore dell'oggetto appena inserito.\\
+	
+	Quindi, compilo la tabella, ma \textbf{avrò delle celle in cui il peso minimo è too much}, $> W$, l'\textbf{output} per il nostro problema lo \textbf{ottengo risalendo} dalla cella in basso a destra verso l'alto \textbf{finché non trovo un valore di capienza minima ammissibile} $w < W$, i.e., prendo il valore ammissibile più alto possibile.\\
+	
+	\newpage
+	
+	\subsubsection{Algoritmo DP Approssimato}
+	
+	Problema: gli algoritmi precedenti sono esatti, ma sono entrambi esponenziali nel numero di righe.\\
+	
+	Per \textbf{approssimare il problema} possiamo "\textit{comprimere le righe}", ovvero \textbf{dividiamo tutti i valori per un certo numero}, \textbf{diminuendo} così il \textbf{numero di righe} necessarie, fino a far diventare l'algoritmo polinomiale.\\
+	
+	Si può fare \textbf{solo con la seconda versione}, in cui le righe rappresentano la funzione obiettivo (che possiamo approssimare, andando ad ottenere un sub-ottimo), mentre con la prima versione non possiamo comprimere la capacità dello zaino, in quanto parte dei constraint del problema, rischieremmo di andare verso soluzioni non ammissibili.\\
+	
+	Quindi, applichiamo il secondo algoritmo, ma con \textbf{scaling}.\\
+	
+	Al problema $\pi (v_i, w_i, W)$ aggiungiamo $\epsilon \in (0,1]$ e vogliamo una \textbf{$(1+\epsilon)$-approssimazione} di $\pi$
+	$$ \theta = \frac{\epsilon \cdot v_{max}}{2n}$$
+	
+	Aggiungiamo \textbf{due ulteriori versioni del problema}: 
+	$$ \overline{\pi} \left(\overline{v}_i = \left\lceil \frac{v_i}{\theta} \right\rceil \theta, w_i, W\right) $$
+	
+	Quindi arrotondo un po' i valori per eccesso, mentre in 
+	$$ \hat \pi = \left( \hat v_i = \left\lceil \frac{v_1}{\theta} \right\rceil, w_i, W \right)$$
+	approssimo ma lascio compresso, quindi noi vogliamo risolvere $\hat \pi$ in modo esatto tramite il secondo algoritmo di programmazione dinamica visto precedentemente.\\
+	
+	\newpage
+	
+	Dobbiamo capire \textbf{come sono correlate le tre soluzioni}:
+	$$ \hat X^\ast \subseteq n, \;\;\;\; \overline X^\ast \subseteq n \;\;\;\; X^\ast \subseteq n$$
+	
+	\paragraph{Osservazione:} l'\textbf{ammissibilità è la stessa} per tutti e 3 i problemi, tutti i problemi hanno le stesse soluzioni ammissibili.\\
+	
+	\paragraph{Osservazione:} Le soluzioni 
+	$$ \hat X^\ast = \hat X^\ast$$
+	in quanto sono problemi uguali, i valori sono solo moltiplicati per una costante. \textbf{Queste soluzioni sono uguali}.\\
+	
+	\paragraph{Lemma:} Sia $X$ una soluzione ammissibile, 
+	$$ (1 + \epsilon) \sum_{i \in \hat X^\ast} v_i \geq \sum_{i \in X} v_i $$
+	La soluzione ottima dei nostri problemi modificati, moltiplicata per la costante di approssimazione, è sempre $\geq$ di qualsiasi soluzione ammissibile.\\
+	
+	\begin{proof}
+		Dato che $\hat \pi$ ha degli arrotondamenti per eccesso, tutti i valori saranno un po' più grandi, quindi 
+		$$ \sum_{i \in X} v_i \leq \sum_{i \in X} \hat v_i \leq \sum_{i \in \overline X^\ast} \hat v_i $$
+		E ovviamente, la soluzione ottima per $\hat \pi$ ha un valore maggiore di una qualsiasi soluzione ammissibile.\\
+		
+		%\newpage
+		
+		Per come sono definiti 
+		$$\hat v_i - v_i \leq \theta $$
+		
+		Quindi 
+		$$ \sum_{i \in \overline X^\ast} \hat v_i 
+		\leq \sum_{i \in \overline X^\ast} (v_i + \theta) 
+		= \sum_{i \in \overline X^\ast} v_i + |\overline X^\ast| \theta \leq $$
+		$$\leq \sum_{i \in \overline X^\ast} v_i + n \theta 
+		= \sum_{i \in \overline X^\ast} v_i + n \frac{\epsilon \cdot v_{max}}{2n}
+		$$ 
+		
+		Quindi 
+		$$ \sum_{i \in X} v_i \leq \sum_{i \in \overline X^\ast} v_i + \frac{\epsilon \cdot v_{max}}{2} $$
+		è vera per ogni soluzione ammissibile $X$.\\
+		
+		Prendo solo l'indice dell'elemento del valore massimo:
+		$$ X = \{i_{max}\}$$
+		(ovviamente escludendo gli elementi con $w_i>W$).\\
+		
+		Questa è una soluzione ammissibile, quindi
+		$$ v_{max} \leq \sum_{i \in \overline X^\ast} v_i + \frac{\epsilon \cdot v_{max}}{2} \leq  $$
+		Essendo $\epsilon \leq 1$
+		$$\leq  \sum_{i \in \overline X^\ast} v_i + \frac{v_{max}}{2}$$
+		$$ \implies \frac{v_{max}}{2} \leq \sum_{i \in \overline X^\ast} v_i $$
+		
+		Quindi la disuguaglianza precedente
+		$$ \sum_{i \in X} v_i \leq \sum_{i \in \overline X^\ast} v_i + \frac{\epsilon \cdot v_{max}}{2} $$
+		diventa
+		$$ \sum_{i \in X} v_i \leq (1 + \epsilon) \sum_{i \in \overline X^\ast} v_i$$
+		
+		Ma ricordando che $\hat X^\ast = \overline X^\ast$
+		$$ \sum_{i \in X} v_i \leq (1 + \epsilon) \sum_{i \in \hat X^\ast} v_i $$
+	\end{proof}
+	
+	\newpage
+	
+	\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+	\paragraph{Teorema:} Il lemma vale per tutte le soluzioni, anche quella originale
+	$$(1 + \epsilon) \hat v^\ast \theta \geq v^\ast$$
+	
+	\begin{proof}
+		Il Lemma dice che
+		$$ (1 + \epsilon) \sum_{i \in \hat X^\ast} v_i \geq \sum_{i \in X} v_i $$
+		Ma la prima parte è $\leq \hat v^\ast \theta$ e la seconda è una qualsiasi soluzione ammissibile, quindi anche $X^\ast$ e di conseguenza $v^\ast$.\\
+	\end{proof}
+	
+	Non sono un cazzo sicuro di questo teorema ma trust me bro.\\
+	
+	Comprimo i valori, faccio i miei calcoli, ma poi alla fine devo decomprimerli per sapere il mio risultato, per questo ho il $\theta$ in giro, la discrepanza è data dall'approssimazione per eccesso effettuata.\\
+	
+	\paragraph{Corollario:} L'algoritmo è una \textbf{$(1 + \epsilon)$-approssimazione}.\\
+	
+	\paragraph{Complessità:} devo guardare le celle della tabella, ovvero il numero di colonne per il numero di righe, quindi 
+	$$ n \cdot \sum \hat v_i \leq n^2 \hat v_{max} = n^2 \left\lceil \frac{v_{max}}{\theta} \right\rceil = $$
+	$$ = n^2 \left\lceil \frac{2 v_{max} n}{\epsilon \cdot v_{max}} \right\rceil = O\left(\frac{n^3}{\epsilon}\right) $$
+	la disuguaglianza è data dal fatto che ognuno degli $n$ elementi è per forza minore del massimo $v_{max}$
+	
+	In totale quindi diventa
+	$$ O \left(\frac{n^3}{\epsilon}\right)$$
+	Ovvero, polinomiale in $n$ e in $\epsilon$, quindi è un FPTAS.\\
+	
+	%End L12
 	
 	
 	
