@@ -1,0 +1,69 @@
+% !TeX spellcheck = it_IT
+
+\section{Notazione}
+%Controlla slide, c'è un $\epsilon$ che manca
+
+Definire una notazione che verrà usata da qui in avanti. \\
+
+Verranno usati tanto gli \textbf{insiemi}: $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$ ed anche le versioni con \textbf{solo i positivi} di ognuno di questi $\mathbb{N}^+$, ... \\
+
+Un \textbf{magma} è un \textbf{insieme più un'operazione binaria} definita su di esso. Esempio
+$$ (A, \circledast) $$
+
+Se il magma ha la \textbf{proprietà associativa} sull'operazione è un \textbf{semigruppo}
+$$ (y \circledast z) \circledast x = y \circledast (z \circledast x) $$
+
+Se \textbf{esiste elemento neutro} rispetto all'operazione si parla di \textbf{monoide}. Se esiste elemento neutro è unico
+$$ x \circledast \overline{\epsilon} = \overline{\epsilon} \circledast x = x $$
+
+Se l'\textbf{operazione è anche commutativa} allora \textbf{monoide abelliano}. L'esempio più semplice sono i naturali con l'operazione somma. \\
+
+Se per ogni elemento c'è \textbf{anche un inverso} allora è un \textbf{gruppo}. \\
+
+Definendo un \textbf{alfabeto come un insieme finito non vuoto} di elementi. \\
+
+\paragraph{Monoide libero:} prendendo un alfabeto $\Sigma$ e considerando tutte le sequenze finite costituite da elementi dell'alfabeto, si nota con 
+$$w \in \Sigma^{\ast} \;\;\; w = w_1, w_2, w_3, ... , w_n \;\;\;\; n \geq 0 \;\;\;$$
+$$ w_i \in \Sigma \;\;\;\;\;\; |w| = n$$
+
+\newpage
+
+La concatenazione è un'operazione interna a $\Sigma^{\ast}$, due parole se le concateno le metto una dopo l'altra
+$$ w = w_1, w_2, w_3, ... , w_n $$ 
+$$ w' = w_1', w_2', w_3', ... , w_m' $$ 
+$$ w \cdot w' = w_1, w_2, w_3, ... , w_n, w_1', w_2', w_3', ... , w_m'  $$
+
+$(\Sigma^\ast, \cdot)$ è un monoide, chiamato \textbf{monoide libero} su $\Sigma$ (abelliano solo quando nell'insieme è presente solo una lettera). \\
+
+In generale un monoide libero è un monoide con una base, ovvero un insieme di elementi che generano il monoide e che non possono essere generati da altri elementi della base.\\
+
+Se $A$ e $B$ sono due insiemi allora $B^A$ è l'\textbf{insieme delle funzioni da $A$ a $B$}
+$$ B^A = \{f | f : A \rightarrow B\}$$
+
+La cardinalità finale è quella di $|B|^{|A|}$, per questo la notazione è in quest'ordine.\\
+
+Con l'\textbf{insieme} $K$ si intende 
+$$ K = \{0, 1, \, ... \, , k-1\}$$
+Con $0$ che significa l'insieme vuoto.\\
+
+Sostanzialmente l'insieme di tutti i valori inferiori a $K$.\\
+L'insieme dei valori dei bit si chiama $2 = \{0,1\}$.\\
+
+Considerando
+$$ 2^A = \{f | f : A \rightarrow 2\} = \{f | f : A \rightarrow \{0,1\}\}$$
+Questa è una funzione che \textbf{mappa ogni elemento di $A$ in $0$ o in $1$}, in biezione con $\cong \{x | x \text{ è sottoinsieme di } A\} = P(A)$ (insieme delle parti di $A$).\\
+
+\newpage
+
+$A^2$, \textbf{insieme delle coppie di elementi di $A$}, ma sarebbe 
+$$ A^2 = \{f | f : 2 \rightarrow A\} = \{f|f : \{0,1\} \rightarrow A\} $$
+che è in biezione con
+$$ A \times A $$
+Quindi con il prodotto cartesiano di $A$ con $A$.\\
+
+$2^\ast$ è un monoide libero sull'alfabeto binario, \textbf{tutte le combinazioni binarie}. Quindi una qualsiasi stringa in binario sarà parte di questo monoide.\\
+
+Mentre $2^{2^\ast}$ rappresenta la \textbf{famiglia di tutti i linguaggi binari} (su $\{0,1\}$).\\
+Ogni linguaggio che consiste di numeri binari è membro di $2^{2^\ast}$.\\
+
+\newpage

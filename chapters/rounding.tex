@@ -1,0 +1,140 @@
+% !TeX spellcheck = it_IT
+
+\section{Tecniche basate sull'arrotondamento}
+\addcontentsline{toc}{subsection}{\protect\numberline{}Programmazione Lineare}
+\subsection*{Programmazione Lineare}
+
+Serve per il prossimo algoritmo, bear with me.\\
+
+La programmazione lineare ($LP$) può essere \textbf{descritta come problema di ottimizzazione}: 
+\begin{itemize}
+	\item \textbf{Input:} una \textbf{matrice di razionali} $A \in \mathbb{Q}^{m \times m}$, un \textbf{vettore} $b \in \mathbb{Q}^m$, \textbf{vettore} $c \in \mathbb{Q}^n$
+	
+	\item \textbf{Soluzioni ammissibili:} tutti i \textbf{vettori} $x \in \mathbb{Q}^n$ \textbf{tali che} $Ax \geq b$
+	
+	\item \textbf{Funzione obiettivo:} $c^T x$
+	
+	\item \textbf{Tipo:} minimizzazione $\min$
+\end{itemize}
+
+Si sa che $LP \in \mathcal{PO}$ (il più famoso è algoritmo di Karmarkar).\\
+
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}PL Intera}
+\subsection*{PL Intera}
+Programmazione lineare intera ($ILP$):
+\begin{itemize}
+	\item \textbf{Input:} matrice $A \in \mathbb{Q}^{m \times m}$, $b \in \mathbb{Q}^m$,  $c \in \mathbb{Q}^n$
+	
+	\item \textbf{Soluzioni ammissibili:} tutti i vettori $x \in \mathbb{Z}^n$ tali che $Ax \geq b$
+	
+	\item \textbf{Funzione obiettivo:} $c^T x$
+	
+	\item \textbf{Tipo:} minimizzazione $\min$
+\end{itemize}
+
+Cercando una\textbf{ soluzione intera al posto che razionale} il problema diventa $ILP \in \mathcal{NPO}c$.\\
+
+\newpage
+
+\subsection{VertexCover via Rounding}
+Soluzione per VertexCover \textbf{basata sull'arrotondamento}.\\
+
+\paragraph{Programmazione lineare per VertexCover:} Per il problema VertexCover $\pi$: Input: $G = (V,E)$, con pesi $w_i \in \mathbb{Q}^+$, $\forall i \in V$ (già definito prima, non riscritto). \\
+
+Il problema di programmazione lineare intera associato a $\pi$ diventa $ILP(\pi)$: $x \in \mathbb{Z}^n$, ed i vincoli sono: 
+$$
+\begin{cases}
+	x_i + x_j \geq 1 & \forall \{i,j\} \in E \\
+	x_i \geq 0 & \forall i \in V \\
+	x_i \leq 1 & \forall i \in V
+\end{cases}
+$$
+La funzione \textbf{obiettivo da minimizzare} è:
+$$ \sum_{i \in V} w_i x_i $$
+
+I vincoli sostanzialmente dicono che il nodo è o 0 o 1, possono essere solo numeri interi, quindi il nodo è preso oppure no, ed il vincolo $\geq 1$ stabilisce che ogni arco è preso da almeno un nodo. \\
+Ma questo rimane un problema $ \in \mathcal{NPO}c$.\\
+
+La versione "rilassata" di $\pi$ è uguale ma \textbf{risolto con} $x \in \mathbb{Q}^n$ ($LP$ non $ILP$). Stessi vincoli, stessa funzione obiettivo.\\
+
+Quindi, partiamo dal \textbf{problema di VertexCover} $\pi$, lo abbiamo trasformato in un problema di \textbf{programmazione lineare intera} $ILP(\pi)$, ci dimentichiamo della parte intera , \textbf{diventa} $LP(\pi)$, ed \textbf{arrotondiamo} a partire dalla soluzione ottima $x^\ast$ di $LP(\pi)$: 
+$$ \pi = (V,E), w_i  \xrightarrow[]{} 
+\begin{array}{c}
+	ILP(\pi) \\
+	w^\ast_{ILP} \\
+\end{array}
+\xrightarrow[]{}
+\begin{array}{c}
+	LP(\pi) \\
+	w^\ast_{LP}
+\end{array}
+\xrightarrow{x^\ast}
+\text{ Rounding }
+\xrightarrow{}
+\hat{x}
+$$
+$$ 
+\hat{x} = \begin{cases}
+	0 & \text{ se } x^\ast_i <  \frac{1}{2} \\ 
+	1 & \text{ se } x^\ast_i \geq  \frac{1}{2} 
+\end{cases}
+$$
+
+Chiamando $w^\ast_{ILP}$ la funzione obiettivo di $ILP(\pi)$ e $w^\ast_{LP}$ la funzione obiettivo di $LP(\pi)$.\\
+
+\paragraph{Lemma 1:} $w^\ast_{LP} \leq w^\ast_{ILP}$.\\
+
+\begin{proof}
+	Il problema rilassato ha un superinsieme di soluzioni ammissibili, quindi la soluzione ottima sicuramente non può peggiorare, può solo essere migliore.\\
+\end{proof}
+
+\paragraph{Lemma 2:} $\hat{x}$ è una \textbf{soluzione ammissibile} di $ILP(\pi)$.\\
+
+\begin{proof}
+	Ricordando i vincoli
+	$$\begin{cases}
+		\hat{x}_i + \hat{x}_j \leq 1 & \forall \{i,j\} \in E \\
+		0 \leq \hat{x}_i \leq 1 & \forall i \in V
+	\end{cases}
+	$$
+	E la definizione di $\hat{x}_i$ (sopra).\\
+	
+	Inoltre sappiamo che $x^\ast_i$ rispetterà, in quanto soluzione ammissibile, gli stessi vincoli che sono presenti per $\hat{x}$.\\
+	
+	L'unico vincolo importante da verificare è che la somma sia $\geq 1$ e l'unico caso in cui può non succedere è quando entrambi sono $=0$ 
+	$$ \hat{x}_i + \hat{x}_j \ngeq 1 \implies \hat{x}_i + \hat{x}_j = 0 \implies \hat{x}_i = 0, \; \hat{x}_j = 0  $$
+	
+	Ma questo succede solo quando gli $x_i^\ast$ erano entrambi $< 1/2$
+	$$ x_i^\ast = 0, \; x_j^\ast = 0$$
+	
+	Ma questo è impossibile in quanto vorrebbe dire che:
+	$$ x_i^\ast + x_j^\ast < 1 $$
+	
+	Il che è impossibile per i vincoli del problema $LP(\pi)$, risolto in maniera ottima.\\
+\end{proof}
+
+\newpage
+
+\paragraph{Lemma 3:} $\forall i$, $\hat{x}_i \leq 2x_i^\ast$.\\
+
+\begin{proof}
+	Guardando i possibili casi: 
+	$$ \hat{x}_i = 0 \implies x_i^\ast < 1/2 \implies 0 \leq 2 \cdot 1/2 $$
+	$$ \hat{x}_i = 1 \implies x_i^\ast \geq 1/2 \implies 2x_i^\ast \geq 1 = \hat{x}_i $$
+\end{proof}
+
+\paragraph{Lemma 4:}
+$$ w = \sum_i w_i \hat{x}_i \leq 2 \sum_i w_i x_i^\ast = 2 w_{LP}^\ast $$
+Questo dice che la soluzione ottenuta dall'algoritmo di arrotondamento è $\leq$ (per il Lemma 3) di 2 volte la soluzione ottima del problema $LP(\pi)$.\\
+
+Per il Lemma 1  per il Lemma 4, rispettivamente, possiamo vedere che:
+$$ \frac{w}{w_{ILP}^\ast} \leq \frac{w}{w_{LP}^\ast} \leq \frac{2 w^\ast_{LP}}{w^\ast_{LP}} = 2$$
+Quindi l'algoritmo di arrotondamento è una \textbf{2-Approssimazione di VertexCover}.\\
+
+% End L8
+
+\vfill
+
+Sperimentalmente, l'approssimazione peggiora, sia per rounding che pricing VertexCover, con grafi sparsi. In qualsiasi caso sempre abbastanza meglio della 2-Approssimazione, generare input pessimi è difficile, solitamente sono casi estremi.\\
+
+\newpage

@@ -1,0 +1,279 @@
+% !TeX spellcheck = it_IT
+
+\section{Tecnica di Pricing}
+
+\subsection{Problema VertexCover}
+
+Definizione del problema: 
+\begin{itemize}
+	\item \textbf{Input:} un grafo non orientato $G =(V,E)$ con dei pesi/costi per ogni nodo $w_i \in \mathbb{R}^+$, $i \in V$
+	\item \textbf{Soluzione ammissibile:} $X \subseteq V$ tale che $\forall e \in E$, $e \cap X \neq \emptyset$, ogni lato deve avere una delle due estremità dentro la soluzione
+	\item \textbf{Funzione obiettivo:} somma dei pesi $\sum_{i \in X} w_i$
+	\item \textbf{Tipo:} minimizzazione $\min$
+\end{itemize}
+
+\paragraph{Pricing-based Solution:} I problemi basati sul pricing funzionano basandosi sull'idea che ogni lato offre una cifra per farsi coprire, ed i vertici devono decidere cosa fare, ovvero se entrare nella soluzione o meno, ottenendo la cifra di tutti i lati che copre. I vertici sono una gang che vuole massimizzare il costo dei lati. Ad ogni lato si associa un prezzo per "farsi coprire".\\
+Quindi si ha un \textbf{pricing} $(P_e)_{e \in E}$ \textbf{per ogni lato}.\\
+
+Un pricing $(P_e)_{e \in E}$ è \textbf{equo} se \textbf{iff} $\forall i$
+$$ \sum_{e \in E, i \in e} P_e \leq w_i $$
+Ovvero, i \textbf{lati}, in totale, \textbf{non offriranno più} di quanto "richiede" il vertice, ovvero \textbf{del costo del vertice}. Zero su tutti i lati soddisfa banalmente questa proprietà. Verranno considerati solo di pricing equi.\\
+
+\newpage
+
+\paragraph{Lemma 1:} Se $(P_e)_{e \in E}$ è un \textbf{pricing equo} allora se \textbf{sommo tutti i prezzi} di tutti i lati \textbf{ottengo} un \textbf{valore minore uguale} della \textbf{soluzione ottima}
+$$ \sum_{e \in E} P_e \leq w^\ast $$
+
+\begin{proof}
+	Considerando $X^\ast \subseteq V$ soluzione ottima e il peso relativo
+	$$ w^\ast = \sum_{i \in X^\ast} w_i $$
+	
+	Per la definizione di equità: $\forall i$ 
+	$$ w_i \geq \sum_{e \in E, i \in e} P_e $$
+	il peso di ogni nodo è maggiore della somma dei costi dei lati su di esso.\\
+	
+	Quindi 
+	$$ w^\ast = \sum_{i \in X^\ast} w_i \geq \sum_{i \in X^\ast} \sum_{e \in E, i \in e} P_e \geq \sum_{e \in E} P_e $$
+	La soluzione ottima è per forza maggiore della somma di tutti i lati, quindi maggiore della somma del prezzo di tutti i lati (per ammissibilità).\\
+\end{proof}
+
+Sostanzialmente,  se il pricing è equo il costo del nodo deve essere $\geq$ della somma dei pricing dei suoi lati, quindi la soluzione ottima, in quanto composta dal peso dei nodi, non potrà essere minore della somma totale dei pricing.\\
+
+\paragraph{Pricing stretto:} Il pricing $(P_e)_{e \in E}$ è \textbf{stretto} su $\hat{i}$ (un vertice specifico) iff
+$$ \sum_{e \in E, \hat{i} \in e} P_e < w_{\hat{i}} $$
+In breve, "\textbf{pricing stretto}" vuol dire che \textbf{non soddisfa quanto chiede il vertice}, somma dei pricing di quel vertice minore del costo del vertice.\\
+
+\newpage
+
+\subsubsection{PricingVertexCover}
+L'input e sempre $G = (V,E)$, $w_i \in \mathbb{R}^+$, $i \in V$.
+
+\begin{algorithm}
+	\caption{PricingVertexCover}
+	\begin{algorithmic}
+		\STATE $P_e \leftarrow 0$, $\forall e \in E$
+		\WHILE{$\exists \hat{e} = \{\hat{i}, \hat{j}\}$ t.c. $(P_e)$ è stretto su $\hat{i}$ e $\hat{j}$}
+		\STATE Sia $\hat{e} = \{\hat{i}, \hat{j}\}$ quello che minimizza 
+		$$\Delta \leftarrow \min \left(w_{\hat{i}} - \sum_{e \in E, \hat{i} \in e} P_e, w_{\hat{i}} - \sum_{e \in E, \hat{j} \in e} P_e \right)$$
+		\STATE $P_{\hat{e}} \leftarrow P_{\hat{e} + \Delta}$
+		\ENDWHILE
+	\end{algorithmic}
+\end{algorithm}
+
+Inizialmente attribuisce a tutti i lati un prezzo 0.\\
+
+Finché \textbf{esiste un lato} tale che $(P_e)$ è stretto su $\hat{i}$ e su $\hat{j}$, $\exists \hat{e} = \{\hat{i}, \hat{j}\}$, ovvero il \textbf{pricing è stretto su entrambe le estremità}, quindi per entrambi il costo del vertice è maggiore della somma dei pricing offerti, finché vale questa condizione si \textbf{viene scelto il lato} $\hat{e} = \{\hat{i}, \hat{j}\}$ tale che \textbf{minimizza} di quanto dovrebbe \textbf{aumentare la sua offerta} per \textbf{rendere non stretto} il costo di uno dei vertici adiacenti.\\
+
+Alla fine \textbf{restituisce l'insieme dei vertici} $i$ tali per cui $P_e$ \textbf{su} $i$ \textbf{non è stretto}.\\
+
+Partono tutti a zero, guardo vertice per vertice quanto stanno ricevendo dai lati adiacenti, ed all'inizio ovviamente non sarà stretto su nessun vertice.\\
+Quanto dovrebbe offrire in più ogni lato per rendere stretto il pricing su uno dei due vertici a cui è collegato? Calcolo il valore per tutti e prendo il minimo.\\
+Ripeto sui lati non ancora stretti per entrambe le estremità, finché sono presenti lati con questa caratteristica.\\
+
+Alla fine restituisce i vertici "contenti", quindi i vertici che prendono quanto chiedono, ovvero i vertici con pricing non stretto.
+
+%End L6
+
+\newpage
+
+Ricordando il lemma sul pricing equo.
+
+\paragraph{Lemma:} alla fine di PricingVertexCover il costo $w \leq 2 \sum_{e \in E} P_e$ è minore uguale al doppio della somma dei prezzi. \\
+
+\begin{proof}
+	$$ w = \sum_{i \in output} w_i = \sum_{i: P_e \text{ non stretto su } i} w_i = $$
+	Emettiamo in output i vertici tali per cui il pricing su quel vertice non è stretto. Per la definizione di "stretto", possiamo continuare dicendo che: 
+	$$ = \sum_{i \in output} \sum_{e \in E, i \in e} P_e$$
+	Qua stiamo sommando per tutti i vertici nell'output i prezzi di alcuni lati, ma \textbf{ognuno dei lati può comparire al massimo due volte}, se entrambe le estremità di quel lato stanno nell'output. Quindi:
+	$$ \sum_{i \in output} \sum_{e \in E, i \in e} P_e \leq 2 \sum_{e \in E} P_e$$
+\end{proof}
+
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+\paragraph{Teorema:} PricingVertexCover è una 2-Approssimazione.\\
+
+\begin{proof}
+	$$ \frac{w}{w^\ast} \leq \frac{2 \sum_{e \in E} P_e}{w^\ast} \leq \frac{2 \sum_{e \in E} P_e}{\sum_{e \in E} P_e} = 2$$
+	Per il Lemma 2, $w$ è minore di 2 volte la somma totale dei prezzi, mentre la soluzione ottima $w^\ast$ è per forza maggiore della somma totale dei prezzi. \\
+\end{proof}
+
+Non si sa se esiste un'approssimazione migliore, non si conosce una $\gamma$-approssimazione con $\gamma < 2$. Si sa che non esiste un PTAS, quindi c'è per forza un minimo di approssimazione ma non si sa per certo quale sia.\\
+
+\newpage
+
+\subsection{Problema DisjointPaths}
+
+Problema dei \textbf{cammini disgiunti}. L'idea è, su un grafo orientato, ci sono $k$ \textbf{sorgenti} ed altrettante \textbf{destinazioni}, una lista di sorgenti e destinazioni. Vogliamo \textbf{collegare il maggior numero di sorgenti e destinazioni tramite un cammino}, con il vincolo di non usare ogni lato più di una volta. Verrà considerata una versione con un parametro $c$ che determina la congestione, ovvero \textbf{ogni lato non può essere usato più di $c$ volte}.\\
+
+Definizione: 
+\begin{itemize}
+	\item \textbf{Input:} un grafo orientato $G = (N,A)$, la lista delle sorgenti $s_0, \, ... \, , s_k \in N$, la lista delle destinazioni $t_0, \, ... \, , t_k \in N$ ed un parametro $c \in \mathbb{N}^+$
+	\item \textbf{Output:} $I \subseteq k$ e $\forall i \in I$ un cammino $\pi_i: s_i \rightarrow t_i$ tale che nessun arco di $G$ sia usato da più di $c$ cammini
+	\item \textbf{Funzione obiettivo:} la cardinalità $|I|$, ovvero il numero di cammini trovati
+	\item Tipo: massimizzazione, $\max$
+\end{itemize}
+
+Da notare che con i grafi orientati si parla di nodi (da qui $N$), non vertici, e archi (da qui $A$), non lati.\\
+
+Per l'esecuzione dell'algoritmo \textbf{assoceremo} ad \textbf{ogni arco} un \textbf{funzione lunghezza}:
+$$ \ell: \, A \rightarrow \mathbb{R}^+ $$
+
+Che può \textbf{variare nel tempo}, quindi va \textbf{specificato il momento} in cui viene considerata. Di conseguenza si avrà una lunghezza dei cammini: con $\pi = <x_1, \, ... \, , x_i>$
+$$ \ell (\pi) = \ell (x_1, x_2) + \ell (x_2, x_3) + \, ...  \, + \ell (x_{i-1}, x_i) $$
+
+\newpage
+
+\subsubsection{GreedyPaths}
+Input come sopra, grafo, sorgenti, destinazioni, capacità. Si aggiunge un parametro $\beta>1$.
+
+\begin{algorithm}
+	\caption{GreedyPaths}
+	\begin{algorithmic}
+		\STATE $I \leftarrow \emptyset$
+		\STATE $P \leftarrow \emptyset$
+		\STATE $\ell(a) = 1 $, $\forall a \in A$
+		\WHILE{$true$}
+		\STATE find shortest path $\pi_i: \, s_i \rightarrow t_i$ with $i \notin I$
+		\IF{such path does not exist}
+		\STATE break
+		\ENDIF
+		\STATE $I \leftarrow I \cup \{i\}$
+		\STATE $P \leftarrow P \cup \{\pi_i\}$
+		\FORALL{$a \in \pi_i$}
+		\STATE $\ell (a) \leftarrow \ell (a) \cdot \beta$
+		\IF{$\ell(a) = \beta^c$}
+		\STATE remove $a$
+		\ENDIF
+		\ENDFOR
+		\ENDWHILE
+		\STATE Output $I$, $P$
+	\end{algorithmic}
+\end{algorithm}
+
+L'insieme $I$ è l'insieme delle \textbf{coppie già collegate}, all'inizio vuoto, così come l'insieme di \textbf{cammini} $P$. La funzione \textbf{lunghezza all'inizio vale 1 per tutti} gli archi. Poi si ha un ciclo infinito in cui: 
+\begin{itemize}
+	\item trova il \textbf{percorso più breve} (secondo la lunghezza $\ell$) \textbf{tra} una \textbf{coppia sorgente e destinazione non ancora collegata}
+	\item \textbf{se} tale percorso \textbf{non esiste} per nessuna delle coppie rimaste, \textbf{esce} dal ciclo
+	\item se ho trovato un percorso, \textbf{aggiungo} la coppia di \textbf{nodi collegati ad} $I$ ed il relativo path in $P$
+	\item per tutti gli archi nel cammino, \textbf{moltiplico} il \textbf{lunghezza per} $\beta$, rendendoli più costosi e meno appetibili per i prossimi path. Inoltre se un \textbf{arco è stato usato} $c$ volte \textbf{viene rimosso}
+\end{itemize}
+Alla fine \textbf{restituisce l'insieme delle coppie collegate ed i relativi path}.\\
+
+\newpage
+
+Quando si dice "trovare il cammino minimo", bisogna usare più iterazioni di Dijkstra per trovarli tutti.\\
+
+\paragraph{Definizione:} In un certo istante dell'esecuzione un \textbf{cammino} $\pi$ è definito \textbf{corto} iff la sua \textbf{lunghezza} è \textbf{minore di} $\beta^c$, quindi $\ell(\pi) < \beta^c$. \\
+
+\paragraph{Definizione:} In un certo istante, un \textbf{cammino} $\pi$ è \textbf{utile} se \textbf{collega una coppia nuova} $i \notin I$. L'algoritmo considera solo cammini utili ed il più corto tra quelli esistenti.\\
+
+L'algoritmo avrà più \textbf{fasi}, una in cui seleziona solo cammini corti utili, poi una in in cui sceglie cammini lunghi utili, e termina quando sono finiti tutti i cammini utili.\\
+
+Considerando il programma nella fase in cui sono \textbf{finiti cammini corti utili}, chiameremo $\overline{\ell}, \overline{I}, \overline{P}$ rispettivamente lunghezza, insieme di coppie collegate ed i relativi path in quel momento, ovvero subito dopo che è stato aggiunto l'ultimo cammino utile.\\
+Alla fine dell'esecuzione chiameremo i parametri $\ell_{out}, I_{out}, P_{out}$.\\
+
+\paragraph{Lemma 1:} Sia $i \in I^\ast \setminus I_{out}$, una coppia \textbf{collegata dalla soluzione ottima ma non dalla soluzione dell'algoritmo}, allora 
+$$\overline{\ell} (\pi_i^\ast) \geq \beta^c$$
+Ovvero il costo del path è superiore a $\beta^c$. \\
+%TODO Check la frase: (Immaginando che non vengano rimossi, per la prima fase dell'esecuzione non cambia niente, sono cammini troppo costosi per essere considerati).\\
+
+\begin{proof}
+	$i \in I^\ast \setminus I_{out}$, se fosse vera la condizione $\overline{\ell} (\pi_i^\ast) < \beta^c$ selezioneremmo quel path, ma noi stiamo guardando il momento in cui non sono più presenti cammini corti, quindi non è possibile.\\
+	Quindi se $\overline{\ell} (\pi_i^\ast) < \beta^c$ per costruzione dell'algoritmo verrebbe incluso, ma il presupposto è esattamente il contrario.\\
+\end{proof}
+
+\newpage
+
+\paragraph{Lemma 2:} se \textbf{sommo la lunghezza di tutti gli archi} ottengo:
+$$ \sum_{a \in A} \overline{\ell}(a) \leq \beta^{c+1} |\overline{I}| + m $$
+La somma della lunghezza è minore uguale di $\beta^{c+1}$ per il numero di cammini corti $+ m$, con $m$ il numero totale di archi.\\
+
+\begin{proof}
+	Per induzione. All'inizio: 
+	$$ \sum_{a \in A} \ell (a) = m  \leq \beta^{c+1} |\overline{I}| + m$$
+	Supponendo che 
+	$$ \ell_1 \xrightarrow[i, \pi_i]{} \ell_2 \rightarrow \, ... \, \rightarrow \overline{\ell}$$
+	
+	Quindi nel momento di transizione tra $\ell_1$ e $\ell_2$ vengono aggiunti $i$ e $\pi_i$. \\
+	Possiamo vedere che $\ell_2$ diventa:
+	$$
+	\ell_2 (a) = \begin{cases}
+		\ell_1 (a) & a \notin \pi_i \\
+		\ell_1 (a) \cdot \beta \;\; & a \in \pi_i \\
+	\end{cases}
+	$$
+	
+	Quindi domandandoci di quanto sia aumentata la lunghezza degli archi possiamo vedere che:
+	$$ \sum_{a \in A} \ell_2 (a) - \sum_{a \in A} \ell_1 (a) = $$
+	
+	Ma possiamo considerare solo gli archi nel path $\pi$ in quanto l'aumento per gli altri è 0: 
+	$$ = \sum_{a \in \pi} \left(\ell_2 (a) - \ell_1 (a)\right) =$$
+	
+	Ma per passare da $\ell_1$ a $\ell_2$ abbiamo moltiplicato $\ell_1$ per $\beta$, quindi
+	$$ = \sum_{a \in \pi} \left( \beta \ell_1 (a) - \ell_1 (a) \right) = $$
+	
+	Quindi possiamo raccogliere e dire che, per definizione di tutti i path scelti negli istanti precedenti $\overline{\ell}$
+	$$ = (\beta -1) \sum_{a \in A} \ell_1 (a) = (\beta -1) \ell_1 (\pi) < (\beta -1) \beta^c \leq \beta^{c+1} $$
+	
+	Ad ognuno dei $|\overline{I}|$ passi (quindi per ognuno dei cammini trovati) possiamo dire che aumento la somma di al più $\beta^{c+1}$. Si aggiunge $m$ in quanto valore iniziale di tutti gli archi, ovviamente presente.\\
+\end{proof}
+
+\paragraph{Osservazione 1:} Tutti i \textbf{cammini} nella \textbf{soluzione ottima} ma \textbf{non in quella dell'algoritmo} sono \textbf{maggiori di}
+$$ \sum_{i \in I^\ast \setminus I_{out}} \overline{\ell} (\pi_i^\ast) \geq \beta^c |I^\ast \setminus I_{out}|$$
+Per il Lemma 1.\\
+
+\paragraph{Osservazione 2:} Nella \textbf{soluzione ottima nessun arco} è \textbf{usato più di $c$ volte}, comunque è vincolata, quindi
+$$ \sum_{i \in I^\ast \setminus I_{out}} \overline{\ell}(\pi_i^\ast) \leq c \sum_{a \in A} \overline{\ell} (a) \leq $$
+
+e per il lemma 2 
+$$ \leq c \left( \beta^{c+1}|\overline{I}| + m \right) $$
+
+\nn 
+Quindi, \textbf{usando le osservazioni}: 
+$$ \beta^c |I^\ast| \leq \beta^c |I^\ast \setminus I_{out}| + \beta^c |I^\ast \cap I_{out}| \leq $$
+
+La prima parte, per l'osservazione 1, è maggiorata da
+$$ \leq \sum_{i \in I^\ast \setminus I_{out}} \overline{\ell} (\pi_i^\ast) + \beta^c |I_{out}| \leq $$
+
+Ma questo corrisponde all'osservazione 2:
+$$ \leq c \left( \beta^{c+1}|\overline{I}| + m \right) + \beta^c |I_{out}| \leq  c \left( \beta^{c+1}|I_{out}| + m \right) + \beta^c |I_{out}| $$
+
+Dividendo per $\beta^c$:
+$$ |I^\ast| \leq c \cdot \beta \cdot |I_{out}| + \frac{cm}{\beta^c} + |I_{out}| \leq $$
+
+Aggiungendo un $|I_{out}|$ sicuramente il valore rimane maggiore, lo aggiungiamo per raccogliere:
+$$ \leq c \cdot \beta \cdot |I_{out}| + \frac{cm}{\beta^c} |I_{out}| + |I_{out}| = |I_{out}| \left(c \beta + \frac{cm}{\beta^c} + 1\right) $$
+
+Quindi
+$$ \frac{|I^\ast|}{|I_{out}|} \leq c \left(\beta + m \beta^{-c}\right) + 1$$
+
+Ma bisogna trovare un $\beta$ adeguato, e considereremo
+$$ \beta = m^{\frac{1}{c+1}}$$
+
+Con questa scelta il rapporto visto può essere maggiorato da:  
+$$ \frac{|I^\ast|}{|I_{out}|} \leq c \left(m^{\frac{1}{c+1}} + m^{1-\frac{1}{c+1}}\right) + 1 = 2c m^{\frac{1}{c+1}} + 1 $$
+
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+\paragraph{Teorema:} GreedyPath fornisce una \textbf{$\left(2c \cdot m^{\frac{1}{c+1}} + 1\right)$-approssimazione} per Disjoint paths.
+
+\vfill
+
+Esempio di valori:
+\begin{center}
+	$$
+	\begin{array}{c | c}
+		c & \\
+		\hline
+		1 & 2 \sqrt{m} + 1 \\
+		2 & 4 \sqrt[3]{m} + 1 \\
+		3 & 6 \sqrt[4]{m} + 1 \\
+	\end{array}
+	$$
+\end{center}
+
+Dipende da $c$ e dal numero di archi $m$. Si ha $c$ che determina un parametro lineare ed una radice che riduce il valore di $m$. Cresce al numero di archi, ma decresce con $c$.\\
+
+%End L7 
+
+L'approssimazione migliora nel caso di coppie ripetute.\\
+
+\newpage

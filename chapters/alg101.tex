@@ -1,0 +1,198 @@
+% !TeX spellcheck = it_IT
+
+\section{Algoritmi 101}
+
+\subsection{Cos'è un problema?} 
+
+Un \textbf{problema} $\pi$ è \textbf{costituito da}:
+\begin{itemize}
+	\item Un \textbf{insieme di input} possibili $I_\pi$
+	
+	\item Un \textbf{insieme di output} possibili $O_\pi$
+	
+	\item Funzione $Sol_\pi: I_\pi \rightarrow 2^{O_\pi} \setminus \{\emptyset\}$ \textbf{mappa ogni input ad un insieme di output corretti possibili}, non è detto che dobbiamo avere un solo output corretto, possono esserci più output validi. Molti problemi considerati potranno avere più output corretti.
+\end{itemize}
+
+\paragraph{Esempio di problema:} Descrizione informale: decidere se un numero è primo. \\
+
+Supponendo che si tratta, in input, di numeri naturali scritti in base $2$ (non specificato, da specificare, questo sono assunzioni).\\
+Mentre in output si può avere solo $sì$ o $no$, si tratta di un problema di decisione
+$$ O_\pi = \{no, yes\} $$
+
+Anche se non esplicitamente detti, \textbf{input e output dovrebbero essere specificati come su un linguaggio binario}, sono \textbf{sequenze di bit}.\\
+
+\newpage
+
+\paragraph{Altro esempio:} emettere il MCD tra due interi positivi $x$ e $y$. Non è più un problema di decisione.\\
+
+Come distinguo i due valori in input?  \\
+
+Soluzioni: raddoppio tutti i bit e $01$ diventa il separatore. \\
+
+Altra soluzione: Elias $\gamma_x$ sapendo la lunghezza $l$ in bit dell'input $x$, scrivo $l$ in unario, quindi $l$ bit ed uno $0$ prima dell'input, così in base a quanti 1 leggo so quanti bit leggere dopo.  \\
+
+I problemi generalmente saranno scritti "approssimativamente", quindi sono necessarie diverse assunzioni per specificarli formalmente.\\
+
+Nella pratica quindi i dettagli di implementazione dell'algoritmo cambieranno, ma tra $n^2$ e $n^2 \log n$ ci cambia poco, sempre dominato da un polinomio ed un polinomio vale l'altro (assunzione solo teorica, nella realtà non è proprio così ma sticazzi).
+
+\newpage
+
+\subsection{Cos'è un algoritmo?}
+Senza definirlo esattamente in modo formale, si presume che a questo punto tu ne abbia un'idea.\\
+
+Ma se proprio dobbiamo: tutti gli algoritmi sono Macchine di Turing (programmi eseguibili da una MdT). \\
+
+\paragraph{Tesi di Church-Turing:} storicamente, hanno preso tutte le definizioni di algoritmi presenti, hanno provato che sono tutte equivalenti ed ogni definizione riporta alla stessa famiglia di problemi risolvibili: problemi che con una MdT sono risolvibili allora sono risolvibili anche secondo qualsiasi altra definizione.\\
+
+Al giorno d'oggi è importante perché si traspone in "ogni linguaggio di programmazione (Turing-completo) può risolvere gli stessi problemi risolvibili da tutti gli altri". 
+
+In passato è stato discusso come sia impossibile concepire una definizione realistica di algoritmo non equivalente alla MdT.\\
+
+\newpage
+
+\subsection{Cos'è un algoritmo per un problema $\pi$?}
+
+Dando $x \in I_\pi$ ad un algoritmo $A$ eseguito su una MdT restituirà $y \in O_\pi$ tale che $y \in Sol_\pi (x)$, ovvero \textbf{dato un input restituisce una soluzione tra quelle ammesse}.\\
+
+\textbf{Molti problemi non sono risolvibili}. Considerando i problemi di decisione, data una stringa binaria bisogna rispondere $sì$ o $no$.\\
+
+Se ne può avere uno per ogni possibile insieme di stringhe binarie, gli elementi di $2^{2^\ast}$ sono tutti problemi di decisione, e possiamo vedere che
+$$ |2^{2^\ast}| \cong |2^{\mathbb{N}}| \cong |\mathbb{R}|$$
+ha la potenza del continuo, quindi il numero possibile di problemi di decisione è un infinito non numerabile. \\
+
+Ma i programmi (algoritmi per risolvere questi problemi) sono infiniti? Sì, ma hanno cardinalità $|\mathbb{N}|$, essendo questa la dimensione dell'insieme di risposte possibili ($|2^\ast|$).\\
+
+Quindi \textbf{i problemi sono di più dei possibili programmi per risolverli}. Per forza di cose la maggior parte dei problemi non sono risolvibili. \\
+
+\newpage
+
+\subsection{Teoria della complessità}
+Tutti i problemi che verranno considerati sono risolvibili, ma \textbf{quanto efficientemente}? La teoria della complessità stabilisce la \textbf{quantità di risorse consumate da un problema}.
+
+Si può parlare di teoria della complessità in due termini:
+\begin{itemize}
+	\item \textbf{Algoritmica}
+	\item \textbf{Strutturale}
+\end{itemize}
+
+
+\subsubsection{Algoritmica}
+
+Dato $\pi$
+\begin{enumerate}
+	\item Stabilire \textbf{se è risolvibile} (per noi sempre sì); c'è un algoritmo che lo risolve?
+	
+	\item \textbf{Risolvibile con che costo?} Ci sono più \textbf{misure} possibili:
+	\begin{itemize}
+		\item Tempo (solitamente sarà usata questa)
+		\item Spazio
+		\item Numero di processori utilizzati/somma dei tempi di tutte le CPU
+		\item Energia dissipata
+	\end{itemize}
+\end{enumerate}
+
+Considerando il tempo, vogliamo stabilire \textbf{dato un input quanto tempo impiega}, ovvero \textbf{quanti passi} deve svolgere
+$$ T_A : I_\pi \rightarrow \mathbb{N}$$
+
+Invece di calcolare la \textbf{complessità} input per input si considera "per taglia", \textbf{per ogni dimensione}, prendendo l'input che ci impiega il tempo massimo per taglia
+$$ t_a : \mathbb{N} \rightarrow \mathbb{N}$$
+$$ t_a (n) = \max \{T_A (x) \, | \, x \in I_\pi \text{ t.c. } |x| = n\} $$
+
+Si tratta di un'assunzione worst-case, dati input di stessa dimensione prendo il peggiore. Potrebbe essere utile fare una media al posto di un'assunzione pessimistica, ma noi teniamo così perché è comodo, inoltre nella realtà possiamo solo metterci di meno.\\
+
+\newpage
+
+Se dobbiamo valutare quale algoritmo usare il \textbf{confronto va fatto asintoticamente}, i casi piccoli sono "facili" (di solito, ma andrebbero considerati i casi d'uso effettivi? In estremo potrei fare una tabella). Quindi consideriamo come le performance dell'algoritmo scalano con la dimensione dell'input.\\
+
+Quindi due assunzioni: worst-case e asintotico. \\
+
+Generalmente quindi tra
+$$ t_a = O (n^2) \;\;\;\;\;\; t_a = O(n^7)$$
+meglio il primo tendenzialmente.
+
+Bisogna anche provare che non ci possono essere cose migliori/peggio, quindi upper and lower bound.\\
+
+\newpage
+
+\subsubsection{Strutturale}
+
+Fissato un problema $\pi$, qual'è la sua complessità? Non vogliamo cercare la complessità di un algoritmo, ma la \textbf{complessità del miglior algoritmo che risolve un problema} $\pi$. Questo permette di eliminare facilmente problemi che non hanno soluzioni efficienti.\\
+
+Con la notazione worst case asintotica sopracitata possiamo avere un \textbf{upper bound} per il \textbf{tempo impiegato} per la risoluzione di un problema. Quindi nel caso peggiore avrà asintoticamente quel comportamento. $O(n^2)$ vuol dire che nel caso peggiore ci mette tempo quadratico rispetto all'input.\\
+
+Esistono anche \textbf{lower bounds}, ovvero limiti inferiori per il \textbf{tempo impiegato} da un algoritmo e dimostrarlo implica \textbf{dimostrare che per come è fatto un problema, questo non può impiegare meno di un certo tempo}. $\Omega(n)$ vuol dire che non ci può mettere meno di tempo lineare.\\
+
+Un problema viene "chiuso" quando upper e lower bound coincidono, vuol dire che si ha l'algoritmo ottimo e si conosce esattamente la complessità del problema. Per esempio, l'ordinamento di array basato su confronti e scambi ci mette esattamente $n \log n$, quindi si dice $\Theta(n \log n)$.\\
+
+Le casistiche problematiche sono quando gli \textbf{upper bound sono esponenziali ed i lower bound polinomiali}, quindi le possibilità sono: 
+\begin{itemize}
+	\item esiste un upper bound da migliorare, quindi esistono algoritmi polinomiale non ancora scoperti
+	\item esiste un lower bound esponenziale, quindi il problema non è risolvibile in tempo polinomiale
+\end{itemize}
+
+In entrambi i casi saremmo contenti, il non avere informazioni a riguardo è il problema.\\
+
+\newpage
+
+\subsubsection{Classi di complessità:} 
+
+Per la complessità strutturale sono state inventate delle classi di problemi per \textbf{dividerli in base alla difficoltà di risoluzione}: 
+\begin{itemize}
+	\item $\mathcal{P}$: problemi di decisione risolvibili in tempo polinomiale; la domanda diventa "il mio $\pi$ è in $\mathcal{P}$?"
+	\item $\mathcal{NP}$: problemi di decisione risolvibili in tempo polinomiale \textbf{su macchine non deterministiche} 
+\end{itemize}
+
+Sostanzialmente macchine non deterministiche vuol dire che: una macchina su cui il programma può essere eseguito più volte in parallelo con determinate variabili settate a 0 e 1, permettendo di eseguire in parallelo tante "versioni" ed ottenere una soluzione per ogni esecuzione parallela. La soluzione alla fine è \textit{yes} se esiste almeno una esecuzione che ha dato \textit{yes} e \textit{no} se tutte le esecuzioni hanno riportato \textit{no}. \\
+
+\paragraph{CNF-Sat problem:} l'input è una espressione logica in forma CNF (Conjunctive Normal Form), quindi un \texttt{and} tra clausole, ognuna delle quali contiene \texttt{or} di letterali, i quali possono essere variabili o negazioni di variabili.\\
+
+L'output è se l'espressione logica $\varphi$ è soddisfacibile, ovvero, esiste $\exists$ assegnazione che rende $\varphi$ \textit{true}? \\
+Attualmente questo problema si pensa sia in $\mathcal{NP}$, non sappiamo se possa stare in $\mathcal{P}$.\\
+
+Sappiamo rientra in $\mathcal{NP}$ perché è facile pensare ad un algoritmo non deterministico per questo problema, basta avere una esecuzione parallela per ogni possibile valore di ognuna delle variabili, e se almeno un output è \textit{sì} allora è soddisfacibile.\\
+
+\newpage
+
+\paragraph{Relazione tra $\mathcal{P}$ e $\mathcal{NP}$:} $\mathcal{P}$ è ovviamente \textbf{incluso in} $\mathcal{NP}$, dato che se posso risolvere un problema in modo polinomiale, posso risolverlo anche con il parallelismo aggiunto delle macchine non deterministiche.\\
+
+La vera domanda è se $\mathcal{P} = \mathcal{NP}$, quindi \textbf{se le due classi coincidono}, le possibilità sono: 
+\begin{itemize}
+	\item le due \textbf{classi sono uguali} $\mathcal{P} = \mathcal{NP}$: sarebbe molto bello, vorrebbe dire che \textbf{tutti i problemi sono risolvibili polinomialmente}
+	\item $\mathcal{P}$ \textbf{contenuta in} $\mathcal{NP}$, $P \subset NP$: meno emozionante ma vorrebbe dire che \textbf{esistono dei problemi non risolvibili in tempo polinomiale}
+\end{itemize}
+Ma è uno dei millennium problem, quindi penso rimarrà lì.\\
+
+\subsubsection{Riduzione in tempo polinomiale}
+
+Un problema $\pi_1$ e polinomialmente riducibile a $\pi_2$ iff: 
+$$ \pi_1 \leq_p \pi_2 \text{ iff:}$$
+$$ \exists f : \, I_{\pi_1} \rightarrow I_{\pi_2} \text{ t.c. } x \in I_{\pi_1} \;\;\; Sol_{\pi_1} (x) = yes \;\;\; Sol_{\pi_2} (f(x)) = yes $$ 
+%Should be right, idk
+
+Esiste una funzione che a partire da un input di $pi_1$ arriva ad un input di $\pi_2$ in tempo polinomiale e se $x$ è un input di $\pi_1$ possiamo avere lo stesso output che $x$ fornisce su $\pi_1$ per $\pi_2$ con input $f(x)$. \\
+
+Sostanzialmente vuol dire che possiamo \textbf{trasformare input di $\pi_1$ in input di $\pi_2$ in tempo polinomiale}, allora \textbf{se $\pi 2$ è risolvibile in tempo polinomiale lo è anche $\pi_1$}.\\
+
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+\paragraph{Teorema:} Se $\pi_1 \leq_p \pi_2$ e $\pi_2 \in \mathcal{P}$ allora $\pi_1 \in \mathcal{P}$. Se un problema può essere polinomialmente ridotto ad un altro all'interno di $\mathcal{P}$, allora anch'esso è in $\mathcal{P}$.\\
+Sostanzialmente $\leq_p$ può essere letto come "non è più difficile di".\\
+
+\newpage
+
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema di Cook}
+\paragraph{Teorema di Cook:} dato che CNF-Sat $\in \mathcal{NP}$ e $\forall \pi \in \mathcal{NP}$ allora $\pi \leq_p$ CNF-Sat. Esistono \textbf{problemi all'interno di }$\mathcal{NP}$ \textbf{a cui tutti gli altri problemi si possono ridurre} (provato per la prima volta da Cook con il CNF-Sat).\\
+
+Questi problemi sono \textbf{$\mathcal{NP}$-completi} ($\mathcal{NP}c$)
+$$(\mathcal{NP}c) = \{\pi \in \mathcal{NP} | \, \forall \pi' \in \mathcal{NP} \pi' \leq_p \pi\} $$
+
+$\mathcal{NP}$ completi vuol dire \textbf{tutti i problemi in $\mathcal{NP}$ si possono ridurre ad un altro problema in $\mathcal{NP}$}, quindi alla complessità di questi altri. Vuol dire sostanzialmente che sono tutti circa "difficili uguali" e che "cambia poco" (secondo la riduzione polinomiale).\\
+
+Se noi sapessimo che un qualunque problema $\mathcal{NP}c$ è risolvibile in tempo polinomiale, l'implicazione di questo teorema è che tutti i problemi in $\mathcal{NP}$ sarebbero risolvibili in tempo polinomiale, facendo collassare $\mathcal{P}$ e $\mathcal{NP}$.\\
+
+\paragraph{Corollario:} se $\pi \in \mathcal{NP}c$ e $\pi \in \mathcal{P}$ allora $\mathcal{P} = \mathcal{NP}$.\\
+
+Nello scenario in cui $\mathcal{P} \neq \mathcal{NP}$ i problemi $\mathcal{NP}c$ sono sottoinsieme di $\mathcal{NP}$, ma completamente staccati dall'insieme di $\mathcal{P}$.\\
+
+Dire che un \textbf{problema è} $\mathcal{NP}c$ vuol dire che è \textbf{risolvibile esattamente solo in tempo esponenziale}.\\
+
+\newpage
