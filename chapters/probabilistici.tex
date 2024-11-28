@@ -240,3 +240,202 @@ Se eseguo tante volte un algoritmo che può darmi soluzioni molto brutte, ma pot
 
 % End L14
 
+\newpage
+
+\addcontentsline{toc}{subsection}{\protect\numberline{}\textit{Cose}}
+\subsection*{\textit{Cose}}
+
+Una serie di \textit{Cose}$^\text{\textregistered}$ che potrebbero essere utili: 
+
+\begin{enumerate}
+	\item \textbf{Chain rule (regola della catena):} la probabilità della congiunzione di eventi si può sempre esprimere come probabilità del primo per probabilità del secondo dato il primo, fino all'ultimo
+	$$ P[E_1 \wedge E_2 \wedge \, \dots \, \wedge E_n] = P [E_1] \cdot P [E_2 | E_1] \cdot \, \dots \, \cdot P[E_n | E_1 \, \dots \, E_{n-1}] $$
+	
+	\item $\forall x > 1$
+	$$ \frac{1}{4} \leq \left(1 - \frac{1}{x}\right)^x \leq \frac{1}{e} $$
+	
+	\item \textbf{Union bound:} la probabilità dell'unione di eventi è minore della somma di probabilità degli eventi (uguale solo se sono tutti disgiunti):
+	$$ P\left[ \bigcup_i E_i \right] \leq \sum_i P[E_i] $$
+	
+	\item \textbf{Disuguaglianza di Markov:} avendo una variabile aleatoria $x$ non negativa e con media finita e un $\alpha > 0$, allora
+	$$ P[x \geq \alpha] \leq \frac{E[x]}{\alpha} $$
+	la probabilità che $x$ sia maggiore di $\alpha$ è minore uguale della media di $x$ diviso $\alpha$.\\
+	
+	\item $\forall x \in [0,1]$
+	$$ 1 - x \leq e^{-x} $$
+\end{enumerate}
+
+\newpage
+
+\subsection{Problema SetCover}
+
+Già visto, per una definizione più precisa guarda il \hyperref[subsec:setcover]{\texttt{capitolo a riguardo}}.\\
+
+\textbf{Definizione}:
+\begin{itemize}
+	\item \textbf{Input}: $S_0, \, \dots \, , S_{m-1}$, con $\bigcup_{i \in m} = U$ con pesi $w_o, \, \dots \, , w_{m-1} \in Q^+$
+	
+	\item \textbf{Soluzioni ammissibili}: $I \subseteq m$ tale che
+	$$ \bigcup_{i \in I} S_i = U $$
+	
+	\item \textbf{Funzione obiettivo}: 
+	$$ w = \sum_{i \in I} w_i $$
+	
+	\item Tipo: minimizzazione, $\min$
+\end{itemize} 
+
+Chiamo $n:= |U|$ la \textbf{cardinalità dell'universo}.\\
+
+Si può formulare come un \textbf{problema di programmazione lineare intera ILP}. Prendo $x_0, \, \dots \, , x_{m-1}$ variabili, ognuna di queste dice se includere o meno il relativo insieme. La funzione da minimizzare è 
+$$ w_0 x_0 + w_1 x_1 + \, \dots \, + w_n x_n $$
+
+Quindi i vincoli sono:
+$$ 
+\begin{cases}
+	0 \leq x_j \leq 1 & \forall j \in n \\
+	\sum_{i: p \in S_i} x_i \geq 1  &\forall p \in U
+\end{cases}
+$$
+
+La prima riga vuol dire che \textbf{ogni variabile può essere tra 0 e 1} (ma abbiamo solo valori interi), di conseguenza prendere o meno il set.\\
+La seconda riga vuol dire che \textbf{almeno un insieme deve coprire ogni punto dell'universo}.\\
+
+Risolvendo questo problema sugli interi si ottiene la soluzione ottima, ma si può rilassare su numeri reali per risolverlo (non ottimamente) in tempo polinomiale. Consideriamo $\hat \pi$ la \textbf{versione rilassata} di programmazione lineare non intera di questo problema.\\
+
+\newpage
+
+\subsubsection{Arrotondamento Aleatorio}
+
+L'idea dietro l'algoritmo di arrotondamento aleatorio per SetCover è la seguente.
+
+\begin{algorithm}
+	\caption{ArrotondamentoAleatorioSetCover()}
+	\begin{algorithmic}
+		\STATE Costruiamo $\pi$
+		\STATE Risolviamo la versione rilassata $\hat \pi$, ottenendo soluzione $\hat x$ (vettore di valori soluzione)
+		\STATE $I \leftarrow \emptyset$
+		\FOR{$i \in M$}
+			\FOR{$t = 1, \, \dots \, , \lceil k + \ln n \rceil$}
+				\STATE aggiungiamo $i$ a $I$ con probabilità $\hat x_i$ 
+			\ENDFOR
+		\ENDFOR
+		\STATE Output $I$
+	\end{algorithmic}
+\end{algorithm}
+
+Il \texttt{for} per l'inserimento può essere visto anche come: "Inserisci $i$ in $I$ con probabilità $1 - (1-\hat x_i)^{k + \ln n}$".\\
+
+Usiamo la \textbf{soluzione} $\hat x_i$ \textbf{come probabilità}, più il valore è alto più è probabile che verrà inserito nella soluzione finale. $k$ è un parametro, dentro l'algoritmo, mentre $\alpha$ è esterno, scelto da noi.\\
+
+Sebbene improbabile, \textbf{potrebbe non portare ad una soluzione ammissibile}, che non copre tutto l'universo. Quando anche fornisce una soluzione ammissibile \textbf{non è detto che sia ottima}.\\
+
+\newpage
+
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+\paragraph{Teorema:} L'algoritmo ha queste proprietà:
+\begin{enumerate}
+	\item Produce una \textbf{soluzione ammissibile con probabilità} $\geq 1 - e^{-k}$.\\
+	
+	\item Per ogni $\alpha \in [0,1)$, la \textbf{probabilità} che il \textbf{fattore di approssimazione} (quanto lontano dall'ottimo è la soluzione) sia $\geq \alpha (k + \ln n)$ è $\leq 1/\alpha$
+	$$ P[\text{fatt. appr. } \geq \alpha (k + \ln n)] \leq \frac{1}{\alpha} $$
+	Insomma, la probabilità che l'algoritmo vada male è bassa.\\
+\end{enumerate}
+
+\begin{proof}
+	\textbf{Notazione}: ricordando come è fatto l'input (vedi sopra), risolvendo la versione $\hat \pi$ ottengo $\hat x_0, \, \dots \, , \hat x_{m-1} \in [0,1]$ e la soluzione del problema rilassato è 
+	$$ \hat w = w_0 \hat x_0 + \, \dots \, + w_{m-1} \hat x_{m-1} $$
+	
+	E $w^\ast$ è la soluzione ottima, ovviamente $\hat w \leq w^\ast$.\\
+	
+	\textbf{Punto 1:} Probabilità che la soluzione sia ammissibile: chiamando 
+	$$ E_p = \text{il punto } p \in U \text{ non è coperto} $$
+	\begin{flalign*}
+		P[\text{sol. amm.}] & = 1 - P[\text{sol. non amm.}]   \\
+		& = 1 - P[\text{almeno un punto di }U \text{non coperto}]  \\
+		& = 1 - P\left[\bigcup_{p \in U} E_p  \right]  \geq 
+	\end{flalign*}
+	
+	Usando l'union bound
+	\begin{flalign*}
+		& \geq 1 - \sum_{p \in U} P[E_p] \\
+		& = 1 - \sum_{p \in U} P[p \text{ non è coperto}]\\
+		& = 1 - \sum_{p \in U} \left( \prod_{i \in m, p \in S_i} P[i \text{ non è stato scelto}]\right)
+	\end{flalign*}
+	
+	\newpage
+	
+	Quindi la probabilità che un punto non sia coperto è il prodotto delle probabilità di non aver scelto nessun insieme che lo contengo, e posso dire meglio quando questa cosa succede, per definizione dell'algoritmo:
+	\begin{flalign*}
+		& = 1 - \sum_{p \in U} \prod_{i \in m, p \in S_i} (1 - \hat x_i)^{\lceil k + \ln n \rceil}  \\
+		& \geq 1 - \sum_{p \in U} \prod_{i \in m, p \in S_i} (1 - \hat x_i)^{k + \ln n} \geq
+	\end{flalign*}
+	
+	uso il fatto che $1-x \leq e^{-x}$:
+	\begin{flalign*}
+		& \geq 1 - \sum_{p \in U} \prod_{i \in m, p \in S_i} e^{- \hat x_i (k + \ln n)} \\
+		& = 1 - \sum_{p \in U} e^{- (k + \ln n) \sum_{i \in m, p \in S_i} \hat x_i} \geq
+	\end{flalign*}
+	
+	Ma uno dei vincoli delle LP per la seconda sommatoria è che questa sia $\geq 1$, quindi
+	\begin{flalign*}
+		& \geq 1- \sum_{p \in U} e^{-(k + \ln n)} \\ 
+		& = 1 - \sum_{p \in U} \frac{1}{n} e^{-k}  \\
+		& = 1 - e^{-k} \sum_{p \in U}  \frac{1}{n} \\
+		& = 1 - e^{-k}
+	\end{flalign*}
+	
+	\newpage
+	
+	\textbf{Punto 2:} La probabilità che $S_i$ venga scelto è $\leq (k + \ln n) \hat x_i$ (per union bound). Il valore atteso di $w$ è 
+	\begin{flalign*}
+		E[w] & = \sum_{i \in m} w_i P[S_i \text{ sia scelto}] \\
+		& \leq \sum_{i \in m} w_i (k + \ln n) \hat x_i  \\
+		& = (k + \ln n) \sum_{i \in m} w_i \hat x_i =
+	\end{flalign*}
+	Ma è la definizione di $\hat w$ quindi
+	\begin{flalign*}
+		& = (k + \ln n)\hat w \\
+		& \leq (k + \ln n) w^\ast
+	\end{flalign*}
+	
+	Vogliamo usare la disuguaglianza di Markov, scegliendo come parametro $\beta .= \alpha (k + \ln n) w^\ast$. Mi importa che
+	$$ P\left[x \geq \beta\right] \leq \frac{E[x]}{\beta} $$
+	
+	Quindi
+	\begin{flalign*}
+		P \left[\frac{w}{w^\ast} \geq \alpha (k + \ln n) \right] & = P\left[w \geq \alpha (k + \ln n) w^\ast \right] \\
+		& = P [w \geq \beta] \leq 
+	\end{flalign*}
+	
+	Per la disuguaglianza di Markov
+	\begin{flalign*}
+		& \leq \frac{E[w]}{\beta} \\
+		& \leq \frac{(k + \ln n) w^\ast}{\alpha (k + \ln n) w^\ast} \\
+		& = \frac{1}{\alpha}
+	\end{flalign*}
+\end{proof}
+
+\newpage
+
+\paragraph{Corollario:} Per $k=3$, c'è il $45\%$ di \textbf{probabilità di ottenere una soluzione ammissibile con rapporto di approssimazione} $\leq 6 + 2 \ln n$.\\
+
+\begin{proof}
+	La probabilità che una soluzione sia non ammissibile è piccola, il resto delle volte la soluzione è ammissibile ma il rapporto di approssimazione non ci piace abbastanza.\\
+	
+	Quindi abbiamo uno spazio di soluzioni non ammissibili $E_{\text{non-amm}}$, delle soluzioni che non vogliamo $E_{\text{bad}}$ e le soluzioni che effettivamente ci vanno bene $E_{\text{ok}}$.\\
+	
+	La probabilità delle soluzioni non ammissibili è:
+	$$ P[E_{\text{non-amm}}] \leq e^{-k} = e^{-3} $$
+	
+	Dal rapporto di approssimazione possiamo capire che $\alpha = 2$, quindi la probabilità per le soluzioni che non vogliamo è
+	$$ P[E_{\text{bad}}] = P[\text{fatt. appr. } > 6 + 2 \ln n] \leq \frac{1}{2} $$
+	
+	Per le soluzioni buone invece:
+	\begin{flalign*}
+		P[E_{\text{ok}}] & = 1 - P[E_{\text{non-amm}} \cup E_{\text{bad}} \\ 
+		& \geq 1 - \left(P[E_{\text{non-amm}}] + P[E_{\text{bad}}]\right) \\
+		& \geq 1 - \left(e^{-3} + \frac{1}{2}\right) \approx 45\%
+	\end{flalign*}
+\end{proof}
+
+% End L15
