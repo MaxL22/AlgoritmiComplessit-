@@ -259,10 +259,12 @@ Una serie di \textit{Cose}$^\text{\textregistered}$ che potrebbero essere utili:
 	
 	\item \textbf{Disuguaglianza di Markov:} avendo una variabile aleatoria $x$ non negativa e con media finita e un $\alpha > 0$, allora
 	$$ P[x \geq \alpha] \leq \frac{E[x]}{\alpha} $$
-	la probabilità che $x$ sia maggiore di $\alpha$ è minore uguale della media di $x$ diviso $\alpha$.\\
+	la probabilità che $x$ sia maggiore di $\alpha$ è minore uguale della media di $x$ diviso $\alpha$.
 	
 	\item $\forall x \in [0,1]$
 	$$ 1 - x \leq e^{-x} $$
+	
+	\item \textbf{Teorema delle probabilità totali:} la probabilità di un evento può essere calcolata sommando le probabilità condizionate di tale evento rispetto a un insieme completo di eventi mutuamente esclusivi.\\
 \end{enumerate}
 
 \newpage
@@ -439,3 +441,188 @@ Sebbene improbabile, \textbf{potrebbe non portare ad una soluzione ammissibile},
 \end{proof}
 
 % End L15
+
+\newpage
+
+\subsection{Problema MaxEkSat}
+
+Dove $k$ è un parametro $\geq 3$.\\
+
+\textbf{Definizione}: 
+\begin{itemize}
+	\item \textbf{Input}: una formula CNF in cui ogni clausola contiene esattamente $k$ letterali
+	\item \textbf{Soluzioni Ammissibili}: assegnamenti di valori di verità (per le variabili che compaiono nell'input)
+	\item \textbf{Funzione obiettivo}: numero di clausole soddisfatte
+	\item \textbf{Tipo}: massimizzazione, $\max$
+\end{itemize}
+
+Ovviamente è $\mathcal{NPO}$, in quanto facilmente riconducibile ad un SAT generico.\\
+
+
+\subsubsection{Algoritmo Probabilistico}
+
+\textbf{Passaggi}: 
+\begin{itemize}
+	\item Assegna a ogni variabile un valore a caso $\in \{true, false\}$
+\end{itemize}
+
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+\paragraph{Teorema:} Questo algoritmo \textbf{rende vere} almeno 
+$$ \frac{2^k-1}{2^k} = 1 - \frac{1}{2^k} $$
+delle clausole totali.\\
+
+Alternativamente, questo algoritmo, data una formula con $t$ clausole, ne \textbf{rende vere almeno}
+$$ \frac{2^k-1}{2^k} t $$
+Cioè 
+$$ E[T] \geq  \frac{2^k-1}{2^k} t  $$
+
+Un po' di \textbf{notazione:} sia $\varphi$ l'\textbf{input}, chiamiamo 
+\begin{itemize}
+	\item $n$ il numero di variabili che compaiono
+	\item $k$ il numero di letterali per clausola 
+	\item $x_1, \, \dots \, , x_n$ le variabili che compaiono nelle clausole
+	\item $K_1, \, \dots \, , K_t$ le clausole
+\end{itemize}
+
+Variabili aleatorie: 
+\begin{itemize}
+	\item $x_i$: variabile uniforme in $(0,1)$, variabile che uso per decidere se rendere vera o falsa la variabile $i$-esima. Assegniamo 0 o 1 a caso per tutte
+	\item $C_i$: variabile aleatoria che ha valore:
+	$$ C_i = \begin{cases}
+		1 & \text{ se } K_i \text{ soddisfatta } \\
+		0 &  \text{ altrimenti }
+	\end{cases}
+	$$
+	\item $T$: numero di clausole soddisfatte
+\end{itemize}
+
+\begin{proof}
+	Qual'è il \textbf{numero atteso di clausole soddisfatte} $E[t]$?
+	\begin{flalign*}
+		E[T] & = \sum_{b_1 \in \{0,1\}} \, \dots \, \sum_{b_n \in \{0,1\}} E [T | x_1 = b_1, \, \dots \, , x_n = b_n] P[x_1 = b_1, \, \dots \, , x_n = b_n] \\
+		& =  \sum_{b_1 \in \{0,1\}} \, \dots \, \sum_{b_n \in \{0,1\}} E[C_1 + \, \dots \, + C_t | x_1 = b_1, \, \dots \, , x_n = b_n] P[x_1 = b_1] \, \dots \, P[x_n = b_n]
+	\end{flalign*}
+	
+	Ma ognuna delle $n$ probabilità è $1/2$ (dato che l'assegnamento è casuale), quindi 
+	$$
+	= \frac{1}{2^n} \sum_{b_1 \in \{0,1\}} \, \dots \, \sum_{b_n \in \{0,1\}} E[C_1 + \, \dots \, + C_t | x_1 = b_1, \, \dots \, , x_n = b_n]
+	$$
+	
+	Sostituisco alla probabilità il \textbf{valore atteso}:
+	$$ 
+	= \frac{1}{2^n} \sum_{b_1 \in \{0,1\}} \, \dots \, \sum_{b_n \in \{0,1\}} \sum_{j=1}^t E[C_j | x_1 = b_1, \, \dots \, , x_n = b_n]
+	$$
+	
+	Dove, ogni clausola $K_j$ può essere falsa solo nel caso in cui ognuna delle variabili $x_i$ che la compone si presenta nella forma:
+	\begin{itemize}
+		\item $false$ se $x_i \in K_j$
+		\item $true$ se $\neg x_i \in K_j$
+	\end{itemize}
+	
+	%TODO: Chiedere/controllare
+	Quindi c'è un singolo assegnamento che rende $K_j$ falsa, mentre ci sono $2^n - 2^{n-k}$ modi per renderla vera.\\ 
+	
+	Quindi la sommatoria sopra diventa
+	$$ 
+	= \frac{1}{2^n} \sum_{j=1}^t (2^n - 2^{n-k}) 
+	= \frac{2^n - 2^{n-k}}{2^n} t 
+	= \frac{2^{k-n} 2^n - 2^{k-n} 2^{n-k}}{2^{k-n} 2^n} t
+	= \frac{2^k - 1}{2^k} t
+	$$
+	%End proof?
+\end{proof}
+
+%\newpage
+
+\paragraph{Lemma:} Per ogni $j = 0, \, \dots \, , n$ esistono $b_1, \, \dots \, , b_j \in \{0,1\}$ tali che
+$$ E[T |  x_1 = b_1 \, \dots \, , x_j = b_j] \geq \frac{2^k - 1}{2^k} t $$
+dove $t$ è il numero di clausole.\\
+
+\begin{proof}
+	Per induzione su $j$:
+	\begin{itemize}
+		\item \textbf{Base:} Per $j=0$ è il teorema.\\
+		
+		\item \textbf{Passo induttivo:} per ipotesi di induzione
+		$$\frac{2^k-1}{2^k} t \leq  E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}] = $$
+		
+		Per il teorema delle probabilità totali:
+		\begin{flalign*}
+			& = E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 0] P[x_j = 0]  \\
+			& \hspace*{3cm} + E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 1] P[x_j = 1] \\
+			& = \frac{1}{2} (E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 0] \\ 
+			& \hspace*{3cm} + E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 1] )
+		\end{flalign*}
+		Ipotizzando che per assurdo i due valori siano: 
+		$$ 
+		E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 0] < \frac{2^k-1}{2^k} t
+		$$
+		$$
+		E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 1] < \frac{2^k-1}{2^k} t
+		$$
+		Ma questo vorrebbe dire che la loro somma è
+		$$ 
+		< \frac{2^k - 1}{2k} 2t 
+		$$
+		Ma questo va contro l'ipotesi induttiva, quindi almeno uno dei due deve essere $\geq$.\\
+	\end{itemize}
+\end{proof}
+
+%L'algoritmo si riesce a derandomizzare ... %Wtf 
+
+\paragraph{Corollario:} Esiste un \textbf{assegnamento deterministico che soddisfa almeno} 
+$$ \frac{2^k - 1}{2^k} t$$
+clausole.\\
+Input: Formula $k$-CNF fatta da $t$ clausole $K_1 \wedge \, \dots \, \wedge K_t$ e $n$ variabili $x_1, \, \dots \, , x_n$.\\
+Per capire come assegnarle.\\
+\begin{algorithmic}
+	\STATE $D \leftarrow \emptyset$
+	\FOR{$i=1, \, \dots \, , n$}
+		\STATE $\Delta_0 \leftarrow 0$, $\Delta_1 \leftarrow 0$
+		\STATE $\Delta_{D_0} \leftarrow \emptyset$, $\Delta_{D_1} \leftarrow \emptyset$
+		\FOR{$j = 1, \, \dots \, , t$}
+			\IF{$j \in D$ \textbf{or} $x_i$ non compare in $K_j$}
+				\STATE continue
+			\ENDIF
+			\STATE $h \leftarrow$ numero di variabili in $K_j$ con indice $\geq i$
+			\IF{$x_i$ compare positiva in $K_j$}
+				\STATE $\Delta_0 \leftarrow \Delta_0 - \frac{1}{2^h}$
+				\STATE $\Delta_1 \leftarrow \Delta_1 + \frac{1}{2^h}$
+				\STATE $\Delta_{D_1} \leftarrow \Delta_{D_1} \cup \{j\}$
+			\ELSE
+				\STATE $\Delta_0 \leftarrow \Delta_0 + \frac{1}{2^h}$
+				\STATE $\Delta_1 \leftarrow \Delta_1 - \frac{1}{2^h}$
+				\STATE $\Delta_{D_0} \leftarrow \Delta_{D_0} \cup \{j\}$
+			\ENDIF
+		\ENDFOR
+		\IF{$\Delta_0 \geq \Delta_1$}
+			\STATE $x[i] = false$
+			\STATE $D \leftarrow D \cup \Delta_{D_0}$
+		\ELSE
+			\STATE $x[i] = true$
+			\STATE $D \leftarrow D \cup \Delta_{D_1}$
+		\ENDIF
+	\ENDFOR
+	\STATE Output $x[i], \, \dots \, x[n]$
+\end{algorithmic}
+
+\newpage
+
+Questo algoritmo tenta di "mimare" quello visto nel Lemma, conoscendo un assegnamento "buono" delle prime $j$ variabili posso conoscere un assegnamento "buono" delle prime $j+1$.\\
+
+Notazione:
+\begin{itemize}
+	\item $\Delta_1/\Delta_0$: valore atteso se viene posta ad 1 ed a 0 la variabile, rispettivamente.\\
+	
+	\item $\Delta_{D_1}/\Delta_{D_0}$: l'insieme di clausole chiuse da un determinato assegnamento ($true$ o $false$ rispettivamente).\\
+\end{itemize}
+
+Per ogni variabile (\texttt{for} esterno), per ogni clausola (\texttt{for interno}) determina cosa succederebbe al valore atteso se assegnassi un certo valore di verità alla variabile (\texttt{if/else}, rispettivamente \textit{true/false}).\\
+
+\vfill
+
+(Non ho capito, ma farò finta)
+
+\newpage
+
+%End L16
