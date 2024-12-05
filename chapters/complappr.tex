@@ -1,0 +1,127 @@
+% !TeX spellcheck = it_IT
+
+\section{Teoria della Complessità di Approssimazione}
+
+
+%\subsection{Teorema PCP}
+ 
+%Story time?
+
+Torniamo nel mondo magico dei \textbf{problemi di decisione}. \\
+
+Ricordiamo che si possono sempre esprimere come: conoscendo un \textbf{linguaggio} $L \subseteq 2^\ast$ (insieme di stringhe binarie), dobbiamo \textbf{stabilire se l'input} $x \in 2^\ast$ (stringa binaria) \textbf{appartiene a} $L$ (linguaggio), quindi stabilire se $x \in L$, tramite un \textbf{algoritmo di decisione}.\\
+
+\subsection{MdT con Oracolo o Verificatore}
+
+Con \textbf{MdT con Oracolo o verificatore} si intende una macchina di Turing nella quale l'input è sempre una stringa binaria $x \in 2^\ast$, ma è presente anche un "\textbf{oracolo}", il quale contiene un'\textbf{ulteriore stringa} $w \in 2^\ast$, a cui la MdT può accedere quando necessario. L'\textbf{output} sarà quindi una \textbf{decisione} (sì/no) e \textbf{dipende da input e stringa dell'oracolo}.\\
+
+Per accedere all'oracolo la MdT scrive sul \textbf{nastro delle query}: scrivendo una posizione su questo nastro l'oracolo restituirà il bit presente in quella posizione sulla stringa dell'oracolo.\\
+
+Possiamo pensare alle MdT con oracolo come se quest'ultimo fosse una "\textit{dimostrazione}" per l'input, per questo vengono anche chiamate \textbf{verificatori}.\\
+
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+\paragraph{Teorema:} un linguaggio $L \subseteq 2^\ast$ sta in $\NP$ se e solo se esiste una MdT $V$ con oracolo tale che: 
+\begin{enumerate}
+	\item $V(x,w)$ lavora in \textbf{tempo polinomiale} in $|x|$
+	\item $\forall x \in 2^\ast$, $\exists w \in 2^\ast$ tale che $V(x,w) = $ sì, se e solo se $x \in L$. Se $x$ deve avere risposta "sì", esiste una $w$ che fa ottenere "sì"
+\end{enumerate}
+
+Equivalente ad una NDTM, al posto di dipendere ad input e tutte le uscite, dipende da input e stringa di oracolo, il non determinismo viene introdotto in maniera differente ma sono equivalenti.\\
+
+Quindi $\NP$ possiamo definirla come la \textbf{classi di problemi risolvibili da verificatori in tempo polinomiale}.
+
+\newpage
+
+\subsubsection{Verificatori Probabilistici}
+
+Input e output come prima, ma il \textbf{verificatore probabilistico} ha \textbf{accesso} anche ad una \textbf{sorgente di bit random} e risponde "sì" o "no" in base anche a questi. Si aggiunge una parte di randomness.\\
+
+La macchina in sè è deterministica, ma il \textbf{risultato dipende da input, oracolo e bit casuali}.\\
+
+Il verificatore probabilistico $V$ per il linguaggio $L$: 
+\begin{enumerate}
+	\item Lavora in \textbf{tempo polinomiale} per $|x|$.\\
+	
+	\item Se $x \in L$, allora $\exists w \in 2^\ast$ tale che $V(x,w)$ \textbf{accetta con probabilità 1}. Se una stringa è accettabile, deve esserci una dimostrazione/stringa $w$ dell'oracolo che la accetta indipendentemente dalla sorgente casuale.\\
+	
+	\item Se $x \notin L$, $\forall w \in 2^\ast$, $V(x,w)$ \textbf{rifiuta con probabilità} $\geq 1/2$. Se una stringa è da non accettare, nonostante i bit casuali ho una buona probabilità di non accettarla.\\
+\end{enumerate}
+
+\newpage
+
+\subsection{Probabilistically Checkable Proof PCP}
+
+Dai verificatori non probabilistici viene il nome PCP: Probabilistically Checkable Proof.\\
+
+Date due funzioni $r,p : \mathbb{N} \rightarrow \mathbb{N}$, \textbf{chiamo} 
+$$ PCP [r,q] $$
+La \textbf{classe dei linguaggi accettati da un verificatore probabilistico} che su input $x$ faccia $\leq q(|x|)$ query all'oracolo e $\leq r(|x|)$ letture di bit random.\\
+
+Esempi di classi: 
+\begin{itemize}
+	\item Se non posso fare query o prendere bit random:
+	$$ PCP [0,0] = \mathcal{P} $$
+	La decisione dipende solo dall'input, quindi questa equivale a $\mathcal{P}$.\\
+	
+	\item Se posso fare query all'oracolo ma non posso accedere ad i bit randomici
+	$$ PCP [0, poly] = \NP $$
+	Senza probabilità le "probabilità" diventano certezze, ovvero 0 o 1. Questa corrisponde ad introdurre il non determinismo, ovvero coincide con $\mathcal{NP}$.\\
+\end{itemize}
+
+\paragraph{Teorema PCP [Arora, Safra, 1998]: } La classe $\NP$ equivale a:
+$$\mathcal{NP} = PCP [O (\log n), O(1)] $$
+
+Estraggo un \textbf{numero logaritmico di bit} e faccio un \textbf{numero costante di query all'oracolo}, introdurre un po' di randomness fa fare meno query all'oracolo. Inoltre la randomness aumenta logaritmicamente, al posto di avere una quantità polinomiale di letture all'oracolo, quindi la randomness è esponenzialmente "più potente" del non determinismo.\\
+
+\newpage
+
+Ad \textbf{esempio}: 
+$$ SAT \in PCP [ 5 \log n + 7 \log \log n + 12, 157] $$
+
+D'ora in poi facciamo riferimento ad uno specifico verificatore $V$ che usa $r$ \textbf{bit random} e $q$ \textbf{query}
+$$ V \in PCP [r,q] $$
+
+Su \textbf{input} $x \in 2^\ast$:
+\begin{itemize}
+	\item Fa esattamente $q(|x|)$ \textbf{query}
+	\item Estrae esattamente $r(|x|)$ \textbf{bit random}
+\end{itemize}
+
+Si può assumere questo \textbf{senza perdita di generalità}, al massimo potrebbe usarne di meno, ma non è una restrizione (posso fare quelle che mancano "a caso" e non usare, basta sia un upper bound).\\
+
+Ci interessa il caso in cui le \textbf{query siano una costante} $O(1)$.\\
+
+Inoltre possiamo assumere che i \textbf{bit random li estragga tutti assieme} come prima cosa, per poi tenerli da parte e usarli quando servono.\\
+
+Considerando un \textbf{verificatore} 
+$$ V \in PCP [r (n), q] $$
+Dove $q$ è una costante mentre $r(n)$ è un verificatore $\in O(\log n)$. \\
+Questo verificatore 
+\begin{itemize}
+	\item riceve input $w \in 2^\ast$
+	\item Estrae $R \in 2^{r(|x|)} bit$
+	\item Richiede all'oracolo la posizione $w_{i_1^{R,x}}$
+	\item Può rispondere 0 o 1 e per ogni possibilità richiederà un numero $q$ di posizioni su $w$ e le \textbf{richieste effettuate} potrebbero essere diverse, \textbf{in base alle risposte precedenti potrebbero cambiare le richieste effettuate}
+\end{itemize}
+
+Si chiama \textbf{verificatore adattivo}, le \textbf{query} fatte all'oracolo \textbf{dipendono anche dalle risposte delle query precedenti}.  Sarebbe carino avere un verificatore non adattivo.\\
+
+Quindi al posto di avere un albero di esecuzioni, guardiamo quali sono \textbf{tutte le possibili richieste}, le quali saranno una quantità finita
+$$ \overline q = 2^{q-1}, 2^{q-2}, \, \dots \, , 1$$
+
+Dopo aver estratto tutti i bit random che ci servono, \textbf{estraiamo} anche \textbf{tutte le possibili} $\overline q$ \textbf{query all'oracolo}. Dopo di questo l'esecuzione diventa quella di una MdT deterministica.\\
+
+Questo ci permette di \textbf{trasformare qualunque verificatore adattivo} in un verificatore \textbf{non adattivo}.\\
+
+%Quindi vedendo %?
+
+Daremo per scontato che il verificatore: 
+\begin{enumerate}
+	\item \textbf{Legga} una \textbf{stringa} $R \in 2^{r(|x|)}$ di bit random
+	\item \textbf{Effettui} un numero $q$ di \textbf{query} $\{i_1^{R,x}, \, \dots \, , i_q^{R,x}\}$
+	\item Da qui il \textbf{comportamento} è \textbf{puramente deterministico}, dipendente da input $x$, stringa random $R$ e risposte ottenute dall'oracolo
+\end{enumerate}
+
+Se la stringa è da accettare, qualunque sia la stringa di bit random scelti, c'è una stringa dell'oracolo che mi fa accettare l'input. Se non è da accettare invece, per almeno metà delle stringhe di bit random viene rifiutato (probabilità $\geq 1/2$).\\
+
+% End L17
