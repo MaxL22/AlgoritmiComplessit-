@@ -125,3 +125,108 @@ Daremo per scontato che il verificatore:
 Se la stringa è da accettare, qualunque sia la stringa di bit random scelti, c'è una stringa dell'oracolo che mi fa accettare l'input. Se non è da accettare invece, per almeno metà delle stringhe di bit random viene rifiutato (probabilità $\geq 1/2$).\\
 
 % End L17
+
+\newpage
+
+\paragraph{Esempio:} Prendendo 
+$$ L \in PCP [r(n), q] = \NP $$
+Come \textbf{funziona il verificatore}?
+\begin{itemize}
+	\item Prende in ingresso l'input 
+	$$ z \in 2^\ast$$
+	\item Estrae una stringa random
+	$$ R \in 2^{r(|z|)} $$
+	\item Scelgo le posizioni, che dipenderanno dall'input e da $R$, le quali saranno esattamente $q$
+	$$ i_{1}^{z,R}, \, \dots \, , i_{q}^{z,R} \in \mathbb{N} $$
+	che portano ad altrettante richieste all'oracolo ed altrettanti bit: 
+	$$ b_1, \, \dots \, , b_q $$
+	\item Da qui in poi ci sarà da fare computazione deterministica, che dipende da:
+	$$ z, R, b_1, \, \dots \, , b_q $$
+\end{itemize} 
+
+\newpage
+
+\subsubsection{Inapprossimabilità di MaxEkSat}
+Ogni $k$-CNF (con $k \geq 3$) con $t$ clausole si può \textbf{trasformare} in una 3-CNF con $(k-2)t$ clausole \textbf{preservando la soddisfacibilità}.\\
+
+Esempio: 
+$$ x_7 \vee \neg x_4 \vee x_9 \vee \neg x_{15} $$
+$$ \implies (x_7 \vee \neg x_4 \vee y_1) \wedge (x_9 \vee \neg x_{15} \vee \neg y_1) $$
+
+Se quella sopra è soddisfacibile, almeno uno dei letterali sopra è vero, l'assegnamento si può estendere ad uno che rende vera anche quella sotto, mentre se tutti quelli sopra sono falsi, non c'è modo di avere la variabile ausiliaria $y_1, \neg y_1$ vera in entrambi i casi.\\
+
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+\paragraph{Teorema:} Per ogni $k \geq 3$, esiste un $\epsilon > 0$ tale che MaxEkSat non è $(1+\epsilon)$ approssimabile (supponendo che $\mathcal{P} \neq \mathcal{NP}$).\\
+
+\begin{proof}
+	(per $k=3$). Scegliamo un $L \in \NP c$, quindi 
+	$$ L \in \NP = PCP [r(n), q] $$
+	per qualche $r(n) \in O(\log n)$, $q \in \mathbb{N}$.\\
+	
+	Sia $V$ il verificatore
+	$$ z \in 2^\ast, \;\; R \in 2^{r(|z|)},\;\; i_1^{z,R}, \, \dots \, , i_q^{z,R} \rightarrow b_1, \, \dots \, ,b_q $$
+	
+	Si può scrivere una $q$-CNF soddisfacibile se e solo se $V$ accetta
+	$$ \psi_{z,R} $$
+	che dipende dalle variabili logiche $w_0, w_1, \, \dots$ dove $w_i = true$ se e solo se l'$i$-esimo carattere dell'oracolo è un 1 (corrispondono ai caratteri sulla stringa dell'oracolo).\\
+	
+	\newpage
+	
+	Quindi $\psi_{z,R}$ è una $q$-CNF con $\leq 2^q$ clausole.\\
+	Può diventare $\varphi_{z,R}$, ovvero una 3-CNF con $\leq q 2^q$ clausole.\\
+	
+	Posso creare, in tempo polinomiale: 
+	$$ \Phi_z = \bigwedge_{R \in 2^{r (|z|)}} \varphi_{z,R} $$
+	3-CNF con $\leq q 2^q 2^{r (|z|)}$ clausole (un numero grosso, ma tutto polinomiale).\\
+	
+	Quindi dando in pasto questa formula $\Phi_z$ ad un algoritmo (ipotetico, cerchiamo un assurdo) di approssimazione per MaxE3Sat con tasso di approssimazione $\alpha < 1+ \epsilon$, definendo
+	$$ \epsilon = \frac{1}{2q2^q} $$
+	
+	Se $z \in L$, allora $\exists w$ che fa accettare $V$ con probabilità 1.\\
+	Significa che $\Phi_z$ è soddisfacibile, quindi $q2^q2^{r(|z|)}$ clausole soddisfacibili.\\
+	
+	Se $z \notin L$, $\forall w$ allora $V$ rifiuta con probabilità $\geq 1/2$.\\
+	Significa che il massimo numero di clausole soddisfacibili in $\Phi_z$ è 
+	$$ \frac{q2^q2^{r(|z|)}}{2} + \frac{2^{r(|z|)}}{2} (q2^q - 1) 
+	=  q2^q2^{r(|z|)} - \frac{2^{r(|z|)}}{2}
+	$$
+	
+	Fornendo $\Phi_z$ ad un algoritmo approssimato che permette di approssimare MaxE3Sat a meno di $1+\epsilon$ il numero di clausole che verranno soddisfatte sarà: 
+	\begin{itemize}
+		\item se $z \in L$
+		$$ \geq \frac{q2^q 2^{r(|z|)}}{1 + \epsilon} $$
+		\item se $z \notin L$
+		$$ \leq q2^q2^{r(|z|)} - \frac{2^{r(|z|)}}{2} $$
+	\end{itemize}
+	
+	\newpage
+	
+	Chiamando: 
+	$$ A = q 2^q, \;\;  B = 2^{r(|z|)}, \;\; \epsilon = \frac{1}{2A} $$
+	
+	Dando $\Phi_z$ in pasto all'algoritmo MaxE3Sat approssimato, quindi fornirà un numero di clausole soddisfacibili: 
+	\begin{itemize}
+		\item se $z \in L$
+		$$ \geq \frac{AB}{1 + \epsilon} $$
+		\item se $z \notin L$
+		$$ \leq AB - \frac{B}{2} $$
+	\end{itemize}
+	
+	Si possono distinguere questi due casi? Ipotizzando che per assurdo:
+	\begin{flalign*}
+		AB - \frac{B}{2} > \frac{AB}{1 + \epsilon} & \implies \\
+		& \implies AB + AB \epsilon - \frac{B}{2}  -\frac{B}{2}\epsilon - AB > 0 \\
+		& \implies \epsilon \left(AB - \frac{B}{2}\right) - \frac{B}{2} > 0 \\
+		& \implies \frac{1}{2A} \left(AB - \frac{B}{2}\right) - \frac{B}{2} > 0 \\
+		& \implies \frac{B}{2} - \frac{B}{4A} - \frac{B}{2} > 0 \\
+		& \implies - \frac{B}{4A} > 0 
+	\end{flalign*}
+	
+	Ed è impossibile, quindi i due intervalli non si sovrappongono.\\
+\end{proof}
+
+Questo è il modo in cui si usa PCP, tipicamente la costruzione è, partendo da un problema $\NP c$, far vedere che si riesce a trasformare il comportamento del verificatore in una formula (fatto in tempo polinomiale), che data in pasto ad un algoritmo che non esiste permette di confermare l'appartenenza al linguaggio.\\
+
+Al variare del problema varia $q$, quindi varia anche $\epsilon$, dando una valutazione precisa di $q$ si potrebbe dare un numero ad $\epsilon$.\\
+
+%End L19
