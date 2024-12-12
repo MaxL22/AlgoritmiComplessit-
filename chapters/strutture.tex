@@ -1,0 +1,137 @@
+% !TeX spellcheck = it_IT
+
+\section{Strutture succinte, quasi-succinte e compatte}
+Abbiamo lavorato con dei razzi, ora si parla di oggetti estremamente piccoli, strutture dati molto semplici.\\
+
+Intanto, cos'è una struttura dati? Intendiamo un \textbf{Abstract Data Type ADT}, ovvero un \textbf{insieme di primitive}, ad esempio su uno stack le primitive potrebbero essere \texttt{push}, \texttt{pop} e \texttt{is\_empty}. Esistono modi formali, assiomatici, per definire le ADT.\\
+
+Ogni ADT si può implementare e possono esserci molte \textbf{implementazioni} diverse, che funzionalmente corrispondono alla stessa ADT, ma differiscono per \textbf{complessità in spazio e tempo}.\\
+
+\subsection{Information-Theoretical Lower Bound}
+
+Supponendo di avere una struttura dati specifica che per \textbf{taglia} $n$ abbia $V_n$ \textbf{valori possibili}, che chiameremo: 
+$$ v_1, v_2, \, \dots \, , v_{V_n} $$
+
+Ed ognuno di questi possibili \textbf{valori} utilizza un \textbf{certo numero di bit}
+$$ x_1, x_2, \, \dots \, , x_{V_n}$$
+
+Allora il \textbf{teorema di Shannon} dice che
+$$ \frac{x_1 + x_2 + \, \dots \, + x_{V_n}}{V_n} \geq \log_2 V_n $$
+
+Sostanzialmente, la \textbf{media delle dimensione di tutti i valori} non può essere meglio del $\log_2$ del numero di valori possibili, quindi una "compressione", una rappresentazione dei dati non può essere meglio della media, ci saranno altre rappresentazioni per cui la rappresentazione occuperà più spazio.\\
+
+\newpage
+
+Questo $\log_2 V_n$ si chiama \textbf{information theoretical lower bound} e ci da la \textbf{dimensione media in bit per una struttura dati}.\\
+
+Definiamo quindi 
+$$ Z_n := \log_2 V_n$$
+come il \textbf{numero di bit minimi per rappresentare una ADT}.\\
+
+per una struttura dati che implementa l'ADT e occupa $D_n$ bit, allora 
+$$ D_n \geq Z_n$$
+
+Ci possono essere più casi: le strutture possono essere
+\begin{itemize}
+	\item \textbf{Implicite:} $D_n = Z_n + O(1)$, una costante in più del lower bound, e.g., $Z_n + 3$ bit.\\
+	
+	\item \textbf{Succinte:} $D_n = Z_n + o(Z_n)$, un $o$ in più del lower bound, e.g., $Z_n + \log Z_n$ bit.\\
+	
+	\item \textbf{Compatte:} $D_n = O(Z_n)$, un $O$ del lower bound, e.g., $Z_n + \sqrt{Z_n}$ bit.\\
+	
+	\item Tutte le altre, peggiori.\\
+\end{itemize}
+
+\newpage
+
+\subsection{Struttura Succinta per Rank e Select}
+
+Rank e Select ADT. Supponendo di avere un array di $n$ bit, $\underline b \in 2^n$.\\
+
+Il \textbf{rank} è quanti 1 ci sono prima di una determinata posizione: 
+$$ rank_{\underline b} (p) = |\{i | i<p \text{ e } b_i = 1\}| $$
+
+\textbf{Select} è il duale, quindi dove si trova l'$i$-esimo 1 
+$$ select_{\underline b} (k) = \max \{p | rank_{\underline b} (p) \leq k \}$$
+
+Quindi, \textbf{rank} quanti 1 fino ad una posizione, mentre \textbf{select} dice dove solo gli 1.\\
+
+Proprietà:
+\begin{itemize}
+	\item $rank(select(i)) = i$
+	\item $select(rank(p)) \geq p$, viene $=$ se e solo se in posizione $p$ c'è un 1
+\end{itemize}
+
+Calcoliamo l'\textbf{information theoretical lower bound}. I valori possono essere 
+$$ V_n = 2^n $$
+in quanto questi sono i possibili valori di un vettore di $n$ bit. Di conseguenza 
+$$ Z_n = \log_2 V_n = n $$
+Per rappresentare un vettore di $n$ bit servono $n$ bit (e grazie al).\\
+
+Per \textbf{fare rank e select} sul vettore possiamo: 
+\begin{itemize}
+	\item ad ogni richiesta calcolare la risposta, quindi occupiamo spazio $n$ (solo il vettore) ma le richieste richiedono tempo $O(n)$
+	\item costruisco una tabella per tutti i possibili valori di rank e select, utilizzando spazio $2n \log n$ le richieste richiedono tempo $O(1)$ (solo il lookup)
+\end{itemize}
+ 
+\newpage
+
+\subsubsection{Struttura succinta di Jacobson per Rank}
+
+Si tratta di una \textbf{struttura multilivello}. \\
+
+Il \textbf{vettore di bit} viene diviso in "\textbf{superblocchi}", i quali sono blocchi di lunghezza $(\log n)^2$ bit (si presuppone che $n$ sia potenza di due per evitare ceil vari).\\
+
+Ogni superblocco viene \textbf{diviso in blocchi} di lunghezza $\frac{1}{2} \log n$.\\
+
+Cosa memorizza Jacobson: 
+\begin{enumerate}
+	\item Per ogni \textbf{superblocco} memorizza quanti $1$ ci sono \textbf{prima del superblocco}.\\
+	
+	\item Per ogni \textbf{blocco} $B_{ij}$ memorizza quanti $1$ ci sono \textbf{dall'inizio del superblocco} $S_i$ fino al blocco $B_{ij}$ escluso.\\
+	
+	\item Four russians trick: una tabella rank per tutti i possibili valori dei blocchi
+\end{enumerate}
+
+\paragraph{Spazio:} Quanto \textbf{spazio} occupiamo per i \textbf{superblocchi}? Serve una \textbf{tabella per ogni superblocco} che indica gli 1:
+\begin{itemize}
+	\item ci sono $\frac{n}{(\log n)^2}$ \textbf{righe}
+	\item per ogni riga ci possono essere $n$ valori, quindi servono $\log n$ bit per rappresentarli
+\end{itemize}
+
+In \textbf{totale}
+$$ \frac{n}{(\log n)^2} \log n = \frac{n}{\log n} = o(n) $$
+
+Per i superblocchi uso $o(n)$ bit aggiuntivi.\\
+
+\newpage
+
+Quanto \textbf{spazio per i blocchi}? Mi serve una tabella che indica gli 1 dall'inizio del superblocco: 
+\begin{itemize}
+	\item ci sono $\frac{n}{1/2 \log n}$ blocchi, di conseguenza altrettante \textbf{righe}
+	\item per ogni riga devo scrivere quanti 1 dall'inizio del blocco, ovvero un numero che occuperà al massimo $\log ((\log n)^2)$ bit
+\end{itemize}
+
+In \textbf{totale} 
+$$ \frac{n}{\frac{1}{2} \log n} 2 \log \log n = \frac{4 n \log \log n}{ \log n} = o(n) $$
+
+Quindi per blocchi e superblocchi uso $o(n)$ bit aggiuntivi.\\
+
+\paragraph{Four russians trick:} I blocchi sono lunghi $1/2 \log n$, quindi son corti, per rispondere a query su dati molto piccoli memorizzo tutte le possibili tabelle di rank e vado a cercare quella che mi serve (quella che corrisponde al blocco in questione). \\
+
+Quanto \textbf{spazio} occupa? Ci sono 
+\begin{itemize}
+	\item $2^{1/2 \log n}$ possibili \textbf{blocchi}
+	\item per ognuno dei quali ci sono $1/2 \log n$ \textbf{righe}
+	\item per ogni riga servono $\log (1/2 \log n)$ bit
+\end{itemize}
+
+In \textbf{totale}
+$$ 2^{\frac{1}{2} \log n} \cdot \frac{1}{2} \log n \cdot \log \left(\frac{1}{2} \log n\right) = \sqrt{n} \frac{1}{2} \log n \log \log \sqrt{n} = o(n) $$
+
+Quindi \textbf{tutti i dati aggiuntivi} in totale occupano \textbf{spazio} $o(n)$.\\
+Non possiamo tornare al vettore originale da questa struttura dati in quanto ci serve per fare il four russians trick.\\
+
+Quindi abbiamo una \textbf{struttura succinta} che risponde in \textbf{tempo costante}, per avere un determinato rank prendiamo il rank prima del superblocco, lo sommiamo al rank prima del blocco e poi interroghiamo la tabella corrispondente al blocco all'interno del quale ci troviamo.\\
+
+%End L19

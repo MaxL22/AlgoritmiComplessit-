@@ -223,10 +223,104 @@ Se quella sopra è soddisfacibile, almeno uno dei letterali sopra è vero, l'ass
 	\end{flalign*}
 	
 	Ed è impossibile, quindi i due intervalli non si sovrappongono.\\
+	In tempo polinomiale ho determinato l'appartenenza ad $L$, quindi il linguaggio originale, il che è impossibile (a meno che $\pnp$).\\
 \end{proof}
 
 Questo è il modo in cui si usa PCP, tipicamente la costruzione è, partendo da un problema $\NP c$, far vedere che si riesce a trasformare il comportamento del verificatore in una formula (fatto in tempo polinomiale), che data in pasto ad un algoritmo che non esiste permette di confermare l'appartenenza al linguaggio.\\
-
 Al variare del problema varia $q$, quindi varia anche $\epsilon$, dando una valutazione precisa di $q$ si potrebbe dare un numero ad $\epsilon$.\\
 
-%End L19
+%End L18
+
+\newpage
+
+\subsection{Inapprossimabilità di MaxIndependentSet}
+Il problema MaxIndependentSet consiste nel trovare l'insieme massimo di vertici indipendenti, ovvero senza lati tra di loro.\\
+
+\textbf{Definizione}: 
+\begin{itemize}
+	\item \textbf{Input:} grafo non orientato $G=(V,E)$
+	
+	\item \textbf{Soluzioni ammissibili:} insiemi indipendenti (insiemi di vertici tali che non ci sono lati tra loro, contrario di clique)
+	$$ X \subseteq V \; \text{ t.c. } \; \left(\begin{array}{c}
+		X \\ 2 
+	\end{array}\right) \cap E = \emptyset $$
+	
+	\item \textbf{Funzione obiettivo:} cardinalità dell'insieme di vertici, $|X|$
+	
+	\item \textbf{Tipo:} massimizzazione $\max$
+\end{itemize}
+
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+\paragraph{Teorema:} Per ogni $\epsilon > 0$, MaxIndependentSet non è $(2-\epsilon)$ \textbf{approssimabile}.\\
+
+\begin{proof}
+	Consideriamo un linguaggio $L \in \NP c$, quindi $L$ è verificabile da 
+	$$ L \in PCP [r(n), q] $$
+	con $r(n) \in O(\log n)$, $q \in \mathbb{N}$.\\
+	
+	Fissiamo 
+	$$ z \in 2^\ast $$
+	Generiamo una sequenza di bit random e $q$ query all'oracolo
+	$$ R \in 2^{r(|z|)} \;\;\;\;\; i_1^{z,R}, \, \dots \, , i_q^{z,R} \rightarrow b_1, \, \dots \, , b_q $$
+	
+	Tutto questo genera una $z$-configurazione, ovvero una coppia: 
+	$$ (R, \{i_1^{z,R}: b_1, \, \dots \, , i_q^{z,R}: b_q\}) 	$$
+	
+	Per uno $z$ fissato, è composta da una serie di $2^{r(|z|)}$ bit random e le $q$ coppie bit interrogato-risposta. Ci sono tante $z$-configurazioni, uno per ogni possibile $R$ e per ogni possibile interrogazione.\\
+	
+	\newpage
+	
+	Costruisco un grafo non-orientato $G_z$ dove: 
+	\begin{itemize}
+		\item i vertici sono le $z$-configurazioni accettanti.\\
+		
+		\item c'è un lato tra due configurazioni della forma
+		$$ 
+		(R, \{i_1^{z,R}: b_1, \, \dots \, , i_q^{z,R}: b_q\}), \;\;\;\;\; (R', \{i_1^{z,R'}: b_1', \, \dots \, , i_q^{z,R'}: b_q'\}) 
+		$$
+		
+		se e solo se $R = R' \vee \exists k, k' \in \{1, \, \dots \, , q\}$ tali che $i_k^{z,R} = i_{k'}^{z,R'}$ ma $b_k \neq b_{k'}$. Ovvero, se le due stringhe random sono uguali oppure se ci sono due interrogazioni alla stessa posizione dell'oracolo che forniscono risposte diverse. \\
+	\end{itemize}
+
+	La relazione descritta dai lati si chiama "relazione di incompatibilità", due soluzioni collegate sono incompatibili.\\
+	
+	Questo è un grafone, i bit random sono in quantità $2^{r(|z|)}$ e le interrogazioni sono $2^q$, quindi $2^{r(|z|)} \cdot 2^q$ in totale, grosso ma comunque polinomiale.\\
+	
+	\paragraph{Fact 1:} Se $z \in L$, allora $G_z$ ha un insieme indipendente di dimensione $\geq 2^{r(|z|)}$.\\
+	
+	\begin{proof}
+ 		Se $z \in L$, allora $\exists \overline w$ che fa accettare con probabilità 1. Prendiamo tutte le configurazioni accettanti
+		$$
+		(R, \{i_1^{z,R}: b_1, \, \dots \, , i_q^{z,R}: b_q\})
+		$$
+		compatibili con $\overline w$.\\
+		
+		Proprietà:
+		\begin{enumerate}
+			\item questo insieme di vertici ha dimensione $\geq 2^{r(|z|)}$, in quanto qualunque sia $R$ devo accettare
+			\item sono tutti non collegati da archi, ovvero indipendenti, in quanto se fossero collegate sarebbero incompatibili
+		\end{enumerate}
+		\nn
+	\end{proof}
+	
+	\paragraph{Fact 2:} Se $z \notin L$, allora ogni insieme indipendente di $G_z$ ha cardinalità $\leq 2^{r(|z|) - 1}$.\\
+	
+	\begin{proof}
+		Supponendo che $S$ sia un insieme indipendente di $G_z$, con cardinalità $> 2^{r(|z|) - 1}$. Questo $S$ è un insieme di configurazioni al cui interno non ci possono essere configurazioni incompatibili tra loro, quindi per ogni posizione richiesta da una qualsiasi configurazione con una qualsiasi $R$ risulta sempre lo stesso valore.\\
+		
+		Da $S$ si può costruire un $\overline w$ compatibile con tutti i vertici di $S$.\\
+		$\implies \overline w$ viene accettato in tutte le configurazioni, quindi accetta con probabilità $> 1/2$, ma per definizione è impossibile.\\
+	\end{proof}
+	
+	Ora diamo $G_z$ in pasto ad un algoritmo approssimato per MaxIndependentSet con grado di approssimazione $< 2 - \epsilon$.\\
+	I casi sono due
+	\begin{itemize}
+		\item $z \in L$: l'ottimo è $\geq 2^{r(|z|)}$
+		\item $z \notin L$: l'ottimo $< 2^{r(|z|)}$
+	\end{itemize}
+	
+	Il nostro algoritmo è approssimato quindi ottiene
+	$$ \frac{2^{r(|z|)}}{2 - \epsilon} > 2^{r(|z|) - 1} = \frac{2^{r(|z|)}}{2} $$
+	
+	Comunque sempre maggiore di $2^{r(|z|)-1}$, ed è impossibile ottenerlo in tempo polinomiale (a meno che $\pnp$), quindi assurdo.\\
+\end{proof}
