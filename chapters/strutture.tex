@@ -135,3 +135,150 @@ Non possiamo tornare al vettore originale da questa struttura dati in quanto ci 
 Quindi abbiamo una \textbf{struttura succinta} che risponde in \textbf{tempo costante}, per avere un determinato rank prendiamo il rank prima del superblocco, lo sommiamo al rank prima del blocco e poi interroghiamo la tabella corrispondente al blocco all'interno del quale ci troviamo.\\
 
 %End L19
+
+\newpage
+
+\subsubsection{Struttura di Clarke per la Select}
+
+Ricordiamo che la select serve a memorizzare le posizioni degli 1. L'idea è quella di memorizzare gli 1 non sempre ma solo \textit{ogni tanto}. Anche questa è una struttura \textbf{multilivello}\\
+
+\paragraph{Primo livello:} memorizza solo i \textbf{valori di select} per valori \textbf{multipli di} $\log n \log \log n$.\\
+
+Quanto \textbf{spazio} occupa? 
+\begin{itemize}
+	\item Ci sono $\frac{n}{\log n \log \log n}$ posizioni da memorizzare
+	\item Ogni numero da memorizzare chiede $\log n$ bit
+\end{itemize}
+
+In \textbf{totale}: 
+$$ \frac{n}{ \log n \log \log n} \log n = \frac{n}{\log \log n} = o(n) $$
+
+Chiamiamo $p_i$ è la \textbf{posizione} del $i \cdot \log n \log \log n$-esimo 1.\\
+Quindi sappiamo che:
+$$ p_{i+1} - p_i \geq \log n \log \log n $$
+In quanto tra una posizione e l'altra devono per forza esserci almeno $\log n \log \log n$ valori, e questo succede solo nel caso siano tutti 1 di fila.\\
+
+\newpage
+
+\paragraph{Secondo livello:} Dipende da $r_i = p_{i+1} - p_i$, che sappiamo essere $r_i \geq \log n \log \log n$.\\
+Abbiamo due casi: 
+\begin{enumerate}
+	\item \textbf{Caso sparso:} $r_i \geq (\log n \log \log n)^2$, gli 1 sono lontani tra loro, ci sono molti 0. In questo caso la \textbf{tabella della select viene memorizzata esplicitamente} (come differenza da $p_i$ ovviamente).\\
+	
+	Quanto \textbf{spazio} occupa?
+	\begin{itemize}
+		\item La tabella deve memorizzare $\log n \log \log n$ 1, quindi altrettante righe
+		\item vengono memorizzate come differenza, quindi servono $\log r_i$ bit per ogni riga
+	\end{itemize}
+	
+	In \textbf{totale}: 
+	\begin{flalign*}
+		 (\log n \log \log n) \log r_i 
+		& = \frac{(\log n \log \log n)^2}{\log n \log \log n} \log r_i  \\
+		& \leq \frac{r_i \log r_i}{\log n \log \log n} \\
+		& \leq \frac{r_i}{ \log \log n}
+	\end{flalign*}
+	
+	Il primo $\leq$ viene dall'ipotesi del caso sparso, mentre il secondo viene semplificando $\log r_i$ con $\log n$, ricordando che $r_i \leq n$.\\
+	
+	\item \textbf{Caso denso:} dove $r_i$ è compreso tra 
+	$$ \log n \log \log n \leq r_i < (\log n \log \log n)^2 $$
+	
+	Memorizzo le posizioni multiple di $\log r_i \log \log n$.\\
+	
+	Quanto \textbf{spazio} occupo?
+	\begin{itemize}
+		\item Memorizzo un numero di righe pari ad "un 1 ogni tanto", definito come $(\log n \log \log n)/(\log r_i \log \log n)$
+		\item Ognuno di questi richiede $\log r_i$ bit 
+	\end{itemize}
+	
+	In \textbf{totale}: 
+	$$ \frac{\log n \log \log n}{\log r_i \log \log n} \log r_i 
+	\leq \log n 
+	\leq \frac{r_i}{\log \log n}
+	$$
+	l'ultimo passaggio viene dalla nostra ipotesi per $r_i$ (bound sinistro).\\
+\end{enumerate}
+
+\textbf{Complessivamente} per il \textbf{secondo livello}
+\begin{flalign*}
+	 & \leq \frac{r_0}{\log \log n} + \frac{r_1}{\log \log n} + \, \dots = \\
+	& = \frac{p_1 - p_0}{\log \log n} + \frac{p_2 - p_1}{\log \log n} + \, \dots =  
+\end{flalign*}
+Che è una somma telescopica, quindi rimane
+$$ = \frac{\frac{p_n}{\log n \log \log n} - p_0}{\log \log n} 
+\leq \frac{n}{\log \log n} = o (n)
+$$
+
+Quindi in \textbf{totale} un $o(n)$, ma \textbf{manca un pezzo} per il caso denso del secondo livello, in cui non abbiamo memorizzato tutti gli 1.\\
+
+\paragraph{Terzo livello:} Chiamando $s_i^0, \, \dots \, s_i^q$ le \textbf{posizioni memorizzate al secondo livello} nel \textbf{caso denso}, tra ognuna di queste posizioni saranno presenti $\log r_i \log \log n$ bit pari a 1, quindi
+$$ t_i^j = s_i^{j+1}  -s_i^j \implies t_i^j \geq \log r_i \log \log n $$
+
+Ci sono anche qui \textbf{due casi}:
+\begin{enumerate}
+	\item \textbf{Caso sparso: }
+	$$ t_i^j \geq \log t_i^j \log r_i (\log \log n)^2 $$ 
+	In questo caso \textbf{memorizza esplicitamente la tabella}.\\
+	
+	Quanto \textbf{spazio} occupo? 
+	\begin{itemize}
+		\item servono $\log r_i \log \log n$ posizioni ed altrettante righe della tabella
+		\item ogni riga contiene un numero che al massimo è $t_i^j$, quindi usa $\log t_i^j$ bit
+	\end{itemize}
+	
+	In \textbf{totale}
+	\begin{flalign*}
+		(\log r_i \log \log n) \log t_i^j 
+		& = \frac{\log t_i^j \log r_i (\log \log n)^2}{\log \log n} \\
+		& = \frac{t_i^j}{\log \log n}
+	\end{flalign*}
+	
+	\newpage
+	
+	\item \textbf{Caso denso: }
+	$$ t_i^j < \log t_i^j \log r_i (\log \log n)^2 $$
+	Si usa il four russians trick, \textbf{memorizziamo esplicitamente tutte le possibili tabelle di select}.\\
+	
+	Considerando che 
+	\begin{flalign*}
+		\log t_i^j 
+		& \leq \log r_i \\
+		& \leq \log \left( (\log n \log \log n)^2 \right) \\
+		& = 2 \log (\log n \log \log n) \\ 
+		& = 2 \log \log n + 2 \log \log \log n \\
+		& \leq 4 \log \log n 
+	\end{flalign*}
+	Di conseguenza
+	$$ t_i^j \leq \log t_i^j \log r_i (\log \log n)^2 $$
+	Ma considerando che
+	$$ 
+	\begin{cases}
+		\log t_i^j \leq 4 \log \log n\\
+		\log r_i \leq 4 \log \log n
+	\end{cases}
+	$$
+	complessivamente
+	$$ \leq 16 (\log \log n)^4 $$
+	
+	Quanto \textbf{spazio} occupa?
+	\begin{itemize}
+		\item Ci sono $2^{t_i^j}$ tabelle
+		\item ognuna da $t_i^j$ righe
+		\item ogni riga occupa $\log t_i^j$ bit
+	\end{itemize}
+	
+	Quindi in \textbf{totale}:
+	\begin{flalign*}
+		2^{t_i^j} \cdot t_i^j \cdot \log t_i^j  
+		& \leq 2^{16 (\log \log n)^4} 16 (\log \log n)^4 \log \left(16 (\log \log n)^4\right)  \\
+		& = (16 (\log \log n)^4)^2 \\
+		& = o(n)
+	\end{flalign*}
+	
+	Quindi, nuovamente. il four russians trick \textbf{occupa} $o(n)$.\\
+\end{enumerate} 
+
+Per entrambe le strutture, si possono implementare solo i primi $n$ livelli e lasciar stare gli ultimi (tendenzialmente non implementare il four russians trick), l'operazione non è più tempo costante ma diventa logaritmica, si risparmia lo spazio dei livelli non implementati.\\
+
+%End L20
