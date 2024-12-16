@@ -2,7 +2,7 @@
 \section{Tecniche greedy}
 
 \subsection{Problema di LoadBalancing}
-Non ammette una soluzione polinomiale ottima $\in \mathcal{NPO}$.\\
+Non ammette una soluzione polinomiale ottima, quindi $\in \mathcal{NPO}$.\\
 
 Problema in cui si ha \textbf{un numero di task} di una certa \textbf{durata} e bisogna \textbf{dividerli su varie macchine} in modo da avere la massima \textbf{durata di ogni macchina al minimo possibile}:
 \begin{itemize}
@@ -71,7 +71,7 @@ Ovviamente è polinomiale: $O(n)$ per cercare tra i task e $O(m)$ per cercare le
 	$$ \implies L_{\hat{i}} - t_{\hat{i}} \leq \frac{1}{m} \sum_j t_j \leq L^\ast $$
 	L'ultima parte della disequazione possiamo aggiungerla essendo la stessa cosa della osservazione 1.
 	
-	$$ L = L_{\hat{i}} = L_{\hat{i}} - t_{\hat{j}} + t_{\hat{j}} \geq 2 \cdot L^\ast $$
+	$$ L = L_{\hat{i}} = L_{\hat{i}} - t_{\hat{j}} + t_{\hat{j}} \leq 2 \cdot L^\ast $$
 	Per la osservazione 2, posso far vedere che $t_{\hat{j}}$ è $\leq L^\ast$, quindi il totale è tutto minore di $2 \cdot L^\ast$. Di conseguenza possiamo evincere il rapporto di approssimazione
 	$$ \frac{L}{L^\ast} \leq 2 $$
 	
@@ -172,7 +172,7 @@ Hochbaum-Shmoys 1988 hanno dimostrato che in realtà LoadBalancing apparitene $\
 \newpage
 
 \subsection{Problema della selezione dei centri CenterSelection}
-Avendo vari posti dove smistare pacchi e $n$ soldi per costruire un numero limitato di magazzini, bisogna decidere dove piazzarli. Una volta piazzati tutti gli altri centri di smistamento si rivolgono al magazzino più vicino. Si creano delle celle di Varanoi (Check nome) attorno ai magazzini sostanzialmente. Di conseguenza c'è una distanza massima che un centro di smistamento deve coprire per arrivare al magazzino, ovvero un raggio di copertura, tra tutte le soluzioni si vuole minimizzare questo raggio.\\
+Avendo vari posti dove smistare pacchi e $n$ soldi per costruire un numero limitato di magazzini, bisogna decidere dove piazzarli. Una volta piazzati tutti gli altri centri di smistamento si rivolgono al magazzino più vicino. Si creano delle celle di Voronoi attorno ai magazzini. Di conseguenza c'è una distanza massima che un centro di smistamento deve coprire per arrivare al magazzino, ovvero un raggio di copertura, tra tutte le soluzioni si vuole minimizzare questo raggio.\\
 
 Hai dei \textbf{punti in uno spazio metrico} e si vogliono \textbf{scegliere} $k$ \textbf{punti} in questo spazio in modo che il \textbf{raggio di copertura} per tutti sia il \textbf{minore possibile}.\\
 
@@ -229,7 +229,7 @@ $$ r \in \mathbb{R}^+ $$
 	\end{algorithmic}
 \end{algorithm}
 
-Insieme di centri vuoto, poi finché l'insieme di punto non è vuoto: 
+Insieme di centri vuoto, poi finché l'insieme di punti non è vuoto: 
 \begin{itemize}
 	\item prende un punto in in $S$
 	\item toglie da $S$ tutti i punti con una distanza dal punto preso minore di $2r$
@@ -256,7 +256,6 @@ Se la cardinalità di $C$ è $\leq k$ torna $C$, altrimenti dice che è impossib
 	Sia $C^\ast$ una soluzione ottima, una distribuzione di centri che ha come raggio di copertura $\rho^\ast$.  \\
 	Sia $\overline{s} \in C$. Chiamiamo $\overline{c}^\ast \in C^\ast$ un centro tale che nella soluzione ottima $\overline{s}$ si rivolge a $\overline{c}^\ast$.\\
 	Sia $X$ l'insieme dei punti che nella soluzione ottima $C^\ast$ si rivolgono a $\overline{c}^\ast$
-	
 	$$ \forall s \in X \;\;\; d(s, \overline{s}) \leq d(s, \overline{c}^\ast) + d(\overline{c}^\ast, \overline{s}) \leq 2 \rho^\ast \leq 2r $$
 	
 	$\implies$ Quando seleziono $s$, cancello tutti i punti di $X$ (come minimo), perché distano da $s$ meno di $2r$.\\
