@@ -54,7 +54,7 @@ In passato è stato discusso come sia impossibile concepire una definizione real
 
 Dando $x \in I_\pi$ ad un algoritmo $A$ eseguito su una MdT restituirà $y \in O_\pi$ tale che $y \in Sol_\pi (x)$, ovvero \textbf{dato un input restituisce una soluzione tra quelle ammesse}.\\
 
-\textbf{Molti problemi non sono risolvibili}. Considerando i problemi di decisione, data una stringa binaria bisogna rispondere $sì$ o $no$.\\
+\textbf{Molti problemi non sono risolvibili}. Considerando i problemi di decisione, data una stringa binaria bisogna rispondere \textit{sì} o \textit{no}.\\
 
 Se ne può avere uno per ogni possibile insieme di stringhe binarie, gli elementi di $2^{2^\ast}$ sono tutti problemi di decisione, e possiamo vedere che
 $$ |2^{2^\ast}| \cong |2^{\mathbb{N}}| \cong |\mathbb{R}|$$
@@ -102,15 +102,15 @@ Si tratta di un'assunzione worst-case, dati input di stessa dimensione prendo il
 
 \newpage
 
-Se dobbiamo valutare quale algoritmo usare il \textbf{confronto va fatto asintoticamente}, i casi piccoli sono "facili" (di solito, ma andrebbero considerati i casi d'uso effettivi? In estremo potrei fare una tabella). Quindi consideriamo come le performance dell'algoritmo scalano con la dimensione dell'input.\\
+Se dobbiamo valutare quale algoritmo usare il \textbf{confronto va fatto asintoticamente}, i casi piccoli sono "facili" (di solito, ma andrebbero considerati i casi d'uso effettivi? In estremo si potrebbe compilare una tabella). Quindi consideriamo come le \textbf{performance dell'algoritmo scalano con la dimensione dell'input}.\\
 
-Quindi due assunzioni: worst-case e asintotico. \\
+Quindi \textbf{due assunzioni}: worst-case e asintotico. \\
 
 Generalmente quindi tra
 $$ t_a = O (n^2) \;\;\;\;\;\; t_a = O(n^7)$$
 meglio il primo tendenzialmente.
 
-Bisogna anche provare che non ci possono essere cose migliori/peggio, quindi upper and lower bound.\\
+Bisogna anche provare che non ci possono essere casi migliori/peggiori, dimostrare un upper/lower bound.\\
 
 \newpage
 
@@ -122,7 +122,7 @@ Con la notazione worst case asintotica sopracitata possiamo avere un \textbf{upp
 
 Esistono anche \textbf{lower bounds}, ovvero limiti inferiori per il \textbf{tempo impiegato} da un algoritmo e dimostrarlo implica \textbf{dimostrare che per come è fatto un problema, questo non può impiegare meno di un certo tempo}. $\Omega(n)$ vuol dire che non ci può mettere meno di tempo lineare.\\
 
-Un problema viene "chiuso" quando upper e lower bound coincidono, vuol dire che si ha l'algoritmo ottimo e si conosce esattamente la complessità del problema. Per esempio, l'ordinamento di array basato su confronti e scambi ci mette esattamente $n \log n$, quindi si dice $\Theta(n \log n)$.\\
+Un problema viene "\textit{chiuso}" quando upper e lower bound coincidono, vuol dire che si ha l'algoritmo ottimo e si conosce esattamente la complessità del problema. Per esempio, l'ordinamento di array basato su confronti e scambi ci mette esattamente $n \log n$, quindi si dice $\Theta(n \log n)$.\\
 
 Le casistiche problematiche sono quando gli \textbf{upper bound sono esponenziali ed i lower bound polinomiali}, quindi le possibilità sono: 
 \begin{itemize}
@@ -130,7 +130,7 @@ Le casistiche problematiche sono quando gli \textbf{upper bound sono esponenzial
 	\item esiste un lower bound esponenziale, quindi il problema non è risolvibile in tempo polinomiale
 \end{itemize}
 
-In entrambi i casi saremmo contenti, il non avere informazioni a riguardo è il problema.\\
+In entrambi i casi saremmo contenti, il problema è non avere informazioni a riguardo.\\
 
 \newpage
 
@@ -157,8 +157,9 @@ Sappiamo rientra in $\mathcal{NP}$ perché è facile pensare ad un algoritmo non
 
 La vera domanda è se $\mathcal{P} = \mathcal{NP}$, quindi \textbf{se le due classi coincidono}, le possibilità sono: 
 \begin{itemize}
-	\item le due \textbf{classi sono uguali} $\mathcal{P} = \mathcal{NP}$: sarebbe molto bello, vorrebbe dire che \textbf{tutti i problemi sono risolvibili polinomialmente}
-	\item $\mathcal{P}$ \textbf{contenuta in} $\mathcal{NP}$, $P \subset NP$: meno emozionante ma vorrebbe dire che \textbf{esistono dei problemi non risolvibili in tempo polinomiale}
+	\item Le due \textbf{classi sono uguali} $\mathcal{P} = \mathcal{NP}$: sarebbe molto bello, vorrebbe dire che \textbf{tutti i problemi sono risolvibili polinomialmente}.\\
+	
+	\item $\mathcal{P}$ \textbf{contenuta in} $\mathcal{NP}$, $P \subset NP$: meno emozionante ma vorrebbe dire che \textbf{esistono dei problemi non risolvibili in tempo polinomiale}.\\
 \end{itemize}
 Ma è uno dei millennium problem, quindi penso rimarrà lì.\\
 
@@ -174,8 +175,7 @@ Esiste una funzione che a partire da un input di $pi_1$ arriva ad un input di $\
 Sostanzialmente vuol dire che possiamo \textbf{trasformare input di $\pi_1$ in input di $\pi_2$ in tempo polinomiale}, allora \textbf{se $\pi 2$ è risolvibile in tempo polinomiale lo è anche $\pi_1$}.\\
 
 \addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
-\paragraph{Teorema:} Se $\pi_1 \leq_p \pi_2$ e $\pi_2 \in \mathcal{P}$ allora $\pi_1 \in \mathcal{P}$. Se un problema può essere polinomialmente ridotto ad un altro all'interno di $\mathcal{P}$, allora anch'esso è in $\mathcal{P}$.\\
-Sostanzialmente $\leq_p$ può essere letto come "non è più difficile di".\\
+\paragraph{Teorema:} Se $\pi_1 \leq_p \pi_2$ e $\pi_2 \in \mathcal{P}$ allora $\pi_1 \in \mathcal{P}$. Se un problema può essere polinomialmente ridotto ad un altro all'interno di $\mathcal{P}$, allora anch'esso è in $\mathcal{P}$. Sostanzialmente $\leq_p$ può essere letto come "non è più difficile di".\\
 
 \newpage
 

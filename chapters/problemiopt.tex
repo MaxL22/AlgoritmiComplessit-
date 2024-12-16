@@ -17,14 +17,14 @@ Un \textbf{problema di ottimizzazione} $\pi$:
 
 \paragraph{Esempio:} Max-Sat
 \begin{itemize}
-	\item input: formule logiche in forma CNF, esempio:
+	\item \textbf{Input:} formule logiche in forma CNF, esempio:
 	$$ (x_7 \vee x_2) \wedge (x_4 \vee \neg x_5 \vee \neg x_7) \wedge (x_9 \neg x_2) $$
 	
-	\item Le soluzioni ammissibili per una data formula $\varphi$ sono tutti gli assegnamenti delle variabili di di $\varphi$, quindi per l'esempio tutte le $2^5$ possibili combinazioni di assegnamenti delle $5$ variabili
+	\item Le \textbf{soluzioni ammissibili} per una data formula $\varphi$ sono tutti gli assegnamenti delle variabili di di $\varphi$, quindi per l'esempio tutte le $2^5$ possibili combinazioni di assegnamenti delle $5$ variabili
 	
 	\item $c_\pi (\varphi, ass)$: il costo per ogni formula con un dato assegnamento è il numero di clausole rese vere dall'assegnamento
 	
-	\item $T_\pi = \max$: problema di massimizzazione, voglio un assegnamento che massimizzi il numero di clausole soddisfatte
+	\item $T_\pi = \max$: problema di \textbf{massimizzazione}, voglio un assegnamento che massimizzi il numero di clausole soddisfatte
 \end{itemize}
 
 Ovviamente non si può avere un algoritmo polinomiale che risolve questo problema in quanto sarebbe equivalente al CNF-SAT, avere il massimo numero di clausole soddisfacibili vorrebbe dire anche sapere se la formula è soddisfacibile.\\
@@ -58,15 +58,15 @@ $$ \mathcal{PO} = \{\pi \text{ problemi di ott. } | \, \pi \text{ risolvibile in
 
 \paragraph{Corollario:} Al contrario, se il problema di decisione associato $\hat{\pi}$ è $\mathcal{NP}c$, allora il problema non può essere risolto in tempo polinomiale $\pi \notin \mathcal{PO}$ (assumendo $\mathcal{P} \neq \mathcal{NP}$).\\
 
-Esempio di problemi in PO: problemi di programmazione lineare. Mentre restringere il campo a solamente a soluzioni intere fa diventare il problema $\mathcal{NP}c$.\\
+Esempio di problemi in $\mathcal{PO}$: problemi di programmazione lineare. Mentre restringere il campo a solamente a soluzioni intere fa diventare il problema $\mathcal{NP}c$.\\
 
 \newpage
 
 \subsection{Rapporto di prestazione} 
 
-Verranno trattati principalmente problemi che rientrano in $\mathcal{NP}c$, quindi non saranno risolvibili in modo esatto, ma solamente in modo approssimato. Ma come si quantifica l'approssimazione? \\
+Verranno trattati principalmente problemi che rientrano in $\mathcal{NP}c$, quindi non saranno risolvibili in modo esatto, ma solamente in modo approssimato. Ma come si \textbf{quantifica l'approssimazione}? \\
 
-Dato un p.o. $\pi$, chiamiamo $\opt_\pi (x)$ il \textbf{valore ottimo della funzione obiettivo su input} $x$.\\
+Dato un problema di ottimizzazione $\pi$, chiamiamo $\opt_\pi (x)$ il \textbf{valore ottimo della funzione obiettivo su input} $x$.\\
 Dato un \textbf{algoritmo approssimato} $A$ (in input prende un possibile input ed in output fornisce una soluzione ammissibile, ma non necessariamente ottima) per $\pi$, definisco il \textbf{rapporto di approssimazione} 
 $$ R_\pi (x) = \max \left\{\frac{c_\pi (x,y)}{opt_pi(x)}, \frac{opt_\pi (x)}{c_\pi (x,y)} \right\} $$
 Il $\max$ serve a prendere un valore sempre $\geq 1$, sia per problemi di minimizzazione che massimizzazione, in modo da avere una definizione unica.\\
@@ -225,9 +225,26 @@ Se \textbf{una BFS} ad un certo punto \textbf{trova altri nodi esposti} allora a
 \newpage
 
 Perché la BFS non funziona su grafi non bipartiti?
+
 \begin{center}
-	\includegraphics[width=0.8\columnwidth]{img/bipartito1}
+	\begin{tikzpicture}[scale=1.5]
+		\node[draw,circle] (1) at (0,0) {1}; 
+		\node[draw,circle] (2) at (0,-2) {2}; 
+		\node[draw,circle] (3) at (2,-2) {3}; 
+		\node[draw,circle] (4) at (2,-4) {4}; 
+		\node[draw,circle] (5) at (-2,-4) {5}; 
+		\node[draw,circle] (6) at (-2,-2) {6}; 
+		
+		\draw[dashed] (1) -- (2); 
+		\draw[dashed] (2) -- (6); 
+		\draw[dashed] (5) -- (6); 
+		\draw[dashed] (3) -- (4); 
+		
+		\draw (2) -- (3);
+		\draw (4) -- (5); 
+
+	\end{tikzpicture}
 \end{center}
-Partendo da qualsiasi nodo esposto in questo grafo non si possono trovare cammini aumentanti (prova a farci la BFS alternata se non mi credi, stronzo (non ho voglia di scriverla)).\\
+Partendo da qualsiasi nodo esposto in questo grafo non si possono trovare cammini aumentanti (prova a farci la BFS alternata se non mi credi, (non ho voglia di scriverla)).\\
 
 \newpage
