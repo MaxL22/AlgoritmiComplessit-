@@ -282,3 +282,326 @@ Ci sono anche qui \textbf{due casi}:
 Per entrambe le strutture, si possono implementare solo i primi $n$ livelli e lasciar stare gli ultimi (tendenzialmente non implementare il four russians trick), l'operazione non è più tempo costante ma diventa logaritmica, si risparmia lo spazio dei livelli non implementati.\\
 
 %End L20
+
+\subsection{Alberi Binari}
+
+Per la teoria dei grafi: un albero è un \textbf{grafo non orientato}, \textbf{aciclico} e \textbf{connesso}. Facendo cadere l'ipotesi di connessione è una foresta.\\
+Di solito in informatica si sceglie un nodo come radice e si usano \textbf{alberi radicati}.\\
+
+Inoltre l'albero può essere \textbf{ordinato} o \textbf{non ordinato}. Nel caso ordinato ogni nodo ha una lista di figli, quindi c'è un ordine relativo dei figli. Di solito si intende ordinato, in quanto più facile.\\
+
+Un \textbf{albero binario} ha la restrizione di \textbf{avere 2 o 0 figli} (non può esserci 1 figlio solo).\\
+
+I nodi \textbf{con figli} si chiamano "\textbf{nodi interni}", mentre i nodi \textbf{senza} si chiamano "\textbf{nodi esterni}" o "\textbf{foglie}".\\
+
+Quindi da qui in poi con "\textbf{albero binario}" si intende un \textbf{albero radicato ordinato in cui tutti i nodi hanno 2 o 0 figli}.\\
+
+\newpage
+
+\paragraph{Teorema:} Il numero di nodi esterni in un albero binario è pari al numero di nodi interni + 1
+$$ \# \text{ nodi esterni} = \# \text{ nodi interni } + 1 $$
+
+\begin{proof}
+	Fatta per induzione strutturale:
+	\begin{itemize}
+		\item \textbf{Base}: considerando l'albero più semplice possibile, ovvero solo la radice $\square$: il numero di nodi esterni è 1 (la radice) ed il numero di nodi interno è $0$, quindi dato che $1 = 0 + 1$
+		$$ E(\square) = I(\square) + 1 = 0 + 1 = 1 $$
+		la proprietà vale per il caso base.\\
+		
+		\item \textbf{Caso ricorsivo}: considerando i due possibili sotto-alberi di un nodo $T_1, T_2$, per ipotesi induttiva $E(T_1) = I(T_1) + 1$ e $E(T_2) = I(T_2) + 1$, quindi per l'intero albero $T$:
+		\begin{flalign*}
+			E(T) & = E(T_1) + E(T_2)  \\
+			& = I(T_1) + 1 + I(T_2) + 1 \\
+			& = I(T_1) + I(T_2) +1 +1 \\
+			& = I(T) + 1
+		\end{flalign*}
+	\end{itemize}
+	
+\end{proof}
+
+\paragraph{Teorema:} Ci sono 
+$$ C_n = \frac{1}{n+1} 
+\left(
+\begin{array}{c}
+	2n \\ n
+\end{array}
+\right)
+$$
+alberi binari con $n$ nodi interni (numero di Catalano).\\
+
+\begin{proof}
+	Trust me bro.\\
+\end{proof}
+
+\newpage
+
+\paragraph{Approssimazione di Stirling:} 
+$$x! \approx \sqrt{2\pi x} \left(\frac{x}{e}\right)^x $$
+
+Quanto vale $C_n$ asintoticamente?
+\begin{flalign*}
+	C_n = \frac{1}{n+1} 
+	\left(
+	\begin{array}{c}
+		2n \\ n
+	\end{array}
+	\right)
+	& = \frac{1}{n+1} \frac{(2n)!}{n!(2n-n)!} \\
+	& = \frac{1}{n+1} \frac{(2n)!}{(n!)^2} \\
+	& \approx \frac{1}{n+1}\frac{\sqrt{4 \pi n} \left(\frac{2n}{e}\right)^{2n}}{\left(\sqrt{2 \pi n} \left(\frac{n}{e}\right)^n\right)^2} \\
+	& = \frac{1}{n+1} \frac{1}{\sqrt{\pi n}} \cdot 2^{2n} \frac{n^{2n}}{n^{2n}} \\
+	& \approx \frac{4^n}{\sqrt{\pi n^3}}
+\end{flalign*}
+
+\paragraph{Information Theoretical Lower Bound:} Questo vuol dire che
+\begin{flalign*}
+	Z_n = \log C_n & \approx \log 2^n - \log \sqrt{\pi n^3} \\
+	& = 2n - o(\log n)
+\end{flalign*}
+
+Quindi il l'\textbf{information theoretical lower bound} per memorizzare un albero è $2n - o(\log n)$.\\
+
+\newpage
+
+\subsubsection{Rappresentazione Succinta}
+
+Volendo rappresentare un albero con una certa struttura, \textbf{numeriamo i nodi} dall'alto verso il basso e da sinistra verso destra. \textbf{Esempio}:
+\begin{center}
+	\begin{tikzpicture}[scale=0.3]
+		\node[draw, circle] (0) at (0,0) {0};
+		
+		\node[draw, circle] (1) at (-8,-4) {1};
+		\node[draw, square] (2) at (8,-4) {2};
+		
+		\node[draw, square] (3) at (-12,-8) {3};
+		\node[draw, circle] (4) at (-4,-8) {4};
+		
+		\node[draw, circle] (5) at (-6,-12) {5};
+		\node[draw, circle] (6) at (-2,-12) {6};
+		
+		\node[draw, square] (7) at (-7,-16) {7};
+		\node[draw, square] (8) at (-5,-16) {8};
+		\node[draw, square] (9) at (-3,-16) {9};
+		\node[draw, square] (10) at (-1,-16) {10};
+		
+		\draw[-] (0) to node {} (1);
+		\draw[-] (0) to node {} (2);
+		\draw[-] (1) to node {} (3);
+		\draw[-] (1) to node {} (4);
+		\draw[-] (4) to node {} (5);
+		\draw[-] (4) to node {} (6);
+		\draw[-] (5) to node {} (7);
+		\draw[-] (5) to node {} (8);
+		\draw[-] (6) to node {} (9);
+		\draw[-] (6) to node {} (10);
+	\end{tikzpicture}
+\end{center}
+
+Quindi $n=5$ nodi interni e $6$ nodi esterni.\\
+
+Usiamo un \textbf{array di $2n + 1$ bit} ($11$ in questo caso) e se il \textbf{nodo} è \textbf{interno} inserisco \textbf{1}, \textbf{altrimenti 0}. Per l'esempio precedente:
+\begin{flalign*}
+	\begin{array}{c c c c c c c c c c c}
+		0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+	\end{array} \\
+	\begin{array}{| c | c | c | c | c | c | c | c | c | c | c |}
+		\hline
+		1 & 1 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 0 \\
+		\hline
+	\end{array}
+\end{flalign*}
+
+\paragraph{Trovare i figli:} Voglio sapere dove sono i \textbf{figli di ogni nodo}. Per sapere tale indice per un nodo $p$ mi basta sapere quanti sono i nodi a destra del nodo considerato e quanti sono i nodi a sinistra del figlio di sinistra del nodo considerato, li sommo a $p$ e trovo l'indice del figlio.\\
+
+I nodi totali dell'albero sono $2n+1$, i nodi interni $n$. I nodi interni prima di $p$ sono $ rank_b (p)$, quindi l'indice del figlio sinistro è 
+$$ f_{sx} (p) = 2 rank_b (p) + 1 $$
+$$ f_{dx} (p) = 2 rank_b (p) + 2 $$
+
+\newpage
+
+\paragraph{Trovare il genitore:} Ma chi è $p'$ tale che $p'$ è \textbf{genitore di} $p$? Non so se $p$ è il figlio di sinistra o destra, quindi varrà una di queste due proprietà
+$$
+\begin{array}{c c}
+	2 rank (p') + 1 & = p \\
+	2 rank (p') + 2 & = p
+\end{array}
+\implies rank (p') = \left\lfloor \frac{p}{2} - \frac{1}{2} \right\rfloor 
+
+Ma select è circa l'inverso di rank, quindi: 
+$$
+p' = select \left\lfloor \frac{p}{2} - \frac{1}{2} \right\rfloor
+$$
+
+Di conseguenza definiamo:
+$$ parent(p) := select_b \left(\left\lfloor \frac{p}{2} - \frac{1}{2} \right\rfloor\right) $$
+
+In questo modo tramite rank e select possiamo trovare sia padri che figli di un certo nodo all'interno dell'albero.\\
+
+\paragraph{Dati satellite:} Ma se devo memorizzare \textbf{dati ausiliari} per ogni nodo oltre che la struttura?
+\begin{itemize}
+	\item Se i dati sono su \textbf{tutti i nodi} allora mi serve un vettore ausiliario di $2n+1$ \textbf{celle}.\\
+	
+	\item Se i dati sono \textbf{solo su i nodi interni} posso usare un vettore ausiliario con dimensione pari ai nodi interni e faccio una \textbf{rank per sapere la cella a cui accedere}.\\
+\end{itemize}
+
+\paragraph{Occupazione di memoria:} Dimensione dell'array: 
+$$D_n = 2n + 1 + o(n)$$
+
+L'\textbf{information theoretical lower bound} è 
+$$ Z_n = 2n - o (\log n)$$
+
+Quindi la struttura è \textbf{succinta} (considerando le precedenti strutture succinte per rank e select).\\
+
+\newpage
+
+\subsection{Codifica di Elias-Fano per sequenze monotone}
+Elias-Fano è un modo \textbf{succinto} (compatto nel caso più generale, ma succinto in realtà) per \textbf{rappresentare delle sequenze crescenti}.\\
+
+Partendo da una \textbf{sequenza di valori non decrescenti}
+$$ x_1 \leq x_2 \leq x_3 \leq \, \dots \, \leq x_{n-1} < u $$
+
+Si calcola un numero $\ell$ tale che
+$$ \ell = \max \left\{0, \left\lfloor \log \frac{u}{n} \right\rfloor\right\} $$
+
+Dividiamo in due parti la rappresentazione:
+\begin{enumerate}
+	\item Gli $\ell$ \textbf{bit inferiori} (meno significativi)
+	$$ 
+	\begin{array}{c c c}
+		\ell_0 & = & x_0 \mod 2^\ell \\
+		\ell_1 & = & x_1 \mod 2^\ell \\
+		\vdots && \\
+		\ell_{n-1} & = & x_{n-1} \mod 2^\ell \\
+	\end{array}
+	$$
+	Vengono \textbf{memorizzati esplicitamente}.\\
+	
+	\item I \textbf{bit superiori} (più significativi)
+	$$ \left\lfloor \frac{x_0}{2^\ell} \right\rfloor, \left\lfloor \frac{x_1}{2^\ell} \right\rfloor, \, \dots \, , \left\lfloor \frac{x_{n-1}}{2^\ell} \right\rfloor $$
+	
+	Vengono memorizzati come \textbf{differenza tra l'uno ed il successivo} ($\Delta$-compressione)
+	$$ u_0, u_1, u_2, \, \dots $$
+	Dove: 
+	$$ u_i = \left\lfloor \frac{x_i}{2^\ell} \right\rfloor - \left\lfloor \frac{x_{i-1}}{2^\ell} \right\rfloor$$
+	
+	Con il presupposto che $x_{-1} =0$.\\
+	Questi valori vengono \textbf{memorizzati in unario} in un unico vettore dove scrivo \textbf{tanti 0 quanti il valore}, \textbf{terminati da un 1}, esempio:
+	$$ 3\; 7 \rightarrow 001 \; 0000001 $$
+\end{enumerate}
+
+\paragraph{Occupazione di spazio:} 
+\begin{itemize}
+	\item La \textbf{prima parte} richiede $\ell \cdot n$ \textbf{bit}, in quanto memorizzati esplicitamente.\\
+	
+	\item Per la \textbf{seconda parte} servono
+	\begin{flalign*}
+		\sum_{i=0}^{n-1} u_i + 1 & =  \sum_{i=0}^{n-1} \left(\left\lfloor \frac{x_1}{2^\ell}\right\rfloor - \left\lfloor \frac{x_{i-1}}{2^\ell}\right\rfloor + 1 \right) \\
+		& = n + \sum_{i=0}^{n-1} \left(\left\lfloor \frac{x_1}{2^\ell}\right\rfloor - \left\lfloor \frac{x_{i-1}}{2^\ell}\right\rfloor\right) =
+	\end{flalign*}
+	
+	E questa è una somma telescopica, quindi rimane solo 
+	\begin{flalign*}
+		= n + \frac{x_{n-1}}{2^\ell} - \frac{x_{-1}}{2^\ell} & = n + \frac{x_{n-1}}{2^\ell} \\
+		& \leq n \frac{u}{2^\ell} \\
+		& = n + \frac{u}{2^{\left\lfloor \log \frac{u}{n} \right\rfloor}} \\
+		& \leq n + \frac{u}{2^{\log \frac{u}{n}}} \\
+		& = n + \frac{2u}{u/n} \\
+		& = 3n
+	\end{flalign*}
+	Quindi per la seconda parte \textbf{servono $3n$ bit}.\\
+\end{itemize}
+
+In \textbf{totale} servono:
+\begin{flalign*}
+	D_n & = \ell \cdot n + 3n \\
+	& = (\ell + 3) n \\
+	& = \left( \left\lfloor \log \frac{u}{n} \right\rfloor + 3 \right) n \\
+	& = 2n + n \left\lceil \log \frac{u}{n}\right\rceil + o(n)
+\end{flalign*}
+
+Quindi un $ 2n + n \left\lceil \log \frac{u}{n}\right\rceil + o(n)$ bit.\\
+
+\newpage
+
+\paragraph{Trovare un valore:} Quindi per trovare il valore $x_i$ cosa faccio?\\
+\begin{itemize}
+	\item Per la \textbf{parte bassa} dei bit è facile in quanto è memorizzata esplicitamente. \\
+	
+	\item Per la \textbf{parte alta} faccio una select sul vettore che contiene tutte le parti alte in unario per trovare l'$i$-esimo 1:
+	\begin{flalign*}
+		select_{\underline u} (i) & = i + u_0 + u_1 + \, \dots \, + u_i \\
+		& = i + \left\lfloor \frac{x_0}{2^\ell} \right\rfloor +  \left\lfloor \frac{x_1}{2^\ell} \right\rfloor -  \left\lfloor \frac{x_0}{2^\ell} \right\rfloor + \, \dots \, \\
+		& = i + \left\lfloor \frac{x_i}{2^\ell} \right\rfloor
+	\end{flalign*}
+\end{itemize}
+
+Trovate entrambe basta concatenare il valore.\\
+
+\subsubsection{Information theoretical lower bound}
+
+Fissati $n$ e $u$, \textbf{quante sono le possibili sequenze}
+$$ 0 \leq x_0 \leq x_1 \leq \, \dots \, \leq x_{n-1} < u $$
+
+Equivalente a dire: quanti possibili insiemi di cardinalità $n$ con ripetizioni ci sono? \\
+
+Ancora equivalente al numero di soluzioni $\in \mathbb{N}^u$ di 
+$$ c_0 + c_1 + \, \dots \, + c_{u-1} = n $$
+Dove $c_i$ rappresenta quanti valori $i$ sono presenti nella sequenza iniziale.\\
+
+Le soluzioni possiamo contarle con lo stars \& stripes counting:
+\begin{itemize}
+	\item Scriviamo $u-1$ barre
+	\item Tra ogni barra e quella dopo poniamo $c_i$ stelle, quindi ci saranno $n$ stelle
+\end{itemize}
+
+\newpage
+
+Quante sequenze di $n$ stelle e $u-1$ barre esistono?
+\begin{flalign*}
+	\left(\begin{array}{c}u+n-1 \\ u - 1\end{array}\right)
+	& = \frac{(u+n-1)!}{(u-1)!(u+n-1-u+1)!} \\
+	& = \frac{(u+n-1)!}{n! (u-1)!}
+\end{flalign*}
+
+Di conseguenza l'\textbf{information theoretical lower bound} è 
+$$ Z_n = \log \left(\begin{array}{c}u+n-1 \\ u - 1\end{array}\right) = 
+\log \left(\begin{array}{c}u+n-1 \\ n\end{array}\right)
+$$
+
+Ma sapendo che:
+$$
+\log \left(\begin{array}{c}
+	A \\ B
+\end{array}\right) \sim B \log \frac{A}{B} + (A - B) \log \frac{A}{A-B}
+$$
+
+E applicandola ponendo $A = u+n-1$ e $B = n$, quindi: 
+$$ 
+Z_n \sim n \log \frac{u+n-1}{n} + (u-1) \log \frac{u+n-1}{u-1}
+$$
+
+Ma considerando $u \gg n$ (l'universo molto più grande dei valori che effettivamente usiamo), quindi il secondo termine (da $u-1$) è tutto $\approx 1$, quindi:
+
+$$ \approx n \log \frac{u}{n} \left( 1 + \frac{n}{u} - \frac{1}{u}\right)
+= n \log \frac{u}{n} + n \log \left(1 + \frac{n}{u} - \frac{1}{u}\right)
+$$
+
+Sapendo che $x \approx \log (1 + x)$:
+$$ Z_n \approx n \log \frac{u}{n}  + n \left(\frac{n}{u} - \frac{1}{u}\right)
+\leq n \log \frac{u}{n} + \frac{n^2}{u}
+$$
+sempre considerando $n \ll u$.\\
+
+\newpage
+
+Riprendendo il $D_n$ di prima: 
+$$ D_n = 2n + n \left\lceil \log \frac{u}{n}\right\rceil + o(n) $$
+
+Che è dominato dal $2n$, quindi 
+$$ D_n = O(Z_n) $$
+
+La struttura quindi, in questo caso, non è succinta ma \textbf{compatta}.\\
+
+Risulta compatta con assunzioni generiche, \textbf{supponendo che} $n \leq \sqrt{u}$, abbastanza sensata considerando che abbiamo presupposto che $u \gg n$, la struttura anziché compatta \textbf{diventa succinta}.\\
+
+% End L21
