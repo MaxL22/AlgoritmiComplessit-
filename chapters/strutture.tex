@@ -605,3 +605,156 @@ La struttura quindi, in questo caso, non è succinta ma \textbf{compatta}.\\
 Risulta compatta con assunzioni generiche, \textbf{supponendo che} $n \leq \sqrt{u}$, abbastanza sensata considerando che abbiamo presupposto che $u \gg n$, la struttura anziché compatta \textbf{diventa succinta}.\\
 
 % End L21
+
+\newpage
+
+\subsection{Funzioni di Hash}
+
+Su un universo $U$, una \textbf{funzione di hash} è 
+$$ h: U \rightarrow m $$
+dove $|U| > |m|$. Questa viene chiamata "funzione di hash per $U$ con $m$ \textbf{bucket}".\\
+
+Requisiti di una funzione di hash $h$: 
+\begin{enumerate}
+	\item $h$ si deve calcolare in \textbf{tempo costante} (facile da calcolare).\\
+	
+	\item $h$ deve essere "molto iniettiva", non devono \textbf{esserci collisioni}, ma ci saranno per forza, quindi $h$ deve spargere bene gli elementi su $m$ bucket. Collision resistance, difficile trovare $h(x) = h(y)$ per $x \neq y$.\\
+\end{enumerate}
+
+Solitamente per le strutture dati si usa la "\textbf{full randomness assumption}", ovvero che la funzione di hash sia scelta in modo completamente casuale tra tutti i possibili, cosa che non regge nel mondo reale.\\
+
+Quindi, di solito, si \textbf{restringe la quantità di funzioni di hash possibili}, in quanto, probabilmente, non serviranno tutte.\\
+
+Considerando una funzione di hash 
+$$ h: U \rightarrow 100$$
+
+E stringhe richieste alla funzione della forma: 
+$$ x = x_1 \, \dots \, x_n \in U $$
+
+Quindi \textbf{scegliamo dei pesi}, con valore uniformemente a caso (qua possiamo farlo, questo è lo step fully random):
+$$ w_1, \, \dots \, , w_{100}$$
+
+\newpage
+
+E \textbf{definiamo} la nostra \textbf{funzione di hash} come:
+$$ h(x) := \left(\sum_{i=1}^{n} x_i \cdot w_i \right) \mod 100 $$
+Ovvero il prodotto di ogni componente della stringa per il corrispondente peso.\\
+
+In questo modo stiamo definendo una particolare \textbf{famiglia di funzioni di hash}, all'interno della quale posso scegliere uniformemente a caso
+$$ \mathcal{H}_{u,m} \subseteq m^U $$
+
+All'interno della quale vale la \textbf{proprietà}:
+$$ \forall x \in U\;\;\;\; P [h(x) = t] = \frac{1}{m} \;\;\; \forall t \in m$$
+Ovvero, all'interno della funzione i valori sono suddivisi equamente tra tutti i bucket possibili.\\
+
+Quindi, non possiamo scegliere uniformemente a caso, quindi restringo l'universo a qualcosa che posso scegliere davvero uniformemente a caso.\\
+
+\paragraph{Funzione di Hash Perfetta:} Una funzione di \textbf{hash è perfetta} per l'insieme $X$ iff è \textbf{iniettiva} su $x$ (è necessario che $m \geq |X|$, altrimenti è, ovviamente, impossibile).\\
+
+\paragraph{Funzione di Hash minimale:} Si dice "\textbf{minimale}" la funzione di hash perfetta con il \textbf{numero di bucket minori possibili} per un dato universo, quindi con $|X| = m$.\\
+
+\newpage
+
+\subsubsection{Tecnica MWHC}
+
+Per costruire una funzione di hash minimale. Dai nomi degli inventori: Majewski, Worwald, Hava\'s \& Czech.\\ %Wtf
+
+L'obiettivo della tecnica è quello di ottenere una \textbf{funzione di hash minimale perfetta ordinata}, ovvero che permette di mappare i valori in un ordine preciso (order-preserving minimal perfect hash, opmpf per gli amici).\\
+Questa tecnica può essere utilizzata per rappresentare funzioni statiche (generiche) ad $r$ bit, quindi un qualsiasi dizionario di valori statico.\\
+
+Partendo da un \textbf{universo} $U$ ed un \textbf{insieme} $X \subseteq U$, \textbf{con} $|X| = n$; la \textbf{funzione} $f$ associa ad ogni \textbf{valore} $x_i \in X$ un \textbf{vettore} di $r$ bit.\\
+I Bro ci hanno spiegato come memorizzare una funzione di questo tipo.\\
+
+Primi \textbf{step}:
+\begin{enumerate}
+	\item \textbf{Fissano un} $m \geq n$
+	\item Scelgono \textbf{uniformemente a caso due funzioni di hash }
+	$$ h_1, h_2: U \rightarrow m $$
+	\item Costruiscono un \textbf{grafo} dove
+	\begin{itemize}
+		\item i \textbf{vertici} sono i valori da $0$ a $m$, quindi $m$ nodi
+		\item c'è un \textbf{arco} tra due nodi $i,j$ ogni volta che è presente una stringa tale che 
+		$$x \in X, \;\;\;\; \{h_1(x), h_2(x)\} = \{i,j\} $$
+		quindi tendenzialmente ci sono $n$ lati
+	\end{itemize}
+\end{enumerate}
+
+\textbf{Situazioni spiacevoli:} 
+\begin{itemize}
+	\item $h_1(x) = h_2 (x)$ per qualche $x$, non vogliamo loop-de-loops
+	\item $x,y \in X$, $x \neq y$ tali che $\{h_1 (x), h_2 (x)\} = \{h_1 (y), h_2 (y)\}$, in quanto vogliamo una corrispondenza 1 a 1 tra archi ed elementi di $X$
+	\item il grafo è ciclico (vogliamo non lo sia), quindi per cercare di evitarlo scegliamo un $m$ "abbastanza grande"
+\end{itemize}
+Se ci si ritrova in una di queste situazioni si \textbf{cambia funzioni}. Questi eventi, con $m$ \textbf{abbastanza grande}, sono \textbf{poco probabili}.
+
+\newpage
+
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+\paragraph{Teorema:} Con $m > 2.09n$, le funzioni $h_1, h_2$ hanno \textbf{quasi sempre} (asintoticamente) le \textbf{proprietà desiderate}, e il numero di \textbf{tentativi attesi} è circa $2$.\\
+
+Ogni arco del grafo corrisponde ad un valore $x \in X$, di conseguenza ha associato un unico $f(x) \in 2^r$.\\
+
+Possiamo creare un \textbf{sistema di equazioni} con $m$ variabili
+$$ A[0], A[1], \, \dots \, , A[m-1] \in 2^r $$
+
+Dove ci sono $x \in X$ \textbf{equazioni} della forma:
+$$ \forall x \in X \;\;\;\; \left(A[h_1 (x)] + A[h_2(x)]\right) \mod 2^r = f(x) $$
+
+Questo sistema \textbf{ammette soluzione} (grazie al fatto che il grafo è aciclico, ma non spiegheremo il perché, trust me bro) e memorizzo tali valori.\\
+
+La \textbf{struttura dati contiene} le $m$ \textbf{variabili} e i \textbf{valori} $h_1,h_2$ e $m$.\\
+
+\paragraph{Ma quando devo usare la struttura?} Calcolo
+$$ f(v) = A[h_1(v)] + A[h_2 (v)] \mod 2^r $$
+Ed è tempo costante, rispetto alla dimensione dell'input.\\
+
+\paragraph{Quanto spazio occupa?}
+\begin{itemize}
+	\item la parte delle \textbf{funzioni di hash e $m$} occupa uno spazio che non dipende dai valori che vogliamo memorizzare quindi spazio \textbf{costante} $O(1)$ (che può essere o meno rilevante)
+	\item le \textbf{variabili da memorizzare} occupano spazio in relazione alla dimensione di $r$, sono $m$ soluzioni, quindi in \textbf{totale} $m \cdot r$ bit.\\
+\end{itemize}
+
+Da notare che non stiamo memorizzando le chiavi, stiamo rappresentando una funzione a partire da dei valori definiti, se provo ad usare la struttura con una "chiave" non parte dell'insieme definito inizialmente funzionerà lo stesso, anche se non è detto che il risultato abbia senso.\\
+%Maybe
+
+\newpage
+
+\subsubsection{Aciclicità $\rightarrow$ Peelability}
+Questa costruzione si può avere anche su \textbf{ipergrafi}, usando \textbf{più funzioni di hash}, minimizzando il bound del valore $m$ a $1.23n$ con un 3-ipergrafo (3 funzioni di hash, ogni arco può collegare fino a 3 nodi); a salire di dimensioni aumenta il valore.\\
+
+Con un \textbf{3-ipergrafo il teorema vale per} $m> \gamma n$, $\gamma = 1.23$.\\
+
+Per un ipergrafo la nozione di aciclicità diventa "\textbf{peelability}".\\
+
+Un ipergrafo $(V,E)$ \textbf{ammette una peeling sequence} iff esiste un modo per \textbf{ordinare gli iperarchi} $e_1, \, \dots \, , e_n \in E$ e una \textbf{sequenza di vertici} $x_1, \, \dots \, , x_n \in V$ in modo da avere una \textbf{sequenza}
+$$
+\begin{array}{c c}
+	x_1, & e_1 \\
+	x_2, & e_2 \\
+	\vdots \\
+	x_n, & e_n \\
+\end{array}
+$$
+\textbf{tale che}: 
+\begin{enumerate}
+	\item $x_i \in e_i$, il lato si attacca a quel vertice (\textit{hinge})
+	\item $x_i \notin e_j$ $\forall j < i$, ovvero andando avanti sono \textbf{sempre vertici nuovi}, non viene riusato lo stesso vertice
+\end{enumerate}
+In un grafo normale è facile vedere come una peeling sequence esista solo nel caso aciclico. Per il caso in più dimensioni te lo lascio immaginare, ma per un 3-ipergrafo è come "sbucciare" uno dei "piani" che uniscono i vertici (ovvero i lati) per volta, senza toccare nodi vecchi.\\
+
+\newpage
+
+\paragraph{Spazio occupato:} Per la costruzione con MWHC su un 3-ipergrafo 
+$$ \gamma n r \; \text{ bit}$$
+
+Ma molte entry nel vettore delle soluzioni potrebbero non essere necessarie (se non presenti nel sistema di equazioni possono essere poste a 0), quindi posso \textbf{memorizzare solo i valori utili} (entry non zero), più un vettore di bit per memorizzare la posizione, su cui bisogna fare rank e select per trovare gli indici giusti.\\
+
+Quindi la \textbf{versione compressa} occupa:
+$$ n r + \gamma n + o(n) $$
+
+Che \textbf{conviene quando} 
+$$ n r + \gamma n < \gamma n r \implies r > 5$$
+per $\gamma = 1.23$.\\
+
+% End L22
+%Fine del corso :(
