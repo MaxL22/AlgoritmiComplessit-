@@ -95,7 +95,7 @@ Algoritmo \textbf{per il TSP metrico}:
 	
 	\item Sia $D$ l'insieme dei \textbf{vertici di grado dispari in} $T$. Per Handshaking Lemma sappiamo che $D$ ha \textbf{cardinalità pari}.\\
 	
-	\item Scegliamo un \textbf{minimum weight perfect match} $M$ \textbf{sui nodi presenti in} $D$ (sicuramente presente, dato che quei nodi fanno parte di una clique e sono pari). 
+	\item Scegliamo un \textbf{minimum weight perfect match} $M$ \textbf{sui nodi presenti in} $D$ (sicuramente presente, dato che quei nodi fanno parte di una clique e sono pari).\\ 
 	
 	\item Il perfect matching potrebbe riusare lati dell'albero, se il lato compare sia nel MST che nel matching bisognerà andare a considerare un multigrafo. \\
 	Sia $H = T \dot{\cup} M$ (unione tenendo le ripetizioni). Tutti i vertici di $H$ avranno grado pari, in quanto tutti quelli che avevano grado dispari hanno ricevuto un lato bonus dal matching.\\

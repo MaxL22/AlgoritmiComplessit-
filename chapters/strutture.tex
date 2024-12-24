@@ -371,18 +371,18 @@ Volendo rappresentare un albero con una certa struttura, \textbf{numeriamo i nod
 		\node[draw, circle] (0) at (0,0) {0};
 		
 		\node[draw, circle] (1) at (-8,-4) {1};
-		\node[draw, square] (2) at (8,-4) {2};
+		\node[draw] (2) at (8,-4) {2};
 		
-		\node[draw, square] (3) at (-12,-8) {3};
+		\node[draw] (3) at (-12,-8) {3};
 		\node[draw, circle] (4) at (-4,-8) {4};
 		
 		\node[draw, circle] (5) at (-6,-12) {5};
 		\node[draw, circle] (6) at (-2,-12) {6};
 		
-		\node[draw, square] (7) at (-7,-16) {7};
-		\node[draw, square] (8) at (-5,-16) {8};
-		\node[draw, square] (9) at (-3,-16) {9};
-		\node[draw, square] (10) at (-1,-16) {10};
+		\node[draw] (7) at (-7,-16) {7};
+		\node[draw] (8) at (-5,-16) {8};
+		\node[draw] (9) at (-3,-16) {9};
+		\node[draw] (10) at (-1,-16) {10};
 		
 		\draw[-] (0) to node {} (1);
 		\draw[-] (0) to node {} (2);
@@ -425,7 +425,7 @@ $$
 	2 rank (p') + 1 & = p \\
 	2 rank (p') + 2 & = p
 \end{array}
-\implies rank (p') = \left\lfloor \frac{p}{2} - \frac{1}{2} \right\rfloor 
+\implies rank (p') = \left\lfloor \frac{p}{2} - \frac{1}{2} \right\rfloor $$
 
 Ma select è circa l'inverso di rank, quindi: 
 $$
