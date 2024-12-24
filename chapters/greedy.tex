@@ -341,12 +341,12 @@ Si potrebbe anche dimostrare che l'algoritmo è tight, ma sappiamo anche che c'�
 	La dimostrazione si basa su un problema di decisione chiamato DominatingSet: 
 	\begin{itemize}
 		\item Input: un grafo $G = (V, E)$ ed un $k>0$
-		\item Output: $\exists D \subseteq V$, sapere se esiste un insieme di vertici di cardinalità al massimo $k$, $|D| \leq k$, tale che $\forall x \in V$ allora $\exists y \in D$ con $xy \in E$. Sostanzialmente metto sui vertici $k$ guardie ed ogni arco deve essere collegato ad almeno una guardia
+		\item Output: $\exists D \subseteq V$, sapere se esiste un insieme di vertici di cardinalità al massimo $k$, $|D| \leq k$, tale che $\forall x \in V$ allora $\exists y \in D$ con $xy \in E$. Sostanzialmente metto sui vertici $k$ guardie e ogni nodo deve essere collegato ad almeno una guardia, ogni nodo è in $D$ oppure è vicino di un nodo $\in D$
 	\end{itemize}
 	
 	Si sa che DominatingSet $\in \mathcal{NP}c$.\\
 	
-	Dati $G,k$, input di DominatorSet, dobbiamo costruire un'istanza di CenterSelection, quindi innanzitutto uno spazio metrico:
+	Dati $G,k$, input di DominatingSet, dobbiamo costruire un'istanza di CenterSelection, quindi innanzitutto uno spazio metrico:
 	$$ \Omega = V = S $$
 	$$ d (x,y) = 
 	\begin{cases}
@@ -459,7 +459,7 @@ Metto da parte l'insieme universo e prendo un insieme vuoto per i punti. Finché
 Alla fine restituisco $I$.\\
 
 Questo algoritmo è come se assegnasse ad ogni vertice da coprire un costo
-$$\forall s \in S_i \cap R \;\;\;\;\;\;\;\; c(s) := \frac{2_i}{|S_i \cap R|}$$
+$$\forall s \in S_i \cap R \;\;\;\;\;\;\;\; c(s) := \frac{w_i}{|S_i \cap R|}$$
 
 \newpage
 
@@ -563,6 +563,6 @@ $$ \implies \frac{w}{w^\ast} = \frac{\log n}{2 + 2 \epsilon} = \Omega (\log n)$$
 
 Quindi questo algoritmo fa le scelte peggiori possibili, ed è l'input peggiore possibile.\\
 
-\paragraph{Fun fact:} Se $P \neq NP$ non esiste un algoritmo che approssimi SetCover meglio di $(1 - O(1)) \log n$. Questo pone SetCover nell'insieme dei problemi $\log n$-APX.\\
+\paragraph{Fun fact:} Se $\pnp$ non esiste un algoritmo che approssimi SetCover meglio di $(1 - O(1)) \log n$. Questo pone SetCover nell'insieme dei problemi $\log n$-APX.\\
 
 \newpage
