@@ -169,7 +169,7 @@ Questo algoritmo \textbf{può ottenere la soluzione ottima}, ma anche \textbf{so
 	Considerazioni:
 	\begin{enumerate}
 		\item $G_i$ ha $n-i+1$ vertici (contrarre riduce i vertici sempre di 1)
-		\item $G_i$ ha al $\leq m -i+1$ dato che ne cancelliamo almeno 1 (potrebbero esserci paralleli) ogni volta
+		\item $G_i$ ha $\leq m -i+1$ lati dato che ne cancelliamo almeno 1 (potrebbero esserci paralleli) ogni volta
 		\item Ogni taglio di $G_i$ corrisponde ad un taglio di $G$ con la stessa dimensione
 		\item Quindi il grado minimo di $G_i$ è $\geq k^\ast$, altrimenti (come visto nel Lemma) il taglio minimo non sarebbe davvero minimo
 		\item Se $m_i$ sono i lati di $G_i$
@@ -192,7 +192,7 @@ Questo algoritmo \textbf{può ottenere la soluzione ottima}, ma anche \textbf{so
 		P[E_i | E_1, \, \dots \, , E_{i-1}]  
 		& = 1 - P[\overline{E}_i | E_1, \, \dots \, , E_{i-1}]  \\
 		& = 1 - \frac{k^\ast}{m_i}  \\
-		& \geq 1 - \frac{k^\ast \cdot 2}{k^\ast (n-i+1)} = \frac{n-i-1}{n-i+1}  \\
+		& \geq 1 - \frac{k^\ast \cdot 2}{k^\ast (n-i+1)} \\ 
 		& = \frac{n-i-1}{n-i+1}
 	\end{flalign*}
 	Quindi questa è la probabilità che all'$i$-esimo passo io non ho mai escluso nessuno dei lati necessari per il taglio minimo.\\
@@ -283,7 +283,7 @@ Già visto, per una definizione più precisa guarda il \hyperref[subsec:setcover
 	\item \textbf{Funzione obiettivo}: 
 	$$ w = \sum_{i \in I} w_i $$
 	
-	\item Tipo: minimizzazione, $\min$
+	\item \textbf{Tipo}: minimizzazione, $\min$
 \end{itemize} 
 
 Chiamo $n:= |U|$ la \textbf{cardinalità dell'universo}.\\
@@ -316,7 +316,7 @@ L'idea dietro l'algoritmo di arrotondamento aleatorio per SetCover è la seguent
 		\STATE Costruiamo $\pi$
 		\STATE Risolviamo la versione rilassata $\hat \pi$, ottenendo soluzione $\hat x$ (vettore di valori soluzione)
 		\STATE $I \leftarrow \emptyset$
-		\FOR{$i \in M$}
+		\FOR{$i \in m$}
 			\FOR{$t = 1, \, \dots \, , \lceil k + \ln n \rceil$}
 				\STATE aggiungiamo $i$ a $I$ con probabilità $\hat x_i$ 
 			\ENDFOR
@@ -385,6 +385,7 @@ Sebbene improbabile, \textbf{potrebbe non portare ad una soluzione ammissibile},
 		& = 1 - e^{-k} \sum_{p \in U}  \frac{1}{n} \\
 		& = 1 - e^{-k}
 	\end{flalign*}
+	Ricordando che $|U| = n$.\\
 	
 	\newpage
 	
@@ -434,7 +435,7 @@ Sebbene improbabile, \textbf{potrebbe non portare ad una soluzione ammissibile},
 	
 	Per le soluzioni buone invece:
 	\begin{flalign*}
-		P[E_{\text{ok}}] & = 1 - P[E_{\text{non-amm}} \cup E_{\text{bad}} \\ 
+		P[E_{\text{ok}}] & = 1 - P[E_{\text{non-amm}} \cup E_{\text{bad}}] \\ 
 		& \geq 1 - \left(P[E_{\text{non-amm}}] + P[E_{\text{bad}}]\right) \\
 		& \geq 1 - \left(e^{-3} + \frac{1}{2}\right) \approx 45\%
 	\end{flalign*}
@@ -497,7 +498,7 @@ Variabili aleatorie:
 \end{itemize}
 
 \begin{proof}
-	Qual'è il \textbf{numero atteso di clausole soddisfatte} $E[t]$?
+	Qual'è il \textbf{numero atteso di clausole soddisfatte} $E[T]$?
 	\begin{flalign*}
 		E[T] & = \sum_{b_1 \in \{0,1\}} \, \dots \, \sum_{b_n \in \{0,1\}} E [T | x_1 = b_1, \, \dots \, , x_n = b_n] P[x_1 = b_1, \, \dots \, , x_n = b_n] \\
 		& =  \sum_{b_1 \in \{0,1\}} \, \dots \, \sum_{b_n \in \{0,1\}} E[C_1 + \, \dots \, + C_t | x_1 = b_1, \, \dots \, , x_n = b_n] P[x_1 = b_1] \, \dots \, P[x_n = b_n]
@@ -535,7 +536,7 @@ Variabili aleatorie:
 %\newpage
 
 \paragraph{Lemma:} Per ogni $j = 0, \, \dots \, , n$ esistono $b_1, \, \dots \, , b_j \in \{0,1\}$ tali che
-$$ E[T |  x_1 = b_1 \, \dots \, , x_j = b_j] \geq \frac{2^k - 1}{2^k} t $$
+$$ E[T |  x_1 = b_1, \, \dots \, , x_j = b_j] \geq \frac{2^k - 1}{2^k} t $$
 dove $t$ è il numero di clausole.\\
 
 \begin{proof}
@@ -544,25 +545,25 @@ dove $t$ è il numero di clausole.\\
 		\item \textbf{Base:} Per $j=0$ è il teorema.\\
 		
 		\item \textbf{Passo induttivo:} per ipotesi di induzione
-		$$\frac{2^k-1}{2^k} t \leq  E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}] = $$
+		$$\frac{2^k-1}{2^k} t \leq  E[T |  x_1 = b_1, \, \dots \, , x_{j-1} = b_{j-1}] = $$
 		
 		Per il teorema delle probabilità totali:
 		\begin{flalign*}
-			& = E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 0] P[x_j = 0]  \\
-			& \hspace*{3cm} + E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 1] P[x_j = 1] \\
-			& = \frac{1}{2} (E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 0] \\ 
-			& \hspace*{3cm} + E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 1] )
+			& = E[T | x_1 = b_1, \, \dots \, , x_{j-1} = b_{j-1}, x_j = 0] P[x_j = 0]  \\
+			& \hspace*{3cm} + E[T | x_1 = b_1, \, \dots \, , x_{j-1} = b_{j-1}, x_j = 1] P[x_j = 1] \\
+			& = \frac{1}{2} (E[T | x_1 = b_1, \, \dots \, , x_{j-1} = b_{j-1}, x_j = 0] \\ 
+			& \hspace*{3cm} + E[T | x_1 = b_1, \, \dots \, , x_{j-1} = b_{j-1}, x_j = 1] )
 		\end{flalign*}
 		Ipotizzando che per assurdo i due valori siano: 
 		$$ 
-		E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 0] < \frac{2^k-1}{2^k} t
+		E[T | x_1 = b_1, \, \dots \, , x_{j-1} = b_{j-1}, x_j = 0] < \frac{2^k-1}{2^k} t
 		$$
 		$$
-		E[T |  x_1 = b_1 \, \dots \, , x_{j-1} = b_{j-1}, x_j = 1] < \frac{2^k-1}{2^k} t
+		E[T | x_1 = b_1, \, \dots \, , x_{j-1} = b_{j-1}, x_j = 1] < \frac{2^k-1}{2^k} t
 		$$
 		Ma questo vorrebbe dire che la loro somma è
 		$$ 
-		< \frac{2^k - 1}{2k} 2t 
+		< \frac{2^k - 1}{2^k} 2t 
 		$$
 		Ma questo va contro l'ipotesi induttiva, quindi almeno uno dei due deve essere $\geq$.\\
 	\end{itemize}
@@ -617,7 +618,7 @@ Notazione:
 	\item $\Delta_{D_1}/\Delta_{D_0}$: l'insieme di clausole chiuse da un determinato assegnamento ($true$ o $false$ rispettivamente).\\
 \end{itemize}
 
-Per ogni variabile (\texttt{for} esterno), per ogni clausola (\texttt{for interno}) determina cosa succederebbe al valore atteso se assegnassi un certo valore di verità alla variabile (\texttt{if/else}, rispettivamente \textit{true/false}).\\
+Per ogni variabile (\texttt{for} esterno), per ogni clausola (\texttt{for} interno) determina cosa succederebbe al valore atteso se assegnassi un certo valore di verità alla variabile (\texttt{if/else}, rispettivamente \textit{true/false}).\\
 
 \vfill
 

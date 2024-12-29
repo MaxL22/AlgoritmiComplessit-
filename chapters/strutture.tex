@@ -90,7 +90,7 @@ Cosa memorizza Jacobson:
 	
 	\item Per ogni \textbf{blocco} $B_{ij}$ memorizza quanti $1$ ci sono \textbf{dall'inizio del superblocco} $S_i$ fino al blocco $B_{ij}$ escluso.\\
 	
-	\item Four russians trick: una tabella rank per tutti i possibili valori dei blocchi
+	\item \textbf{Four russians trick}: una tabella rank per tutti i possibili valori dei blocchi
 \end{enumerate}
 
 \paragraph{Spazio:} Quanto \textbf{spazio} occupiamo per i \textbf{superblocchi}? Serve una \textbf{tabella per ogni superblocco} che indica gli 1:
@@ -259,7 +259,7 @@ Ci sono anche qui \textbf{due casi}:
 	\end{cases}
 	$$
 	complessivamente
-	$$ \leq 16 (\log \log n)^4 $$
+	$$ t_i^j \leq 16 (\log \log n)^4 $$
 	
 	Quanto \textbf{spazio} occupa?
 	\begin{itemize}
@@ -502,9 +502,9 @@ Dividiamo in due parti la rappresentazione:
 	E questa è una somma telescopica, quindi rimane solo 
 	\begin{flalign*}
 		= n + \frac{x_{n-1}}{2^\ell} - \frac{x_{-1}}{2^\ell} & = n + \frac{x_{n-1}}{2^\ell} \\
-		& \leq n \frac{u}{2^\ell} \\
+		& \leq n + \frac{u}{2^\ell} \\
 		& = n + \frac{u}{2^{\left\lfloor \log \frac{u}{n} \right\rfloor}} \\
-		& \leq n + \frac{u}{2^{\log \frac{u}{n}}} \\
+		& \leq n + \frac{u}{2^{\log \frac{u}{n} - 1}} \\
 		& = n + \frac{2u}{u/n} \\
 		& = 3n
 	\end{flalign*}
