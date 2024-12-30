@@ -641,15 +641,15 @@ $$ h(x) := \left(\sum_{i=1}^{n} x_i \cdot w_i \right) \mod 100 $$
 Ovvero il prodotto di ogni componente della stringa per il corrispondente peso.\\
 
 In questo modo stiamo definendo una particolare \textbf{famiglia di funzioni di hash}, all'interno della quale posso scegliere uniformemente a caso
-$$ \mathcal{H}_{u,m} \subseteq m^U $$
+$$ \mathcal{H}_{U,m} \subseteq m^U $$
 
 All'interno della quale vale la \textbf{proprietà}:
-$$ \forall x \in U\;\;\;\; P [h(x) = t] = \frac{1}{m} \;\;\; \forall t \in m$$
+$$ \forall x \in U \;\;\;\; P [h(x) = t] = \frac{1}{m} \;\;\; \forall t \in m$$
 Ovvero, all'interno della funzione i valori sono suddivisi equamente tra tutti i bucket possibili.\\
 
 Quindi, non possiamo scegliere uniformemente a caso, quindi restringo l'universo a qualcosa che posso scegliere davvero uniformemente a caso.\\
 
-\paragraph{Funzione di Hash Perfetta:} Una funzione di \textbf{hash è perfetta} per l'insieme $X$ iff è \textbf{iniettiva} su $x$ (è necessario che $m \geq |X|$, altrimenti è, ovviamente, impossibile).\\
+\paragraph{Funzione di Hash Perfetta:} Una funzione di \textbf{hash è perfetta} per l'insieme $X$ iff è \textbf{iniettiva} su $X$ (è necessario che $m \geq |X|$, altrimenti è, ovviamente, impossibile).\\
 
 \paragraph{Funzione di Hash minimale:} Si dice "\textbf{minimale}" la funzione di hash perfetta con il \textbf{numero di bucket minori possibili} per un dato universo, quindi con $|X| = m$.\\
 
@@ -662,7 +662,8 @@ Per costruire una funzione di hash minimale. Dai nomi degli inventori: Majewski,
 L'obiettivo della tecnica è quello di ottenere una \textbf{funzione di hash minimale perfetta ordinata}, ovvero che permette di mappare i valori in un ordine preciso (order-preserving minimal perfect hash, opmpf per gli amici).\\
 Questa tecnica può essere utilizzata per rappresentare funzioni statiche (generiche) ad $r$ bit, quindi un qualsiasi dizionario di valori statico.\\
 
-Partendo da un \textbf{universo} $U$ ed un \textbf{insieme} $X \subseteq U$, \textbf{con} $|X| = n$; la \textbf{funzione} $f$ associa ad ogni \textbf{valore} $x_i \in X$ un \textbf{vettore} di $r$ bit.\\
+Partendo da un \textbf{universo} $U$ ed un \textbf{insieme} $X \subseteq U$, \textbf{con} $|X| = n$; la \textbf{funzione} $f$ associa ad ogni \textbf{valore} $x_i \in X$ un \textbf{vettore} di $r$ bit
+$$ f: X \rightarrow 2^r $$
 I Bro ci hanno spiegato come memorizzare una funzione di questo tipo.\\
 
 Primi \textbf{step}:
@@ -672,7 +673,7 @@ Primi \textbf{step}:
 	$$ h_1, h_2: U \rightarrow m $$
 	\item Costruiscono un \textbf{grafo} dove
 	\begin{itemize}
-		\item i \textbf{vertici} sono i valori da $0$ a $m$, quindi $m$ nodi
+		\item i \textbf{vertici} sono i valori da $0$ a $m$, quindi $m$ vertici
 		\item c'è un \textbf{arco} tra due nodi $i,j$ ogni volta che è presente una stringa tale che 
 		$$x \in X, \;\;\;\; \{h_1(x), h_2(x)\} = \{i,j\} $$
 		quindi tendenzialmente ci sono $n$ lati
