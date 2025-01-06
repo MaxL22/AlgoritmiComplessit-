@@ -2,7 +2,7 @@
 
 \section{Algoritmi probabilistici}
 
-Cambia la \textbf{nozione di algoritmo}, oltre all'input del problema l'algoritmo è in grado di leggere da una \textbf{sorgente di bit casuali} (0 o 1 con pari probabilità). Sostanzialmente, una DTM con accesso anche ad un nastro casuale utilizzabile quando necessario.\\
+Cambia la \textbf{nozione di algoritmo}, oltre all'input del problema l'algoritmo è in grado di leggere da una \textbf{sorgente di bit casuali} (0 o 1 con pari probabilità). Sostanzialmente, una DTM con accesso anche a un nastro casuale utilizzabile quando necessario.\\
 
 L'\textbf{output} quindi non è più deterministico, ma una \textbf{distribuzione di probabilità che dipende dall'input}. Anche il \textbf{tempo di esecuzione} diventa una \textbf{distribuzione} in base all'input.\\
 
@@ -26,7 +26,7 @@ Definizione:
 
 Si tratta di un problema $ \in \mathcal{NPO}c$.\\
 
-Un \textbf{taglio} è una partizione dei vertici di un grafo $V$ in due sottoinsiemi disgiunti $S, T$. Gli archi che collegano un vertice di $S$ ad uno di $T$ formano il taglio. Un taglio è \textbf{minimo} se il suo peso è minimo rispetto a tutti gli altri possibili tagli (insieme di lati più piccolo possibile).\\
+Un \textbf{taglio} è una partizione dei vertici di un grafo $V$ in due sottoinsiemi disgiunti $S, T$. Gli archi che collegano un vertice di $S$ a uno di $T$ formano il taglio. Un taglio è \textbf{minimo} se il suo peso è minimo rispetto a tutti gli altri possibili tagli (insieme di lati più piccolo possibile).\\
 
 \paragraph{Lemma:} Il taglio minimo è $\leq$ grado minimo.\\
 
@@ -49,7 +49,7 @@ Indichiamo la contrazione di $e$ su $G$ con $G \downarrow e$.\\
 	\item Emetti la \textbf{classe di equivalenza} di uno dei due vertici
 \end{itemize}
 
-I due gruppi risultanti dal taglio corrisponderanno ai due gruppi di vertici "compressi" ed i lati da tagliare saranno i vertici presenti tra quei gruppi di nodi.\\
+I due gruppi risultanti dal taglio corrisponderanno ai due gruppi di vertici "compressi" e i lati da tagliare saranno i vertici presenti tra quei gruppi di nodi.\\
 
 \newpage
 
@@ -166,11 +166,11 @@ Questo algoritmo \textbf{può ottenere la soluzione ottima}, ma anche \textbf{so
 	
 	Chiamiamo $X^\ast$ il taglio minimo e $k^\ast$ la dimensione di quest'ultimo.\\
 	
-	Considerazioni:
+	\paragraph{Osservazioni:}
 	\begin{enumerate}
 		\item $G_i$ ha $n-i+1$ vertici (contrarre riduce i vertici sempre di 1)
 		\item $G_i$ ha $\leq m -i+1$ lati dato che ne cancelliamo almeno 1 (potrebbero esserci paralleli) ogni volta
-		\item Ogni taglio di $G_i$ corrisponde ad un taglio di $G$ con la stessa dimensione
+		\item Ogni taglio di $G_i$ corrisponde a un taglio di $G$ con la stessa dimensione
 		\item Quindi il grado minimo di $G_i$ è $\geq k^\ast$, altrimenti (come visto nel Lemma) il taglio minimo non sarebbe davvero minimo
 		\item Se $m_i$ sono i lati di $G_i$
 		$$ 2 m_i = \sum_{v \in V_{G_i}} d_{G_i} (v)$$
@@ -227,7 +227,7 @@ Quindi una probabilità relativamente piccola, che scala molto in fretta con $n$
 	Dimostrazione: Sapendo che $\forall x >1$
 	$$ \frac{1}{4} \leq1 - \left( 1 - \frac{1}{x}\right)^x \leq \frac{1}{e}$$
 	
-	Qual'è la probabilità di NON trovare mai l'ottimo? Sarà
+	Qual è la probabilità di NON trovare mai l'ottimo? Sarà
 	$$ \leq \left(1 - \frac{1}{\left(\begin{array}{c} n \\ 2 \end{array}\right)}\right)^{\left(\begin{array}{c} n \\ 2 \end{array}\right) \ln n} 
 	\leq \left(\frac{1}{e}\right)^{\ln n} 
 	= \frac{1}{n}
@@ -271,7 +271,7 @@ Una serie di \textit{Cose}$^\text{\textregistered}$ che potrebbero essere utili:
 
 \subsection{Problema SetCover}
 
-Già visto, per una definizione più precisa guarda il \hyperref[subsec:setcover]{\texttt{capitolo a riguardo}}.\\
+Già visto, per più informazioni guarda il \hyperref[subsec:setcover]{\texttt{capitolo a riguardo}}.\\
 
 \textbf{Definizione}:
 \begin{itemize}
@@ -329,7 +329,7 @@ Il \texttt{for} per l'inserimento può essere visto anche come: "Inserisci $i$ i
 
 Usiamo la \textbf{soluzione} $\hat x_i$ \textbf{come probabilità}, più il valore è alto più è probabile che verrà inserito nella soluzione finale. $k$ è un parametro, dentro l'algoritmo, mentre $\alpha$ è esterno, scelto da noi.\\
 
-Sebbene improbabile, \textbf{potrebbe non portare ad una soluzione ammissibile}, che non copre tutto l'universo. Quando anche fornisce una soluzione ammissibile \textbf{non è detto che sia ottima}.\\
+Sebbene improbabile, \textbf{potrebbe non portare a una soluzione ammissibile}, che non copre tutto l'universo. Quando anche fornisce una soluzione ammissibile \textbf{non è detto che sia ottima}.\\
 
 \newpage
 
@@ -353,7 +353,7 @@ Sebbene improbabile, \textbf{potrebbe non portare ad una soluzione ammissibile},
 	$$ E_p = \text{il punto } p \in U \text{ non è coperto} $$
 	\begin{flalign*}
 		P[\text{sol. amm.}] & = 1 - P[\text{sol. non amm.}]   \\
-		& = 1 - P[\text{almeno un punto di }U \text{non coperto}]  \\
+		& = 1 - P[\text{almeno un punto di } U \text{ non coperto}]  \\
 		& = 1 - P\left[\bigcup_{p \in U} E_p  \right]  \geq 
 	\end{flalign*}
 	
@@ -372,7 +372,7 @@ Sebbene improbabile, \textbf{potrebbe non portare ad una soluzione ammissibile},
 		& \geq 1 - \sum_{p \in U} \prod_{i \in m, p \in S_i} (1 - \hat x_i)^{k + \ln n} \geq
 	\end{flalign*}
 	
-	uso il fatto che $1-x \leq e^{-x}$:
+	Uso il fatto che $1-x \leq e^{-x}$:
 	\begin{flalign*}
 		& \geq 1 - \sum_{p \in U} \prod_{i \in m, p \in S_i} e^{- \hat x_i (k + \ln n)} \\
 		& = 1 - \sum_{p \in U} e^{- (k + \ln n) \sum_{i \in m, p \in S_i} \hat x_i} \geq
@@ -457,7 +457,7 @@ Dove $k$ è un parametro $\geq 3$.\\
 	\item \textbf{Tipo}: massimizzazione, $\max$
 \end{itemize}
 
-Ovviamente è $\mathcal{NPO}$, in quanto facilmente riconducibile ad un SAT generico.\\
+Ovviamente è $\mathcal{NPO}$, in quanto facilmente riconducibile a un SAT generico.\\
 
 
 \subsubsection{Algoritmo Probabilistico}
@@ -498,7 +498,7 @@ Variabili aleatorie:
 \end{itemize}
 
 \begin{proof}
-	Qual'è il \textbf{numero atteso di clausole soddisfatte} $E[T]$?
+	Qual è il \textbf{numero atteso di clausole soddisfatte} $E[T]$?
 	\begin{flalign*}
 		E[T] & = \sum_{b_1 \in \{0,1\}} \, \dots \, \sum_{b_n \in \{0,1\}} E [T | x_1 = b_1, \, \dots \, , x_n = b_n] P[x_1 = b_1, \, \dots \, , x_n = b_n] \\
 		& =  \sum_{b_1 \in \{0,1\}} \, \dots \, \sum_{b_n \in \{0,1\}} E[C_1 + \, \dots \, + C_t | x_1 = b_1, \, \dots \, , x_n = b_n] P[x_1 = b_1] \, \dots \, P[x_n = b_n]
@@ -613,7 +613,7 @@ Questo algoritmo tenta di "mimare" quello visto nel Lemma, conoscendo un assegna
 
 Notazione:
 \begin{itemize}
-	\item $\Delta_1/\Delta_0$: valore atteso se viene posta ad 1 ed a 0 la variabile, rispettivamente.\\
+	\item $\Delta_1/\Delta_0$: valore atteso se viene posta ad 1 e a 0 la variabile, rispettivamente.\\
 	
 	\item $\Delta_{D_1}/\Delta_{D_0}$: l'insieme di clausole chiuse da un determinato assegnamento ($true$ o $false$ rispettivamente).\\
 \end{itemize}

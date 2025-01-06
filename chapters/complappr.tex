@@ -26,7 +26,7 @@ Possiamo pensare alle MdT con oracolo come se quest'ultimo fosse una "\textit{di
 	\item $\forall x \in 2^\ast$, $\exists w \in 2^\ast$ tale che $V(x,w) = $ sì, se e solo se $x \in L$. Se $x$ deve avere risposta "sì", esiste una $w$ che fa ottenere "sì"
 \end{enumerate}
 
-Equivalente ad una NDTM, al posto di dipendere ad input e tutte le uscite, dipende da input e stringa di oracolo, il non determinismo viene introdotto in maniera differente ma sono equivalenti.\\
+Equivalente ad una NDTM, al posto di dipendere da input e tutte le uscite, dipende da input e stringa di oracolo, il non determinismo viene introdotto in maniera differente ma sono equivalenti.\\
 
 Quindi $\NP$ possiamo definirla come la \textbf{classi di problemi risolvibili da verificatori in tempo polinomiale}.
 
@@ -34,9 +34,9 @@ Quindi $\NP$ possiamo definirla come la \textbf{classi di problemi risolvibili d
 
 \subsubsection{Verificatori Probabilistici}
 
-Input e output come prima, ma il \textbf{verificatore probabilistico} ha \textbf{accesso} anche ad una \textbf{sorgente di bit random} e risponde "sì" o "no" in base anche a questi. Si aggiunge una parte di randomness.\\
+Input e output come prima, ma il \textbf{verificatore probabilistico} ha \textbf{accesso} anche a una \textbf{sorgente di bit random} e risponde "sì" o "no" in base anche a questi. Si aggiunge una parte di randomness.\\
 
-La macchina in sè è deterministica, ma il \textbf{risultato dipende da input, oracolo e bit casuali}.\\
+La macchina in sé è deterministica, ma il \textbf{risultato dipende da input, oracolo e bit casuali}.\\
 
 Il verificatore probabilistico $V$ per il linguaggio $L$: 
 \begin{enumerate}
@@ -63,9 +63,9 @@ Esempi di classi:
 	$$ PCP [0,0] = \mathcal{P} $$
 	La decisione dipende solo dall'input, quindi questa equivale a $\mathcal{P}$.\\
 	
-	\item Se posso fare query all'oracolo ma non posso accedere ad i bit randomici
+	\item Se posso fare query all'oracolo ma non posso accedere a i bit random
 	$$ PCP [0, poly] = \NP $$
-	Senza probabilità le "probabilità" diventano certezze, ovvero 0 o 1. Questa corrisponde ad introdurre il non determinismo, ovvero coincide con $\mathcal{NP}$.\\
+	Senza probabilità le "probabilità" diventano certezze, ovvero 0 o 1. Questa corrisponde a introdurre il non determinismo, ovvero coincide con $\mathcal{NP}$.\\
 \end{itemize}
 
 \paragraph{Teorema PCP [Arora, Safra, 1998]: } La classe $\NP$ equivale a:
@@ -78,7 +78,7 @@ Estraggo un \textbf{numero logaritmico di bit} e faccio un \textbf{numero costan
 Ad \textbf{esempio}: 
 $$ SAT \in PCP [ 5 \log n + 7 \log \log n + 12, 157] $$
 
-D'ora in poi facciamo riferimento ad uno specifico verificatore $V$ che usa $r$ \textbf{bit random} e $q$ \textbf{query}
+D'ora in poi facciamo riferimento a uno specifico verificatore $V$ che usa $r$ \textbf{bit random} e $q$ \textbf{query}
 $$ V \in PCP [r,q] $$
 
 Su \textbf{input} $x \in 2^\ast$:
@@ -138,7 +138,7 @@ Come \textbf{funziona il verificatore}?
 	$$ R \in 2^{r(|z|)} $$
 	\item Scelgo le posizioni, che dipenderanno dall'input e da $R$, le quali saranno esattamente $q$
 	$$ i_{1}^{z,R}, \, \dots \, , i_{q}^{z,R} \in \mathbb{N} $$
-	che portano ad altrettante richieste all'oracolo ed altrettanti bit: 
+	che portano ad altrettante richieste all'oracolo e altrettanti bit: 
 	$$ b_1, \, \dots \, , b_q $$
 	\item Da qui in poi ci sarà da fare computazione deterministica, che dipende da:
 	$$ z, R, b_1, \, \dots \, , b_q $$
@@ -153,13 +153,13 @@ Esempio:
 $$ x_7 \vee \neg x_4 \vee x_9 \vee \neg x_{15} $$
 $$ \implies (x_7 \vee \neg x_4 \vee y_1) \wedge (x_9 \vee \neg x_{15} \vee \neg y_1) $$
 
-Se quella sopra è soddisfacibile, almeno uno dei letterali sopra è vero, l'assegnamento si può estendere ad uno che rende vera anche quella sotto, mentre se tutti quelli sopra sono falsi, non c'è modo di avere la variabile ausiliaria $y_1, \neg y_1$ vera in entrambi i casi.\\
+Se quella sopra è soddisfacibile, almeno uno dei letterali sopra è vero, l'assegnamento si può estendere a uno che rende vera anche quella sotto, mentre se tutti quelli sopra sono falsi, non c'è modo di avere la variabile ausiliaria $y_1, \neg y_1$ vera in entrambi i casi.\\
 
 \addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
 \paragraph{Teorema:} Per ogni $k \geq 3$, esiste un $\epsilon > 0$ tale che MaxEkSat non è $(1+\epsilon)$ approssimabile (supponendo che $\mathcal{P} \neq \mathcal{NP}$).\\
 
 \begin{proof}
-	(per $k=3$). Scegliamo un $L \in \NP c$, quindi 
+	(Per $k=3$). Scegliamo un $L \in \NP c$, quindi 
 	$$ L \in \NP = PCP [r(n), q] $$
 	per qualche $r(n) \in O(\log n)$, $q \in \mathbb{N}$.\\
 	
@@ -179,7 +179,7 @@ Se quella sopra è soddisfacibile, almeno uno dei letterali sopra è vero, l'ass
 	$$ \Phi_z = \bigwedge_{R \in 2^{r (|z|)}} \varphi_{z,R} $$
 	3-CNF con $\leq q 2^q 2^{r (|z|)}$ clausole (un numero grosso, ma tutto polinomiale).\\
 	
-	Quindi dando in pasto questa formula $\Phi_z$ ad un algoritmo (ipotetico, cerchiamo un assurdo) di approssimazione per MaxE3Sat con tasso di approssimazione $\alpha < 1+ \epsilon$, definendo
+	Quindi dando in pasto questa formula $\Phi_z$ a un algoritmo (ipotetico, cerchiamo un assurdo) di approssimazione per MaxE3Sat con tasso di approssimazione $\alpha < 1+ \epsilon$, definendo
 	$$ \epsilon = \frac{1}{2q2^q} $$
 	
 	Se $z \in L$, allora $\exists w$ che fa accettare $V$ con probabilità 1.\\
@@ -191,7 +191,7 @@ Se quella sopra è soddisfacibile, almeno uno dei letterali sopra è vero, l'ass
 	=  q2^q2^{r(|z|)} - \frac{2^{r(|z|)}}{2}
 	$$
 	
-	Fornendo $\Phi_z$ ad un algoritmo approssimato che permette di approssimare MaxE3Sat a meno di $1+\epsilon$ il numero di clausole che verranno soddisfatte sarà: 
+	Fornendo $\Phi_z$ a un algoritmo approssimato che permette di approssimare MaxE3Sat a meno di $1+\epsilon$ il numero di clausole che verranno soddisfatte sarà: 
 	\begin{itemize}
 		\item se $z \in L$
 		$$ \geq \frac{q2^q 2^{r(|z|)}}{1 + \epsilon} $$
@@ -226,7 +226,7 @@ Se quella sopra è soddisfacibile, almeno uno dei letterali sopra è vero, l'ass
 	In tempo polinomiale ho determinato l'appartenenza ad $L$, quindi il linguaggio originale, il che è impossibile (a meno che $\pnp$).\\
 \end{proof}
 
-Questo è il modo in cui si usa PCP, tipicamente la costruzione è, partendo da un problema $\NP c$, far vedere che si riesce a trasformare il comportamento del verificatore in una formula (fatto in tempo polinomiale), che data in pasto ad un algoritmo che non esiste permette di confermare l'appartenenza al linguaggio.\\
+Questo è il modo in cui si usa PCP, tipicamente la costruzione è, partendo da un problema $\NP c$, far vedere che si riesce a trasformare il comportamento del verificatore in una formula (fatto in tempo polinomiale), che data in pasto a un algoritmo che non esiste permette di confermare l'appartenenza al linguaggio.\\
 Al variare del problema varia $q$, quindi varia anche $\epsilon$, dando una valutazione precisa di $q$ si potrebbe dare un numero ad $\epsilon$.\\
 
 %End L18
@@ -270,7 +270,7 @@ Il problema MaxIndependentSet consiste nel trovare l'insieme massimo di vertici 
 	
 	\newpage
 	
-	Costruisco un grafo non-orientato $G_z$ dove: 
+	Costruisco un grafo non orientato $G_z$ dove: 
 	\begin{itemize}
 		\item i vertici sono le $z$-configurazioni accettanti.\\
 		
@@ -312,7 +312,7 @@ Il problema MaxIndependentSet consiste nel trovare l'insieme massimo di vertici 
 		$\implies \overline w$ viene accettato in tutte le configurazioni, quindi accetta con probabilità $> 1/2$, ma per definizione è impossibile.\\
 	\end{proof}
 	
-	Ora diamo $G_z$ in pasto ad un algoritmo approssimato per MaxIndependentSet con grado di approssimazione $< 2 - \epsilon$.\\
+	Ora diamo $G_z$ in pasto a un algoritmo approssimato per MaxIndependentSet con grado di approssimazione $< 2 - \epsilon$.\\
 	I casi sono due
 	\begin{itemize}
 		\item $z \in L$: l'ottimo è $\geq 2^{r(|z|)}$

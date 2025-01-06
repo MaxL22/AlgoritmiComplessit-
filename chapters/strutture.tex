@@ -12,23 +12,23 @@ Ogni ADT si può implementare e possono esserci molte \textbf{implementazioni} d
 Supponendo di avere una struttura dati specifica che per \textbf{taglia} $n$ abbia $V_n$ \textbf{valori possibili}, che chiameremo: 
 $$ v_1, v_2, \, \dots \, , v_{V_n} $$
 
-Ed ognuno di questi possibili \textbf{valori} utilizza un \textbf{certo numero di bit}
+E ognuno di questi possibili \textbf{valori} utilizza un \textbf{certo numero di bit}
 $$ x_1, x_2, \, \dots \, , x_{V_n}$$
 
 Allora il \textbf{teorema di Shannon} dice che
 $$ \frac{x_1 + x_2 + \, \dots \, + x_{V_n}}{V_n} \geq \log_2 V_n $$
 
-Sostanzialmente, la \textbf{media delle dimensione di tutti i valori} non può essere meglio del $\log_2$ del numero di valori possibili, quindi una "compressione", una rappresentazione dei dati non può essere meglio della media, ci saranno altre rappresentazioni per cui la rappresentazione occuperà più spazio.\\
+Sostanzialmente, la \textbf{media delle dimensioni di tutti i valori} non può essere meglio del $\log_2$ del numero di valori possibili, quindi una "compressione", una rappresentazione dei dati non può essere meglio della media, ci saranno altre rappresentazioni per cui la rappresentazione occuperà più spazio.\\
 
 \newpage
 
-Questo $\log_2 V_n$ si chiama \textbf{information theoretical lower bound} e ci da la \textbf{dimensione media in bit per una struttura dati}.\\
+Questo $\log_2 V_n$ si chiama \textbf{information theoretical lower bound} e fornisce la \textbf{dimensione media in bit per una struttura dati}.\\
 
 Definiamo quindi 
 $$ Z_n := \log_2 V_n$$
 come il \textbf{numero di bit minimi per rappresentare una ADT}.\\
 
-per una struttura dati che implementa l'ADT e occupa $D_n$ bit, allora 
+Per una struttura dati che implementa l'ADT e occupa $D_n$ bit, allora 
 $$ D_n \geq Z_n$$
 
 Ci possono essere più casi: le strutture possono essere
@@ -54,7 +54,7 @@ $$ rank_{\underline b} (p) = |\{i | i<p \text{ e } b_i = 1\}| $$
 \textbf{Select} è il duale, quindi dove si trova l'$i$-esimo 1 
 $$ select_{\underline b} (k) = \max \{p | rank_{\underline b} (p) \leq k \}$$
 
-Quindi, \textbf{rank} quanti 1 fino ad una posizione, mentre \textbf{select} dice dove solo gli 1.\\
+Quindi, \textbf{rank} quanti 1 fino a una posizione, mentre \textbf{select} dice dove solo gli 1.\\
 
 Proprietà:
 \begin{itemize}
@@ -70,7 +70,7 @@ Per rappresentare un vettore di $n$ bit servono $n$ bit (e grazie al).\\
 
 Per \textbf{fare rank e select} sul vettore possiamo: 
 \begin{itemize}
-	\item ad ogni richiesta calcolare la risposta, quindi occupiamo spazio $n$ (solo il vettore) ma le richieste richiedono tempo $O(n)$
+	\item a ogni richiesta calcolare la risposta, quindi occupiamo spazio $n$ (solo il vettore) ma le richieste richiedono tempo $O(n)$
 	\item costruisco una tabella per tutti i possibili valori di rank e select, utilizzando spazio $2n \log n$ le richieste richiedono tempo $O(1)$ (solo il lookup)
 \end{itemize}
  
@@ -140,7 +140,7 @@ Quindi abbiamo una \textbf{struttura succinta} che risponde in \textbf{tempo cos
 
 \subsubsection{Struttura di Clarke per la Select}
 
-Ricordiamo che la select serve a memorizzare le posizioni degli 1. L'idea è quella di memorizzare gli 1 non sempre ma solo \textit{ogni tanto}. Anche questa è una struttura \textbf{multilivello}\\
+Ricordiamo che la \texttt{select} serve a memorizzare le posizioni degli 1. L'idea è quella di memorizzare gli 1 non sempre ma solo \textit{ogni tanto}. Anche questa è una struttura \textbf{multilivello}\\
 
 \paragraph{Primo livello:} memorizza solo i \textbf{valori di select} per valori \textbf{multipli di} $\log n \log \log n$.\\
 
@@ -188,7 +188,7 @@ Abbiamo due casi:
 	
 	Quanto \textbf{spazio} occupo?
 	\begin{itemize}
-		\item Memorizzo un numero di righe pari ad "un 1 ogni tanto", definito come $(\log n \log \log n)/(\log r_i \log \log n)$
+		\item Memorizzo un numero di righe pari a "un 1 ogni tanto", definito come $(\log n \log \log n)/(\log r_i \log \log n)$
 		\item Ognuno di questi richiede $\log r_i$ bit 
 	\end{itemize}
 	
@@ -223,7 +223,7 @@ Ci sono anche qui \textbf{due casi}:
 	
 	Quanto \textbf{spazio} occupo? 
 	\begin{itemize}
-		\item servono $\log r_i \log \log n$ posizioni ed altrettante righe della tabella
+		\item servono $\log r_i \log \log n$ posizioni e altrettante righe della tabella
 		\item ogni riga contiene un numero che al massimo è $t_i^j$, quindi usa $\log t_i^j$ bit
 	\end{itemize}
 	
@@ -479,14 +479,14 @@ Dividiamo in due parti la rappresentazione:
 	\item I \textbf{bit superiori} (più significativi)
 	$$ \left\lfloor \frac{x_0}{2^\ell} \right\rfloor, \left\lfloor \frac{x_1}{2^\ell} \right\rfloor, \, \dots \, , \left\lfloor \frac{x_{n-1}}{2^\ell} \right\rfloor $$
 	
-	Vengono memorizzati come \textbf{differenza tra l'uno ed il successivo} ($\Delta$-compressione)
+	Vengono memorizzati come \textbf{differenza tra l'uno e il successivo} ($\Delta$-compressione)
 	$$ u_0, u_1, u_2, \, \dots $$
 	Dove: 
 	$$ u_i = \left\lfloor \frac{x_i}{2^\ell} \right\rfloor - \left\lfloor \frac{x_{i-1}}{2^\ell} \right\rfloor$$
 	
 	Con il presupposto che $x_{-1} =0$.\\
 	Questi valori vengono \textbf{memorizzati in unario} in un unico vettore dove scrivo \textbf{tanti 0 quanti il valore}, \textbf{terminati da un 1}, esempio:
-	$$ 3\; 7 \rightarrow 001 \; 0000001 $$
+	$$ 3\; 7 \rightarrow 0001 \; 00000001 $$
 \end{enumerate}
 
 \paragraph{Occupazione di spazio:} 
@@ -495,8 +495,8 @@ Dividiamo in due parti la rappresentazione:
 	
 	\item Per la \textbf{seconda parte} servono
 	\begin{flalign*}
-		\sum_{i=0}^{n-1} u_i + 1 & =  \sum_{i=0}^{n-1} \left(\left\lfloor \frac{x_1}{2^\ell}\right\rfloor - \left\lfloor \frac{x_{i-1}}{2^\ell}\right\rfloor + 1 \right) \\
-		& = n + \sum_{i=0}^{n-1} \left(\left\lfloor \frac{x_1}{2^\ell}\right\rfloor - \left\lfloor \frac{x_{i-1}}{2^\ell}\right\rfloor\right) =
+		\sum_{i=0}^{n-1} u_i + 1 & =  \sum_{i=0}^{n-1} \left(\left\lfloor \frac{x_i}{2^\ell}\right\rfloor - \left\lfloor \frac{x_{i-1}}{2^\ell}\right\rfloor + 1 \right) \\
+		& = n + \sum_{i=0}^{n-1} \left(\left\lfloor \frac{x_i}{2^\ell}\right\rfloor - \left\lfloor \frac{x_{i-1}}{2^\ell}\right\rfloor\right) =
 	\end{flalign*}
 	
 	E questa è una somma telescopica, quindi rimane solo 
@@ -580,7 +580,7 @@ $$
 Z_n \sim n \log \frac{u+n-1}{n} + (u-1) \log \frac{u+n-1}{u-1}
 $$
 
-Ma considerando $u \gg n$ (l'universo molto più grande dei valori che effettivamente usiamo), quindi il secondo termine (da $u-1$) è tutto $\approx 1$, quindi:
+Ma considerando $u \gg n$ (l'universo molto più grande dei valori che effettivamente usiamo), quindi il secondo termine (da $u-1$) è tutto $\approx 0$, quindi:
 
 $$ \approx n \log \frac{u}{n} \left( 1 + \frac{n}{u} - \frac{1}{u}\right)
 = n \log \frac{u}{n} + n \log \left(1 + \frac{n}{u} - \frac{1}{u}\right)
@@ -662,14 +662,14 @@ Per costruire una funzione di hash minimale. Dai nomi degli inventori: Majewski,
 L'obiettivo della tecnica è quello di ottenere una \textbf{funzione di hash minimale perfetta ordinata}, ovvero che permette di mappare i valori in un ordine preciso (order-preserving minimal perfect hash, opmpf per gli amici).\\
 Questa tecnica può essere utilizzata per rappresentare funzioni statiche (generiche) ad $r$ bit, quindi un qualsiasi dizionario di valori statico.\\
 
-Partendo da un \textbf{universo} $U$ ed un \textbf{insieme} $X \subseteq U$, \textbf{con} $|X| = n$; la \textbf{funzione} $f$ associa ad ogni \textbf{valore} $x_i \in X$ un \textbf{vettore} di $r$ bit
+Partendo da un \textbf{universo} $U$ e un \textbf{insieme} $X \subseteq U$, \textbf{con} $|X| = n$; la \textbf{funzione} $f$ associa a ogni \textbf{valore} $x_i \in X$ un \textbf{vettore} di $r$ bit
 $$ f: X \rightarrow 2^r $$
 I Bro ci hanno spiegato come memorizzare una funzione di questo tipo.\\
 
 Primi \textbf{step}:
 \begin{enumerate}
 	\item \textbf{Fissano un} $m \geq n$
-	\item Scelgono \textbf{uniformemente a caso due funzioni di hash }
+	\item Scelgono \textbf{uniformemente a caso due funzioni di hash}
 	$$ h_1, h_2: U \rightarrow m $$
 	\item Costruiscono un \textbf{grafo} dove
 	\begin{itemize}
@@ -693,7 +693,7 @@ Se ci si ritrova in una di queste situazioni si \textbf{cambia funzioni}. Questi
 \addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
 \paragraph{Teorema:} Con $m > 2.09n$, le funzioni $h_1, h_2$ hanno \textbf{quasi sempre} (asintoticamente) le \textbf{proprietà desiderate}, e il numero di \textbf{tentativi attesi} è circa $2$.\\
 
-Ogni arco del grafo corrisponde ad un valore $x \in X$, di conseguenza ha associato un unico $f(x) \in 2^r$.\\
+Ogni arco del grafo corrisponde a un valore $x \in X$, di conseguenza ha associato un unico $f(x) \in 2^r$.\\
 
 Possiamo creare un \textbf{sistema di equazioni} con $m$ variabili
 $$ A[0], A[1], \, \dots \, , A[m-1] \in 2^r $$
@@ -715,7 +715,7 @@ Ed è tempo costante, rispetto alla dimensione dell'input.\\
 	\item le \textbf{variabili da memorizzare} occupano spazio in relazione alla dimensione di $r$, sono $m$ soluzioni, quindi in \textbf{totale} $m \cdot r$ bit.\\
 \end{itemize}
 
-Da notare che non stiamo memorizzando le chiavi, stiamo rappresentando una funzione a partire da dei valori definiti, se provo ad usare la struttura con una "chiave" non parte dell'insieme definito inizialmente funzionerà lo stesso, anche se non è detto che il risultato abbia senso.\\
+Da notare che non stiamo memorizzando le chiavi, stiamo rappresentando una funzione a partire da dei valori definiti, se provo a usare la struttura con una "chiave" non parte dell'insieme definito inizialmente funzionerà lo stesso, anche se non è detto che il risultato abbia senso.\\
 %Maybe
 
 \newpage

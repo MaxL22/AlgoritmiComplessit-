@@ -7,7 +7,7 @@
 
 La città di K\"onigsberg è attraversata dal fiume Pregel, nel quale sono presenti due isole collegate da 7 ponti in totale.\\
 
-La domanda posta ad Eulero fu: si può passare da tutti i ponti e tornare all'inizio? Ovvero, esiste un cammino che passa per tutti gli archi (ponti) del grafo per poi tornare al nodo iniziale?\\
+La domanda posta a Eulero fu: si può passare da tutti i ponti e tornare all'inizio? Ovvero, esiste un cammino che passa per tutti gli archi (ponti) del grafo per poi tornare al nodo iniziale?\\
 
 Le due isole diventano 2 vertici e le sponde altri 2. Al giorno d'oggi sarebbe chiamato "multigrafo", avendo più lati incidenti sugli stessi due vertici, ma il problema rimane lo stesso.\\
 
@@ -25,7 +25,7 @@ Se si torna ad $x_0$ prima di toccare tutti i lati, si ricomincia senza consider
 
 \addcontentsline{toc}{subsection}{\protect\numberline{}Handshaking Lemma}
 \subsection*{Handshaking Lemma}
-"Lemma delle strette di mano", se un gruppo di persone si stringono la mano, il numero di persone che stringono la mano ad un numero dispari di persone sono in quantità pari.\\
+"Lemma delle strette di mano", se un gruppo di persone si stringono la mano, il numero di persone che stringono la mano a un numero dispari di persone sono in quantità pari.\\
 
 \addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
 \paragraph{Teorema:} In un grafo $G=(V,E)$, il numero di vertici di grado ($d()$) dispari è pari.\\
@@ -33,7 +33,7 @@ Se si torna ad $x_0$ prima di toccare tutti i lati, si ricomincia senza consider
 \begin{proof}
 	Sommando i gradi di tutti i vertici
 	$$ \sum_{x \in V} d(x) = 2m $$
-	In questo modo ogni lato viene contato 2 volte, quindi è pari 2 volte il nnumero di lati $m$. $2m$ è ovviamente pari, ed i nodi con grado pari possono non essere considerati ai fini della parità (se tolgo o aggiungo un numero pari la parità non cambia), quindi i nodi con grado dispari devono essere pari, altrimenti la somma potrebbe non essere pari.\\
+	In questo modo ogni lato viene contato 2 volte, quindi è pari 2 volte il numero di lati $m$. $2m$ è ovviamente pari, e i nodi con grado pari possono non essere considerati ai fini della parità (se tolgo o aggiungo un numero pari la parità non cambia), quindi i nodi con grado dispari devono essere pari, altrimenti la somma potrebbe non essere pari.\\
 \end{proof}
 
 % End L9
@@ -41,7 +41,7 @@ Se si torna ad $x_0$ prima di toccare tutti i lati, si ricomincia senza consider
 \newpage
 
 \subsection{Problema del Traveling Salesman (TSP)}
-Avendo un insieme di città collegate da strade bidirezionali (grafo pesato) un commesso vuole passare per tutte le città una ed una sola volta, facendo un percorso di lunghezza minima per poi tornare a casa (vuole fare il giro).\\
+Avendo un insieme di città collegate da strade bidirezionali (grafo pesato) un commesso vuole passare per tutte le città una e una sola volta, facendo un percorso di lunghezza minima per poi tornare a casa (vuole fare il giro).\\
 
 Definizione: 
 \begin{itemize}
@@ -95,7 +95,7 @@ Algoritmo \textbf{per il TSP metrico}:
 	
 	\item Sia $D$ l'insieme dei \textbf{vertici di grado dispari in} $T$. Per Handshaking Lemma sappiamo che $D$ ha \textbf{cardinalità pari}.\\
 	
-	\item Scegliamo un \textbf{minimum weight perfect match} $M$ \textbf{sui nodi presenti in} $D$ (sicuramente presente, dato che quei nodi fanno parte di una clique e sono pari).\\ 
+	\item Scegliamo un \textbf{minimum weight perfect matching} $M$ \textbf{sui nodi presenti in} $D$ (sicuramente presente, dato che quei nodi fanno parte di una clique e sono pari).\\ 
 	
 	\item Il perfect matching potrebbe riusare lati dell'albero, se il lato compare sia nel MST che nel matching bisognerà andare a considerare un multigrafo. \\
 	Sia $H = T \dot{\cup} M$ (unione tenendo le ripetizioni). Tutti i vertici di $H$ avranno grado pari, in quanto tutti quelli che avevano grado dispari hanno ricevuto un lato bonus dal matching.\\
@@ -103,13 +103,13 @@ Algoritmo \textbf{per il TSP metrico}:
 	\item Avendo tutti grado pari si può usare il teorema di Eulero, quindi \textbf{troviamo un circuito euleriano} $\pi$.\\
 	
 	\item Ma questo può passare per lo stesso vertice più di una volta, si tratta di un circuito euleriano, noi lo vogliamo hamiltoniano. Quindi \textbf{trasformo $\pi$ in un circuito hamiltoniano} $\tilde \pi$. Per farlo bisogna "strozzare i cappi", quando $\pi$ passa per un nodo già preso, lo salto, tanto siamo in una clique, quindi al posto di fare il giro $x, y, z$, se ho già preso prima $y$, posso fare direttamente $x,z$.\\
-	
-	\item Insomma, seguo il circuito euleriano ma salto i nodi che visita due volte, diventa un circuito hamiltoniano. Questo è l'output.\\
 \end{enumerate}
+
+Insomma, seguo il circuito euleriano ma salto i nodi visitati più volte, rendendolo un circuito hamiltoniano. Questo è l'output.\\
 
 \newpage
 
-\addcontentsline{toc}{subsubsection}{\protect\numberline{}Lemma 1}
+%\addcontentsline{toc}{subsubsection}{\protect\numberline{}Lemma 1}
 \paragraph{Lemma 1:} $\delta (T) \leq \delta^\ast$, la somma dei pesi presenti nel MST è minore il peso del circuito hamiltoniano ottimo.\\
 
 \begin{proof}
@@ -117,7 +117,7 @@ Algoritmo \textbf{per il TSP metrico}:
 	$$ \delta (T) \leq \delta^\ast - \delta_e \leq \delta^\ast $$
 \end{proof}
 
-\addcontentsline{toc}{subsubsection}{\protect\numberline{}Lemma 2}
+%\addcontentsline{toc}{subsubsection}{\protect\numberline{}Lemma 2}
 \paragraph{Lemma 2:} $\delta(M) \leq \frac{1}{2} \delta^\ast$.\\
 
 \begin{proof}
@@ -150,7 +150,7 @@ Algoritmo \textbf{per il TSP metrico}:
 \end{proof}
 
 \addcontentsline{toc}{subsubsection}{\protect\numberline{}Tightness}
-\paragraph{Tightness:} l'analisi è stretta, esistono input per cui l'algoritmo restituisce $3/2 \delta^\ast$.\\
+\paragraph{Tightness:} l'analisi è stretta, esistono input per cui l'algoritmo restituisce $\sfrac{3}{2} \delta^\ast$.\\
 
 \begin{proof}
 	$n \in \mathbb{N}$ pari e $\epsilon \in (0,1)$. Prendiamo $n$ nodi, li colleghiamo in un cammino in fila e tutti questi lati hanno lunghezza $1$. \\
@@ -200,7 +200,7 @@ Algoritmo \textbf{per il TSP metrico}:
 	Il cammino hamiltoniano coinciderà con quello euleriano quindi:
 	$$ \delta = \delta (T) + \delta (M) = n-1 + (1 + \epsilon) \frac{n}{2} + 1 = \frac{3}{2} n + \epsilon \frac{n}{2} $$
 	
-	Ma il circuto ottimo è prendere due lati da 1 affianco a primo ed ultimo nodo, poi tutti i lati da $1 + \epsilon$, quindi il totale: 
+	Ma il circuito ottimo è prendere due lati da 1 affianco a primo e ultimo nodo, poi tutti i lati da $1 + \epsilon$, quindi il totale: 
 	$$ \delta^\ast = (1+ \epsilon)n + 2 $$
 	
 	Quindi il rapporto di approssimazione diventa: 

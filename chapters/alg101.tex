@@ -10,7 +10,7 @@ Un \textbf{problema} $\pi$ è \textbf{costituito da}:
 	
 	\item Un \textbf{insieme di output} possibili $O_\pi$
 	
-	\item Funzione $Sol_\pi: I_\pi \rightarrow 2^{O_\pi} \setminus \{\emptyset\}$ \textbf{mappa ogni input ad un insieme di output corretti possibili}, non è detto che dobbiamo avere un solo output corretto, possono esserci più output validi. Molti problemi considerati potranno avere più output corretti.
+	\item Funzione $Sol_\pi: I_\pi \rightarrow 2^{O_\pi} \setminus \{\emptyset\}$ \textbf{mappa ogni input a un insieme di output corretti possibili}, non è detto che dobbiamo avere un solo output corretto, possono esserci più output validi. Molti problemi considerati potranno avere più output corretti.
 \end{itemize}
 
 \paragraph{Esempio di problema:} Descrizione informale: decidere se un numero è primo. \\
@@ -23,17 +23,17 @@ Anche se non esplicitamente detti, \textbf{input e output dovrebbero essere spec
 
 \newpage
 
-\paragraph{Altro esempio:} emettere il MCD tra due interi positivi $x$ e $y$. Non è più un problema di decisione.\\
+\paragraph{Altro esempio:} Emettere il MCD tra due interi positivi $x$ e $y$. Non è più un problema di decisione.\\
 
 Come distinguo i due valori in input?  \\
 
 Soluzioni: raddoppio tutti i bit e $01$ diventa il separatore. \\
 
-Altra soluzione: Elias $\gamma_x$ sapendo la lunghezza $l$ in bit dell'input $x$, scrivo $l$ in unario, quindi $l$ bit ed uno $0$ prima dell'input, così in base a quanti 1 leggo so quanti bit leggere dopo.  \\
+Altra soluzione: Elias $\gamma_x$ sapendo la lunghezza $l$ in bit dell'input $x$, scrivo $l$ in unario, quindi $l$ bit e uno $0$ prima dell'input, così in base a quanti 1 leggo so quanti bit leggere dopo.  \\
 
 I problemi generalmente saranno scritti "approssimativamente", quindi sono necessarie diverse assunzioni per specificarli formalmente.\\
 
-Nella pratica quindi i dettagli di implementazione dell'algoritmo cambieranno, ma tra $n^2$ e $n^2 \log n$ ci cambia poco, sempre dominato da un polinomio ed un polinomio vale l'altro (assunzione solo teorica, nella realtà non è proprio così ma sticazzi).
+Nella pratica quindi i dettagli di implementazione dell'algoritmo possono cambiare, ma tra $n^2$ e $n^2 \log n$ la differenza non è importante, in quanto sempre dominato da un polinomio (assunzione solo teorica, nella realtà non è proprio così, ma sticazzi).
 
 \newpage
 
@@ -42,7 +42,7 @@ Senza definirlo esattamente in modo formale, si presume che a questo punto tu ne
 
 Ma se proprio dobbiamo: tutti gli algoritmi sono Macchine di Turing (programmi eseguibili da una MdT). \\
 
-\paragraph{Tesi di Church-Turing:} storicamente, hanno preso tutte le definizioni di algoritmi presenti, hanno provato che sono tutte equivalenti ed ogni definizione riporta alla stessa famiglia di problemi risolvibili: problemi che con una MdT sono risolvibili allora sono risolvibili anche secondo qualsiasi altra definizione.\\
+\paragraph{Tesi di Church-Turing:} Storicamente, hanno preso tutte le definizioni di algoritmi presenti, hanno provato che sono tutte equivalenti e ogni definizione riporta alla stessa famiglia di problemi risolvibili: problemi che con una MdT sono risolvibili allora sono risolvibili anche secondo qualsiasi altra definizione.\\
 
 Al giorno d'oggi è importante perché si traspone in "ogni linguaggio di programmazione (Turing-completo) può risolvere gli stessi problemi risolvibili da tutti gli altri". 
 
@@ -52,7 +52,7 @@ In passato è stato discusso come sia impossibile concepire una definizione real
 
 \subsection{Cos'è un algoritmo per un problema $\pi$?}
 
-Dando $x \in I_\pi$ ad un algoritmo $A$ eseguito su una MdT restituirà $y \in O_\pi$ tale che $y \in Sol_\pi (x)$, ovvero \textbf{dato un input restituisce una soluzione tra quelle ammesse}.\\
+Dando $x \in I_\pi$ a un algoritmo $A$ eseguito su una MdT restituirà $y \in O_\pi$ tale che $y \in Sol_\pi (x)$, ovvero \textbf{dato un input restituisce una soluzione tra quelle ammesse}.\\
 
 \textbf{Molti problemi non sono risolvibili}. Considerando i problemi di decisione, data una stringa binaria bisogna rispondere \textit{sì} o \textit{no}.\\
 
@@ -78,13 +78,13 @@ Si può parlare di teoria della complessità in due termini:
 
 \subsubsection{Algoritmica}
 
-Dato $\pi$
+Dato un problema $\pi$
 \begin{enumerate}
 	\item Stabilire \textbf{se è risolvibile} (per noi sempre sì); c'è un algoritmo che lo risolve?
 	
 	\item \textbf{Risolvibile con che costo?} Ci sono più \textbf{misure} possibili:
 	\begin{itemize}
-		\item Tempo (solitamente sarà usata questa)
+		\item \textbf{Tempo} (solitamente sarà usata questa)
 		\item Spazio
 		\item Numero di processori utilizzati/somma dei tempi di tutte le CPU
 		\item Energia dissipata
@@ -106,9 +106,9 @@ Se dobbiamo valutare quale algoritmo usare il \textbf{confronto va fatto asintot
 
 Quindi \textbf{due assunzioni}: worst-case e asintotico. \\
 
-Generalmente quindi tra
+Quindi, generalmente, tra
 $$ t_a = O (n^2) \;\;\;\;\;\; t_a = O(n^7)$$
-meglio il primo tendenzialmente.
+è tendenzialmente meglio il primo.
 
 Bisogna anche provare che non ci possono essere casi migliori/peggiori, dimostrare un upper/lower bound.\\
 
@@ -116,7 +116,7 @@ Bisogna anche provare che non ci possono essere casi migliori/peggiori, dimostra
 
 \subsubsection{Strutturale}
 
-Fissato un problema $\pi$, qual'è la sua complessità? Non vogliamo cercare la complessità di un algoritmo, ma la \textbf{complessità del miglior algoritmo che risolve un problema} $\pi$. Questo permette di eliminare facilmente problemi che non hanno soluzioni efficienti.\\
+Fissato un problema $\pi$, qual è la sua complessità? Non vogliamo cercare la complessità di un algoritmo, ma la \textbf{complessità del miglior algoritmo che risolve un problema} $\pi$. Questo permette di eliminare facilmente problemi che non hanno soluzioni efficienti.\\
 
 Con la notazione worst case asintotica sopracitata possiamo avere un \textbf{upper bound} per il \textbf{tempo impiegato} per la risoluzione di un problema. Quindi nel caso peggiore avrà asintoticamente quel comportamento. $O(n^2)$ vuol dire che nel caso peggiore ci mette tempo quadratico rispetto all'input.\\
 
@@ -124,7 +124,7 @@ Esistono anche \textbf{lower bounds}, ovvero limiti inferiori per il \textbf{tem
 
 Un problema viene "\textit{chiuso}" quando upper e lower bound coincidono, vuol dire che si ha l'algoritmo ottimo e si conosce esattamente la complessità del problema. Per esempio, l'ordinamento di array basato su confronti e scambi ci mette esattamente $n \log n$, quindi si dice $\Theta(n \log n)$.\\
 
-Le casistiche problematiche sono quando gli \textbf{upper bound sono esponenziali ed i lower bound polinomiali}, quindi le possibilità sono: 
+Le casistiche problematiche sono quando gli \textbf{upper bound sono esponenziali e i lower bound polinomiali}, quindi le possibilità sono: 
 \begin{itemize}
 	\item esiste un upper bound da migliorare, quindi esistono algoritmi polinomiale non ancora scoperti
 	\item esiste un lower bound esponenziale, quindi il problema non è risolvibile in tempo polinomiale
@@ -142,14 +142,14 @@ Per la complessità strutturale sono state inventate delle classi di problemi pe
 	\item $\mathcal{NP}$: problemi di decisione risolvibili in tempo polinomiale \textbf{su macchine non deterministiche} 
 \end{itemize}
 
-Sostanzialmente macchine non deterministiche vuol dire che: una macchina su cui il programma può essere eseguito più volte in parallelo con determinate variabili settate a 0 e 1, permettendo di eseguire in parallelo tante "versioni" ed ottenere una soluzione per ogni esecuzione parallela. La soluzione alla fine è \textit{yes} se esiste almeno una esecuzione che ha dato \textit{yes} e \textit{no} se tutte le esecuzioni hanno riportato \textit{no}. \\
+Sostanzialmente macchine non deterministiche vuol dire che: una macchina su cui il programma può essere eseguito più volte in parallelo con determinate variabili settate a 0 e 1, permettendo di eseguire in parallelo tante "versioni" e ottenere una soluzione per ogni esecuzione parallela. La soluzione alla fine è \textit{yes} se esiste almeno una esecuzione che ha dato \textit{yes} e \textit{no} se tutte le esecuzioni hanno riportato \textit{no}. \\
 
-\paragraph{CNF-Sat problem:} l'input è una espressione logica in forma CNF (Conjunctive Normal Form), quindi un \texttt{and} tra clausole, ognuna delle quali contiene \texttt{or} di letterali, i quali possono essere variabili o negazioni di variabili.\\
+\paragraph{CNF-Sat problem:} L'input è una espressione logica in forma CNF (Conjunctive Normal Form), quindi un \texttt{and} tra clausole, ognuna delle quali contiene \texttt{or} di letterali, i quali possono essere variabili o negazioni di variabili.\\
 
 L'output è se l'espressione logica $\varphi$ è soddisfacibile, ovvero, esiste $\exists$ assegnazione che rende $\varphi$ \textit{true}? \\
 Attualmente questo problema si pensa sia in $\mathcal{NP}$, non sappiamo se possa stare in $\mathcal{P}$.\\
 
-Sappiamo rientra in $\mathcal{NP}$ perché è facile pensare ad un algoritmo non deterministico per questo problema, basta avere una esecuzione parallela per ogni possibile valore di ognuna delle variabili, e se almeno un output è \textit{sì} allora è soddisfacibile.\\
+Sappiamo rientra in $\mathcal{NP}$ perché è facile pensare a un algoritmo non deterministico per questo problema, basta avere una esecuzione parallela per ogni possibile valore di ognuna delle variabili, e se almeno un output è \textit{sì} allora è soddisfacibile.\\
 
 \newpage
 
@@ -161,6 +161,7 @@ La vera domanda è se $\mathcal{P} = \mathcal{NP}$, quindi \textbf{se le due cla
 	
 	\item $\mathcal{P}$ \textbf{contenuta in} $\mathcal{NP}$, $P \subset NP$: meno emozionante ma vorrebbe dire che \textbf{esistono dei problemi non risolvibili in tempo polinomiale}.\\
 \end{itemize}
+
 Ma è uno dei millennium problem, quindi penso rimarrà lì.\\
 
 \subsubsection{Riduzione in tempo polinomiale}
@@ -170,26 +171,26 @@ $$ \pi_1 \leq_p \pi_2 \text{ iff:}$$
 $$ \exists f : \, I_{\pi_1} \rightarrow I_{\pi_2} \text{ t.c. } x \in I_{\pi_1} \;\;\; Sol_{\pi_1} (x) = yes \;\;\; Sol_{\pi_2} (f(x)) = yes $$ 
 %Should be right, idk
 
-Esiste una funzione che a partire da un input di $pi_1$ arriva ad un input di $\pi_2$ in tempo polinomiale e se $x$ è un input di $\pi_1$ possiamo avere lo stesso output che $x$ fornisce su $\pi_1$ per $\pi_2$ con input $f(x)$. \\
+Esiste una funzione che a partire da un input di $pi_1$ arriva a un input di $\pi_2$ in tempo polinomiale e se $x$ è un input di $\pi_1$ possiamo avere lo stesso output che $x$ fornisce su $\pi_1$ per $\pi_2$ con input $f(x)$. \\
 
 Sostanzialmente vuol dire che possiamo \textbf{trasformare input di $\pi_1$ in input di $\pi_2$ in tempo polinomiale}, allora \textbf{se $\pi 2$ è risolvibile in tempo polinomiale lo è anche $\pi_1$}.\\
 
 \addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
-\paragraph{Teorema:} Se $\pi_1 \leq_p \pi_2$ e $\pi_2 \in \mathcal{P}$ allora $\pi_1 \in \mathcal{P}$. Se un problema può essere polinomialmente ridotto ad un altro all'interno di $\mathcal{P}$, allora anch'esso è in $\mathcal{P}$. Sostanzialmente $\leq_p$ può essere letto come "non è più difficile di".\\
+\paragraph{Teorema:} Se $\pi_1 \leq_p \pi_2$ e $\pi_2 \in \mathcal{P}$ allora $\pi_1 \in \mathcal{P}$. Se un problema può essere polinomialmente ridotto a un altro all'interno di $\mathcal{P}$, allora anch'esso è in $\mathcal{P}$. Sostanzialmente $\leq_p$ può essere letto come "non è più difficile di".\\
 
 \newpage
 
 \addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema di Cook}
-\paragraph{Teorema di Cook:} dato che CNF-Sat $\in \mathcal{NP}$ e $\forall \pi \in \mathcal{NP}$ allora $\pi \leq_p$ CNF-Sat. Esistono \textbf{problemi all'interno di }$\mathcal{NP}$ \textbf{a cui tutti gli altri problemi si possono ridurre} (provato per la prima volta da Cook con il CNF-Sat).\\
+\paragraph{Teorema di Cook:} Dato che CNF-Sat $\in \mathcal{NP}$ e $\forall \pi \in \mathcal{NP}$ allora $\pi \leq_p$ CNF-Sat. Esistono \textbf{problemi all'interno di }$\mathcal{NP}$ \textbf{a cui tutti gli altri problemi si possono ridurre} (provato per la prima volta da Cook con il CNF-Sat).\\
 
 Questi problemi sono \textbf{$\mathcal{NP}$-completi} ($\mathcal{NP}c$)
 $$(\mathcal{NP}c) = \{\pi \in \mathcal{NP} | \, \forall \pi' \in \mathcal{NP} \pi' \leq_p \pi\} $$
 
-$\mathcal{NP}$ completi vuol dire \textbf{tutti i problemi in $\mathcal{NP}$ si possono ridurre ad un altro problema in $\mathcal{NP}$}, quindi alla complessità di questi altri. Vuol dire sostanzialmente che sono tutti circa "difficili uguali" e che "cambia poco" (secondo la riduzione polinomiale).\\
+$\mathcal{NP}$ completi vuol dire \textbf{tutti i problemi in $\mathcal{NP}$ si possono ridurre a un altro problema in $\mathcal{NP}$}, quindi alla complessità di questi altri. Vuol dire sostanzialmente che sono tutti circa "difficili uguali" e che "cambia poco" (secondo la riduzione polinomiale).\\
 
 Se noi sapessimo che un qualunque problema $\mathcal{NP}c$ è risolvibile in tempo polinomiale, l'implicazione di questo teorema è che tutti i problemi in $\mathcal{NP}$ sarebbero risolvibili in tempo polinomiale, facendo collassare $\mathcal{P}$ e $\mathcal{NP}$.\\
 
-\paragraph{Corollario:} se $\pi \in \mathcal{NP}c$ e $\pi \in \mathcal{P}$ allora $\mathcal{P} = \mathcal{NP}$.\\
+\paragraph{Corollario:} Se $\pi \in \mathcal{NP}c$ e $\pi \in \mathcal{P}$ allora $\mathcal{P} = \mathcal{NP}$.\\
 
 Nello scenario in cui $\mathcal{P} \neq \mathcal{NP}$ i problemi $\mathcal{NP}c$ sono sottoinsieme di $\mathcal{NP}$, ma completamente staccati dall'insieme di $\mathcal{P}$.\\
 

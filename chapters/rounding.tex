@@ -127,9 +127,14 @@ Chiamando $w^\ast_{ILP}$ la funzione obiettivo di $ILP(\pi)$ e $w^\ast_{LP}$ la 
 $$ w = \sum_i w_i \hat{x}_i \leq 2 \sum_i w_i x_i^\ast = 2 w_{LP}^\ast $$
 Questo dice che la soluzione ottenuta dall'algoritmo di arrotondamento è $\leq$ (per il Lemma 3) di 2 volte la soluzione ottima del problema $LP(\pi)$.\\
 
-Per il Lemma 1  per il Lemma 4, rispettivamente, possiamo vedere che:
-$$ \frac{w}{w_{ILP}^\ast} \leq \frac{w}{w_{LP}^\ast} \leq \frac{2 w^\ast_{LP}}{w^\ast_{LP}} = 2$$
-Quindi l'algoritmo di arrotondamento è una \textbf{2-Approssimazione di VertexCover}.\\
+\addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
+\paragraph{Teorema:} RoundingVertexCover è una \textbf{2-Approssimazione} per VertexCover.\\
+
+\begin{proof}
+	Per il Lemma 1  per il Lemma 4, rispettivamente, possiamo vedere che:
+	$$ \frac{w}{w_{ILP}^\ast} \leq \frac{w}{w_{LP}^\ast} \leq \frac{2 w^\ast_{LP}}{w^\ast_{LP}} = 2$$
+	Quindi l'algoritmo di arrotondamento è una \textbf{2-Approssimazione di VertexCover}.\\
+\end{proof}
 
 % End L8
 

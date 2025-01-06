@@ -19,7 +19,7 @@ LoadBalancing già visto, quello delle macchine e task, bla bla bla. 2-LoadBalan
 
 Per l'\textbf{algoritmo PTAS}: 
 \begin{itemize}
-	\item \textbf{Input}:  i task $t_0, \, \dots \, , t_{n-1}$ ed un \textbf{costante di approssimazione} (circa) $\epsilon > 0$ (per avere una $1+\epsilon$-approssimazione)
+	\item \textbf{Input}:  i task $t_0, \, \dots \, , t_{n-1}$ e un \textbf{costante di approssimazione} (circa) $\epsilon > 0$ (per avere una $1+\epsilon$-approssimazione)
 \end{itemize}
 
 \newpage
@@ -62,7 +62,7 @@ L'assegnamento dei task "grossi" (i primi) viene risolto a forza bruta, il resto
 	$$ L^\ast \geq \frac{T}{2}, \;\;\;\;\; L = T $$
 	$$\implies \frac{L}{L^\ast} \leq \frac{T}{\sfrac{T}{2}}$$
 	
-	Nel caso in cui $\epsilon < 1$: alla \textbf{fine della prima fase} abbiamo l'\textbf{assegnamento ottimo} per i primi $k$ task ed un carico sulle macchine 0 e 1, rispettivamente $y_0$ e $y_1$. \\
+	Nel caso in cui $\epsilon < 1$: alla \textbf{fine della prima fase} abbiamo l'\textbf{assegnamento ottimo} per i primi $k$ task e un carico sulle macchine 0 e 1, rispettivamente $y_0$ e $y_1$. \\
 	
 	Rimangono \textbf{da assegnare} i task $t_k, \, \dots \, , t_{n-1}$ per arrivare agli \textbf{assegnamenti finali} $L_0$ e $L_1$.\\
 	
@@ -71,7 +71,7 @@ L'assegnamento dei task "grossi" (i primi) viene risolto a forza bruta, il resto
 	Due casi: 
 	\begin{enumerate}
 		\item $L_0 = y_0$, dopo la prima fase tutti i restanti task sono stati attribuiti alla seconda macchina.\\
-		$\implies$ abbiamo \textbf{ottenuto l'assegnamento ottimo}, per costruzione dell'algoritmo.\\
+		$\implies$ Abbiamo \textbf{ottenuto l'assegnamento ottimo}, per costruzione dell'algoritmo.\\
 		
 		\item Uno o più task di $t_k, \, \dots \, , t_{n-1}$ sono stati assegnati alla prima macchina, sia $t_h$ l'\textbf{ultimo assegnato} a suddetta macchina (il più piccolo). Di conseguenza
 		$$ L_0 - t_h \leq L_1' \leq L_1$$
@@ -120,7 +120,7 @@ Quindi abbiamo un algoritmo PTAS, con un \textbf{tasso di approssimazione arbitr
 I pirati arrivano in una grotta con degli oggetti, ognuno di questi $n$ oggetti ha un valore 
 $$ v_0, \, \dots \, , v_{n-1} $$
 
-ed i pirati vogliono portarsi a casa il maggior valore possibile, ma per portarli hanno solo uno zaino con una capacità $W$ ed ogni oggetto ha un peso  
+ed i pirati vogliono portarsi a casa il maggior valore possibile, ma per portarli hanno solo uno zaino con una capacità $W$ e ogni oggetto ha un peso  
 $$ w_0, \, \dots \, , w_{n-1} $$
 
 I pirati vogliono portare a casa il maggior valore possibile con un peso che rientra nello zaino.\\
@@ -139,7 +139,7 @@ I pirati vogliono portare a casa il maggior valore possibile con un peso che rie
 
 \newpage
 
-\paragraph{Side quest: Programmazione Dinamica:} vogliamo risolvere un certo problema $\pi$, nel quale sono presenti dei parametri $\pi [\overline{a},\overline{b}]$, ma il problema si può presentare in varianti con valori diversi da $\overline{a}$ e $\overline{b}$.\\
+\paragraph{Side quest: Programmazione Dinamica:} Vogliamo risolvere un certo problema $\pi$, nel quale sono presenti dei parametri $\pi [\overline{a},\overline{b}]$, ma il problema si può presentare in varianti con valori diversi da $\overline{a}$ e $\overline{b}$.\\
 
 Voglio poter \textbf{risolvere} una certa \textbf{istanza di un problema a partire da istanze precedenti}/più semplici/con valori più semplici risolte in precedenza.\\
 Devo quindi risolvere soluzioni più semplici per arrivare a quelle più grosse, le soluzioni dipendono da quelle prima.\\
@@ -236,14 +236,14 @@ Problema: gli algoritmi precedenti sono esatti, ma sono entrambi esponenziali ne
 
 Per \textbf{approssimare il problema} possiamo "\textit{comprimere le righe}", ovvero \textbf{dividiamo tutti i valori per un certo numero}, \textbf{diminuendo} così il \textbf{numero di righe} necessarie, fino a far diventare l'algoritmo polinomiale.\\
 
-Si può fare \textbf{solo con la seconda versione}, in cui le righe rappresentano la funzione obiettivo (che possiamo approssimare, andando ad ottenere un sub-ottimo), mentre con la prima versione non possiamo comprimere la capacità dello zaino, in quanto parte dei constraint del problema, rischieremmo di andare verso soluzioni non ammissibili.\\
+Si può fare \textbf{solo con la seconda versione}, in cui le righe rappresentano la funzione obiettivo (che possiamo approssimare, andando a ottenere un sub-ottimo), mentre con la prima versione non possiamo comprimere la capacità dello zaino, in quanto parte dei constraint del problema, rischieremmo di andare verso soluzioni non ammissibili.\\
 
 Quindi, applichiamo il secondo algoritmo, ma con \textbf{scaling}.\\
 
 Al problema $\pi (v_i, w_i, W)$ aggiungiamo $\epsilon \in (0,1]$ e vogliamo una \textbf{$(1+\epsilon)$-approssimazione} di $\pi$
 $$ \theta = \frac{\epsilon \cdot v_{max}}{2n}$$
 
-Aggiungiamo \textbf{due ulteriori versioni del problema}: 
+Introduciamo \textbf{due ulteriori versioni del problema}: 
 $$ \overline{\pi} \left(\overline{v}_i = \left\lceil \frac{v_i}{\theta} \right\rceil \theta, w_i, W\right) $$
 
 Quindi arrotondo un po' i valori per eccesso, mentre in 
@@ -316,13 +316,11 @@ $$(1 + \epsilon) \hat v^\ast \theta \geq v^\ast$$
 	Ma la prima parte è $\leq \hat v^\ast \theta$ e la seconda è una qualsiasi soluzione ammissibile, quindi anche $X^\ast$ e di conseguenza $v^\ast$.\\
 \end{proof}
 
-Non sono un cazzo sicuro di questo teorema ma trust me bro.\\
-
-Comprimo i valori, faccio i miei calcoli, ma poi alla fine devo decomprimerli per sapere il mio risultato, per questo ho il $\theta$ in giro, la discrepanza è data dall'approssimazione per eccesso effettuata.\\
+Comprimo i valori, calcolo tutto, ma alla fine devo \textbf{decomprimerli} per sapere il mio risultato, per questo ho il $\theta$ aggiunto, la discrepanza è data dall'approssimazione per eccesso effettuata.\\
 
 \paragraph{Corollario:} L'algoritmo è una \textbf{$(1 + \epsilon)$-approssimazione}.\\
 
-\paragraph{Complessità:} devo guardare le celle della tabella, ovvero il numero di colonne per il numero di righe, quindi 
+\paragraph{Complessità:} Devo guardare le celle della tabella, ovvero il numero di colonne per il numero di righe, quindi 
 $$ n \cdot \sum \hat v_i \leq n^2 \hat v_{max} = n^2 \left\lceil \frac{v_{max}}{\theta} \right\rceil = $$
 $$ = n^2 \left\lceil \frac{2 v_{max} n}{\epsilon \cdot v_{max}} \right\rceil = O\left(\frac{n^3}{\epsilon}\right) $$
 la disuguaglianza è data dal fatto che ognuno degli $n$ elementi è per forza minore del massimo $v_{max}$

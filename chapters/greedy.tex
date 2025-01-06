@@ -80,37 +80,37 @@ Ovviamente è polinomiale: $O(n)$ per cercare tra i task e $O(m)$ per cercare le
 
 \newpage
 
-% da invertire sopra la frazione, scritto sbagliato
-
-\paragraph{Dimostrazione di tightness:} questa dimostrazione serve a stabilire che $L/L^\ast$ è davvero 2, ovvero che \textbf{il bound non può diminuire ulteriormente} e quel fattore di approssimazione dipende intrinsecamente dall'algoritmo e non da qualche errore nella dimostrazione.\\
+\paragraph{Dimostrazione di tightness:} Questa dimostrazione serve a stabilire che $L/L^\ast$ è davvero 2, ovvero che \textbf{il bound non può diminuire ulteriormente} e quel fattore di approssimazione dipende intrinsecamente dall'algoritmo e non da qualche errore nella dimostrazione.\\
 
 \addcontentsline{toc}{subsubsection}{\protect\numberline{}Teorema}
 \paragraph{Teorema:} per ogni $\epsilon > 0$, esiste un input per il problema LoadBalancing tale che GreedyLoadBalancing produce un output con 
 $$ 2 - \epsilon \leq \frac{L}{L^\ast} \leq 2$$
 (ovvero schiaccio quanto voglio il bound).\\
 
-Dobbiamo \textbf{costruire un input} che fa "andare male" l'algoritmo:
-\begin{itemize}
-	\item numero di macchine $m > 1/ \epsilon$
-	\item numero di task $n = m(m-1)+1$
-	\item ci sono $m(m-1)$ task lunghi $1$ e $1$ task lungo $m$, presentati in quest'ordine
-\end{itemize}
-
-I primi $m$ verranno dati ciascuno ad una macchina, e si ripete $m-1$ volte. Alla fine di questi tutte le macchine hanno lo stesso carico.\\
-Poi arriva big task che verrà messo sulla macchina meno carica (sono tutte uguali, quindi una a caso praticamente).\\
-
-Di conseguenza la funzione obiettivo finale sarà:
-$$ L = m - 1 + m = 2m - 1 $$
-
-Non sapendo che alla fine arriva il taskone non possiamo prepararci al suo arrivo. La soluzione ottima sarebbe dare il Titanic ad una macchina e dividere gli altri $m(m-1)$ alle altre macchine; alla fine tutte le macchine avranno lo stesso carico, quindi è sicuramente la soluzione ottima, con valore:
-$$ L = m $$
-
-Il rapporto di prestazione nel primo caso diventa:
-$$ \frac{L}{L^\ast} = \frac{2m-1}{m} = 2 - \frac{1}{m} $$
-
-Essendo un \textbf{algoritmo greedy}, \textbf{l'ordine} dei task è \textbf{importante} ed in questo caso è la differenza tra un input ottimale ed il peggiore.\\
-
-Comunque, magari gli input reali non sono così male, questo algoritmo su input reali potrebbe avere un tasso di approssimazione più basso, potrebbero essere input più favorevoli rispetto alle casistiche considerate in questo modo.\\
+\begin{proof}
+	Dobbiamo \textbf{costruire un input} che fa "andare male" l'algoritmo:
+	\begin{itemize}
+		\item numero di macchine $m > 1/ \epsilon$
+		\item numero di task $n = m(m-1)+1$
+		\item ci sono $m(m-1)$ task lunghi $1$ e $1$ task lungo $m$, presentati in quest'ordine
+	\end{itemize}
+	
+	I primi $m$ verranno dati ciascuno ad una macchina, e si ripete $m-1$ volte. Alla fine di questi tutte le macchine hanno lo stesso carico.\\
+	Poi arriva big task che verrà messo sulla macchina meno carica (sono tutte uguali, quindi una a caso praticamente).\\
+	
+	Di conseguenza la funzione obiettivo finale sarà:
+	$$ L = m - 1 + m = 2m - 1 $$
+	
+	Non sapendo che alla fine arriva il taskone non possiamo prepararci al suo arrivo. La soluzione ottima sarebbe dare il Titanic ad una macchina e dividere gli altri $m(m-1)$ alle altre macchine; alla fine tutte le macchine avranno lo stesso carico, quindi è sicuramente la soluzione ottima, con valore:
+	$$ L = m $$
+	
+	Il rapporto di prestazione nel primo caso diventa:
+	$$ \frac{L}{L^\ast} = \frac{2m-1}{m} = 2 - \frac{1}{m} $$
+	
+	Essendo un \textbf{algoritmo greedy}, \textbf{l'ordine} dei task è \textbf{importante} ed in questo caso è la differenza tra un input ottimale ed il peggiore.\\
+	
+	Comunque, magari gli input reali non sono così male, questo algoritmo su input reali potrebbe avere un tasso di approssimazione più basso, potrebbero essere input più favorevoli rispetto alle casistiche considerate in questo modo.\\
+\end{proof}
 
 \subsubsection{SortedGreedyBalance}
 Sempre sul problema di LoadBalancing, sempre stesso input e output dell'algoritmo precedente.\\
@@ -145,17 +145,19 @@ Ma è davvero meglio? \\
 	\begin{itemize}
 		\item Se $\hat{i}$ ha un task solo, la soluzione è ottima
 		\item Se $\hat{i}$ ha più di un compito. Sia $\hat{j}$ l'ultimo compito (ovvero l'indice del task) assegnato a $\hat{i}$
-		\item Sicuramente $\hat{j} \geq m$ in quanto i primi $m$ task sono sicuramente dati a macchine distinte (non può esserci una macchina meno carica di una vuota)
 	\end{itemize}
+	Sicuramente $\hat{j} \geq m$ in quanto i primi $m$ task sono sicuramente dati a macchine distinte (non può esserci una macchina meno carica di una vuota).\\
+	
 	Quindi 
 	$$ L = L_{\hat{i}} = \left(L_{\hat{i}} - t_{\hat{j}}\right) + t_{\hat{j}} $$  
 	Di conseguenza, sapendo che
 	$$ t_{\hat{j}} \leq t_m \leq \frac{1}{2} L^\ast $$
-	Possiamo dire
+	
+	(una macchina con due task, uno dei quali $t_{\hat j}$ non può superare metà della soluzione ottima). Possiamo dire
 	$$
 	\begin{array}{c c}
 		\left(L_{\hat{i}} - t_{\hat{j}}\right)  & \leq L^\ast \\
-		t_{\hat{j}} & \leq t_{\hat{j}}
+		t_{\hat{j}} & \leq \frac{1}{2} L^\ast
 	\end{array}
 	\implies
 	\left(L_{\hat{i}} - t_{\hat{j}}\right) + t_{\hat{j}}  \leq L^\ast + \frac{1}{2} L^\ast = \frac{3}{2} L^\ast
@@ -165,7 +167,7 @@ Ma è davvero meglio? \\
 	
 \end{proof}
 
-Ci vorrebbe una dimostrazione di tightness, ma questa analisi non è tight, si può dimostrare che l'algoritmo in realtà è una $\frac{4}{3}$-Approssimazione (dimostrazione di \href{https://www.jstor.org/stable/pdf/2099572.pdf}{Graham 1969}).\\
+Ci vorrebbe una dimostrazione di tightness, ma questa analisi non è tight, si può dimostrare che l'algoritmo in realtà è una $\sfrac{4}{3}$-Approssimazione (dimostrazione di \href{https://people.irisa.fr/Sophie.Pinchinat/AA/Graham1969SIAM.pdf}{\texttt{Graham 1969}}).\\
 
 Hochbaum-Shmoys 1988 hanno dimostrato che in realtà LoadBalancing apparitene $\in PTAS$, ovvero si può approssimare con una precisione $\epsilon$ qualunque, e scala esponenzialmente il tempo necessario per l'approssimazione, quindi si sa anche che $\notin FPTAS$.\\
 
@@ -176,7 +178,7 @@ Avendo vari posti dove smistare pacchi e $n$ soldi per costruire un numero limit
 
 Hai dei \textbf{punti in uno spazio metrico} e si vogliono \textbf{scegliere} $k$ \textbf{punti} in questo spazio in modo che il \textbf{raggio di copertura} per tutti sia il \textbf{minore possibile}.\\
 
-\paragraph{Spazio metrico:} un'insieme con una funzione distanza $(\Omega, d)$ 
+\paragraph{Spazio metrico:} Un insieme con una funzione distanza $(\Omega, d)$ 
 $$d: \, \Omega  \times \Omega \rightarrow \mathbb{R}^+$$
 
 Con le seguenti proprietà:
@@ -196,9 +198,9 @@ $$ \rho_c := \max_{s \in S} \delta_c (s) $$
 
 \newpage
 
-\paragraph{Definizione del problema:} fissiamo uno spazio metrico $(\Omega, d)$
+\paragraph{Definizione del problema:} Fissiamo uno spazio metrico $(\Omega, d)$
 \begin{itemize}
-	\item \textbf{Input:} un \textbf{insieme} $S \subseteq \Omega$ di $n$ \textbf{punti immersi in uno spazio metrico} fissato ed un \textbf{budget} $k>0$
+	\item \textbf{Input:} un \textbf{insieme} $S \subseteq \Omega$ di $n$ \textbf{punti immersi in uno spazio metrico} fissato e un \textbf{budget} $k>0$
 	
 	\item \textbf{Soluzione accettabile:} è un \textbf{sottoinsieme} $C \subseteq S$ con $|C| \leq k$ ($\leq k$ punti nello spazio)
 	
@@ -302,8 +304,6 @@ Se l'insieme dei punti ha cardinalità $\leq k$, torna $S$ (basta prendere tutti
 
 Finché la cardinalità di $C$ è $<k$ ( quindi sceglierà esattamente $k$ punti) \textbf{sceglie il punto che massimizza la distanza} $d(\overline{s}, C)$ e lo aggiunge a $C$. Alla fine restituisce $C$.\\
 
-%Si comporta in modo simile a quello di prima con $\rho^\ast$, e diventerà una 2-Approssimazione.\\
-
 % End L4
 
 Cancellare i punti o scegliere il punto più lontano sono equivalenti, non cambia nulla.\\
@@ -373,7 +373,7 @@ Si potrebbe anche dimostrare che l'algoritmo è tight, ma sappiamo anche che c'�
 	\begin{itemize}[label*=]
 		\item \textbf{iff} $\exists C^\ast \subseteq S$, con cardinalità $|C^\ast| \leq k$ e centri tali che $\forall s$, $d(s,C^\ast) \leq 1$ \\
 		
-		\item \textbf{iff} $\exists C^\ast \subseteq S$ con cardinalità $|C^\ast| \leq k$ tale che $\min_{c \in C^\ast} d(s,c) = 1$.\\
+		\item \textbf{iff} $\exists C^\ast \subseteq S$ con cardinalità $|C^\ast| \leq k$ tale che $\forall s$, $\min_{c \in C^\ast} d(s,c) = 1$.\\
 		
 		\item \textbf{iff} $\exists C^\ast \subseteq S$ con cardinalità $|C^\ast| \leq k$ tale che $\forall s$,  $\exists c \in C^\ast$ con $sc \in E$.\\
 		
@@ -516,8 +516,6 @@ Dai due lemmi segue il teorema.
 	Quindi 
 	$$ \implies w^\ast = \sum_{i \in I^\ast} w_i = \sum_{i \in I^\ast} \sum_{s \in S_i} c(s) $$
 	
-	%TODO Check formule
-	
 	La somma dei pesi degli insiemi è pari alla somma del costo di tutti gli elementi di tutti gli insiemi. In questa sommatoria stiamo sommando tutti gli elementi dell'universo, quindi (per il Lemma 1)
 	$$ \geq \sum_{s \in U} c(s) = w $$
 	
@@ -563,6 +561,6 @@ $$ \implies \frac{w}{w^\ast} = \frac{\log n}{2 + 2 \epsilon} = \Omega (\log n)$$
 
 Quindi questo algoritmo fa le scelte peggiori possibili, ed è l'input peggiore possibile.\\
 
-\paragraph{Fun fact:} Se $\pnp$ non esiste un algoritmo che approssimi SetCover meglio di $(1 - O(1)) \log n$. Questo pone SetCover nell'insieme dei problemi $\log n$-APX.\\
+\paragraph{Fun fact:} A meno che $\pnp$, non esiste un algoritmo che approssimi SetCover meglio di $(1 - O(1)) \log n$. Questo pone SetCover nell'insieme dei problemi $\log n$-APX.\\
 
 \newpage

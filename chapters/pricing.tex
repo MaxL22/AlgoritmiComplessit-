@@ -12,7 +12,7 @@ Definizione del problema:
 	\item \textbf{Tipo:} minimizzazione $\min$
 \end{itemize}
 
-\paragraph{Pricing-based Solution:} I problemi basati sul pricing funzionano basandosi sull'idea che ogni lato offre una cifra per farsi coprire, ed i vertici devono decidere cosa fare, ovvero se entrare nella soluzione o meno, ottenendo la cifra di tutti i lati che copre. I vertici sono una gang che vuole massimizzare il costo dei lati. Ad ogni lato si associa un prezzo per "farsi coprire".\\
+\paragraph{Pricing-based Solution:} I problemi basati sul pricing funzionano basandosi sull'idea che ogni lato offre una cifra per farsi coprire, e i vertici devono decidere cosa fare, ovvero se entrare nella soluzione o meno, ottenendo la cifra di tutti i lati che copre. I vertici sono una gang che vuole massimizzare il costo dei lati. A ogni lato si associa un prezzo per "farsi coprire".\\
 Quindi si ha un \textbf{pricing} $(P_e)_{e \in E}$ \textbf{per ogni lato}.\\
 
 Un pricing $(P_e)_{e \in E}$ è \textbf{equo} se \textbf{iff} $\forall i$
@@ -37,7 +37,7 @@ $$ \sum_{e \in E} P_e \leq w^\ast $$
 	La soluzione ottima è per forza maggiore della somma di tutti i lati, quindi maggiore della somma del prezzo di tutti i lati (per ammissibilità).\\
 \end{proof}
 
-Sostanzialmente,  se il pricing è equo il costo del nodo deve essere $\geq$ della somma dei pricing dei suoi lati, quindi la soluzione ottima, in quanto composta dal peso dei nodi, non potrà essere minore della somma totale dei pricing.\\
+Sostanzialmente, se il pricing è equo il costo del nodo deve essere $\geq$ della somma dei pricing dei suoi lati, quindi la soluzione ottima, in quanto composta dal peso dei nodi, non potrà essere minore della somma totale dei pricing.\\
 
 \paragraph{Pricing stretto:} Il pricing $(P_e)_{e \in E}$ è \textbf{stretto} su $\hat{i}$ (un vertice specifico) iff
 $$ \sum_{e \in E, \hat{i} \in e} P_e < w_{\hat{i}} $$
@@ -66,7 +66,7 @@ Finché \textbf{esiste un lato} tale che $(P_e)$ è stretto su $\hat{i}$ e su $\
 
 Alla fine \textbf{restituisce l'insieme dei vertici} $i$ tali per cui $P_e$ \textbf{su} $i$ \textbf{non è stretto}.\\
 
-Partono tutti a zero, guardo vertice per vertice quanto stanno ricevendo dai lati adiacenti, ed all'inizio ovviamente non sarà stretto su nessun vertice.\\
+Partono tutti a zero, guardo vertice per vertice quanto stanno ricevendo dai lati adiacenti, e all'inizio ovviamente non sarà stretto su nessun vertice.\\
 Quanto dovrebbe offrire in più ogni lato per rendere stretto il pricing su uno dei due vertici a cui è collegato? Calcolo il valore per tutti e prendo il minimo.\\
 Ripeto sui lati non ancora stretti per entrambe le estremità, finché sono presenti lati con questa caratteristica.\\
 
@@ -78,7 +78,7 @@ Alla fine restituisce i vertici "contenti", quindi i vertici che prendono quanto
 
 Ricordando il lemma sul pricing equo.
 
-\paragraph{Lemma:} alla fine di PricingVertexCover il costo $w \leq 2 \sum_{e \in E} P_e$ è minore uguale al doppio della somma dei prezzi. \\
+\paragraph{Lemma 2:} alla fine di PricingVertexCover il costo $w \leq 2 \sum_{e \in E} P_e$ è minore uguale al doppio della somma dei prezzi. \\
 
 \begin{proof}
 	$$ w = \sum_{i \in output} w_i = \sum_{i: P_e \text{ non stretto su } i} w_i = $$
@@ -102,11 +102,11 @@ Non si sa se esiste un'approssimazione migliore, non si conosce una $\gamma$-app
 
 \subsection{Problema DisjointPaths}
 
-Problema dei \textbf{cammini disgiunti}. L'idea è, su un grafo orientato, ci sono $k$ \textbf{sorgenti} ed altrettante \textbf{destinazioni}, una lista di sorgenti e destinazioni. Vogliamo \textbf{collegare il maggior numero di sorgenti e destinazioni tramite un cammino}, con il vincolo di non usare ogni lato più di una volta. Verrà considerata una versione con un parametro $c$ che determina la congestione, ovvero \textbf{ogni lato non può essere usato più di $c$ volte}.\\
+Problema dei \textbf{cammini disgiunti}. L'idea è, su un grafo orientato, ci sono $k$ \textbf{sorgenti} e altrettante \textbf{destinazioni}, una lista di sorgenti e destinazioni. Vogliamo \textbf{collegare il maggior numero di sorgenti e destinazioni tramite un cammino}, con il vincolo di non usare ogni lato più di una volta. Verrà considerata una versione con un parametro $c$ che determina la congestione, ovvero \textbf{ogni lato non può essere usato più di $c$ volte}.\\
 
 Definizione: 
 \begin{itemize}
-	\item \textbf{Input:} un grafo orientato $G = (N,A)$, la lista delle sorgenti $s_0, \, ... \, , s_k \in N$, la lista delle destinazioni $t_0, \, ... \, , t_k \in N$ ed un parametro $c \in \mathbb{N}^+$
+	\item \textbf{Input:} un grafo orientato $G = (N,A)$, la lista delle sorgenti $s_0, \, ... \, , s_k \in N$, la lista delle destinazioni $t_0, \, ... \, , t_k \in N$ e un parametro $c \in \mathbb{N}^+$
 	\item \textbf{Output:} $I \subseteq k$ e $\forall i \in I$ un cammino $\pi_i: s_i \rightarrow t_i$ tale che nessun arco di $G$ sia usato da più di $c$ cammini
 	\item \textbf{Funzione obiettivo:} la cardinalità $|I|$, ovvero il numero di cammini trovati
 	\item \textbf{Tipo}: massimizzazione, $\max$
@@ -114,7 +114,7 @@ Definizione:
 
 Da notare che con i grafi orientati si parla di nodi (da qui $N$), non vertici, e archi (da qui $A$), non lati.\\
 
-Per l'esecuzione dell'algoritmo \textbf{assoceremo} ad \textbf{ogni arco} un \textbf{funzione lunghezza}:
+Per l'esecuzione dell'algoritmo \textbf{assoceremo} a \textbf{ogni arco} un \textbf{funzione lunghezza}:
 $$ \ell: \, A \rightarrow \mathbb{R}^+ $$
 
 Che può \textbf{variare nel tempo}, quindi va \textbf{specificato il momento} in cui viene considerata. Di conseguenza si avrà una lunghezza dei cammini: con $\pi = <x_1, \, ... \, , x_i>$
@@ -153,10 +153,10 @@ L'insieme $I$ è l'insieme delle \textbf{coppie già collegate}, all'inizio vuot
 \begin{itemize}
 	\item trova il \textbf{percorso più breve} (secondo la lunghezza $\ell$) \textbf{tra} una \textbf{coppia sorgente e destinazione non ancora collegata}
 	\item \textbf{se} tale percorso \textbf{non esiste} per nessuna delle coppie rimaste, \textbf{esce} dal ciclo
-	\item se ho trovato un percorso, \textbf{aggiungo} la coppia di \textbf{nodi collegati ad} $I$ ed il relativo path in $P$
+	\item se ho trovato un percorso, \textbf{aggiungo} la coppia di \textbf{nodi collegati a} $I$ e il relativo path in $P$
 	\item per tutti gli archi nel cammino, \textbf{moltiplico} il \textbf{lunghezza per} $\beta$, rendendoli più costosi e meno appetibili per i prossimi path. Inoltre se un \textbf{arco è stato usato} $c$ volte \textbf{viene rimosso}
 \end{itemize}
-Alla fine \textbf{restituisce l'insieme delle coppie collegate ed i relativi path}.\\
+Alla fine \textbf{restituisce l'insieme delle coppie collegate e i relativi path}.\\
 
 \newpage
 
@@ -164,17 +164,16 @@ Quando si dice "trovare il cammino minimo", bisogna usare più iterazioni di Dij
 
 \paragraph{Definizione:} In un certo istante dell'esecuzione un \textbf{cammino} $\pi$ è definito \textbf{corto} iff la sua \textbf{lunghezza} è \textbf{minore di} $\beta^c$, quindi $\ell(\pi) < \beta^c$. \\
 
-\paragraph{Definizione:} In un certo istante, un \textbf{cammino} $\pi$ è \textbf{utile} se \textbf{collega una coppia nuova} $i \notin I$. L'algoritmo considera solo cammini utili ed il più corto tra quelli esistenti.\\
+\paragraph{Definizione:} In un certo istante, un \textbf{cammino} $\pi$ è \textbf{utile} se \textbf{collega una coppia nuova} $i \notin I$. L'algoritmo considera solo cammini utili e il più corto tra quelli esistenti.\\
 
-L'algoritmo avrà più \textbf{fasi}, una in cui seleziona solo cammini corti utili, poi una in in cui sceglie cammini lunghi utili, e termina quando sono finiti tutti i cammini utili.\\
+L'algoritmo avrà più \textbf{fasi}, una in cui seleziona solo cammini corti utili, poi una in cui sceglie cammini lunghi utili, e termina quando sono finiti tutti i cammini utili.\\
 
-Considerando il programma nella fase in cui sono \textbf{finiti cammini corti utili}, chiameremo $\overline{\ell}, \overline{I}, \overline{P}$ rispettivamente lunghezza, insieme di coppie collegate ed i relativi path in quel momento, ovvero subito dopo che è stato aggiunto l'ultimo cammino utile.\\
+Considerando il programma nella fase in cui sono \textbf{finiti cammini corti utili}, chiameremo $\overline{\ell}, \overline{I}, \overline{P}$ rispettivamente lunghezza, insieme di coppie collegate e i relativi path in quel momento, ovvero subito dopo che è stato aggiunto l'ultimo cammino utile.\\
 Alla fine dell'esecuzione chiameremo i parametri $\ell_{out}, I_{out}, P_{out}$.\\
 
 \paragraph{Lemma 1:} Sia $i \in I^\ast \setminus I_{out}$, una coppia \textbf{collegata dalla soluzione ottima ma non dalla soluzione dell'algoritmo}, allora 
 $$\overline{\ell} (\pi_i^\ast) \geq \beta^c$$
 Ovvero il costo del path è superiore a $\beta^c$. \\
-%TODO Check la frase: (Immaginando che non vengano rimossi, per la prima fase dell'esecuzione non cambia niente, sono cammini troppo costosi per essere considerati).\\
 
 \begin{proof}
 	$i \in I^\ast \setminus I_{out}$, se fosse vera la condizione $\overline{\ell} (\pi_i^\ast) < \beta^c$ selezioneremmo quel path, ma noi stiamo guardando il momento in cui non sono più presenti cammini corti, quindi non è possibile.\\
@@ -183,7 +182,7 @@ Ovvero il costo del path è superiore a $\beta^c$. \\
 
 \newpage
 
-\paragraph{Lemma 2:} se \textbf{sommo la lunghezza di tutti gli archi} ottengo:
+\paragraph{Lemma 2:} Se \textbf{sommo la lunghezza di tutti gli archi} ottengo:
 $$ \sum_{a \in A} \overline{\ell}(a) \leq \beta^{c+1} |\overline{I}| + m $$
 La somma della lunghezza è minore uguale di $\beta^{c+1}$ per il numero di cammini corti $+ m$, con $m$ il numero totale di archi.\\
 
@@ -214,7 +213,7 @@ La somma della lunghezza è minore uguale di $\beta^{c+1}$ per il numero di camm
 	Quindi possiamo raccogliere e dire che, per definizione di tutti i path scelti negli istanti precedenti $\overline{\ell}$
 	$$ = (\beta -1) \sum_{a \in A} \ell_1 (a) = (\beta -1) \ell_1 (\pi) < (\beta -1) \beta^c \leq \beta^{c+1} $$
 	
-	Ad ognuno dei $|\overline{I}|$ passi (quindi per ognuno dei cammini trovati) possiamo dire che aumento la somma di al più $\beta^{c+1}$. Si aggiunge $m$ in quanto valore iniziale di tutti gli archi, ovviamente presente.\\
+	A ognuno dei $|\overline{I}|$ passi (quindi per ognuno dei cammini trovati) possiamo dire che aumento la somma di al più $\beta^{c+1}$. Si aggiunge $m$ in quanto valore iniziale di tutti gli archi, ovviamente presente.\\
 \end{proof}
 
 \paragraph{Osservazione 1:} Tutti i \textbf{cammini} nella \textbf{soluzione ottima} ma \textbf{non in quella dell'algoritmo} sono \textbf{maggiori di}
@@ -270,7 +269,7 @@ Esempio di valori:
 	$$
 \end{center}
 
-Dipende da $c$ e dal numero di archi $m$. Si ha $c$ che determina un parametro lineare ed una radice che riduce il valore di $m$. Cresce al numero di archi, ma decresce con $c$.\\
+Dipende da $c$ e dal numero di archi $m$. Si ha $c$ che determina un parametro lineare e una radice che riduce il valore di $m$. Cresce al numero di archi, ma decresce con $c$.\\
 
 %End L7 
 
