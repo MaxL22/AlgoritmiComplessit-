@@ -325,7 +325,7 @@ L'idea dietro l'algoritmo di arrotondamento aleatorio per SetCover è la seguent
 	\end{algorithmic}
 \end{algorithm}
 
-Il \texttt{for} per l'inserimento può essere visto anche come: "Inserisci $i$ in $I$ con probabilità $1 - (1-\hat x_i)^{k + \ln n}$".\\
+Il \texttt{for} per l'inserimento può essere visto anche come: "Inserisci $i$ in $I$ con probabilità $1 - (1-\hat x_i)^{\left\lceil k + \ln n \right\rceil}$".\\
 
 Usiamo la \textbf{soluzione} $\hat x_i$ \textbf{come probabilità}, più il valore è alto più è probabile che verrà inserito nella soluzione finale. $k$ è un parametro, dentro l'algoritmo, mentre $\alpha$ è esterno, scelto da noi.\\
 
