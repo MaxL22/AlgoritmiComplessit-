@@ -206,14 +206,14 @@ Abbiamo due casi:
 	& = \frac{p_1 - p_0}{\log \log n} + \frac{p_2 - p_1}{\log \log n} + \, \dots =  
 \end{flalign*}
 Che è una somma telescopica, quindi rimane
-$$ = \frac{\frac{p_n}{\log n \log \log n} - p_0}{\log \log n} 
+$$ = \frac{p_{\frac{n}{\log n \log \log n}} - p_0}{\log \log n} 
 \leq \frac{n}{\log \log n} = o (n)
 $$
 
 Quindi in \textbf{totale} un $o(n)$, ma \textbf{manca un pezzo} per il caso denso del secondo livello, in cui non abbiamo memorizzato tutti gli 1.\\
 
 \paragraph{Terzo livello:} Chiamando $s_i^0, \, \dots \, s_i^q$ le \textbf{posizioni memorizzate al secondo livello} nel \textbf{caso denso}, tra ognuna di queste posizioni saranno presenti $\log r_i \log \log n$ bit pari a 1, quindi
-$$ t_i^j = s_i^{j+1}  -s_i^j \implies t_i^j \geq \log r_i \log \log n $$
+$$ t_i^j = s_i^{j+1} - s_i^j \implies t_i^j \geq \log r_i \log \log n $$
 
 Ci sono anche qui \textbf{due casi}:
 \begin{enumerate}
@@ -233,6 +233,19 @@ Ci sono anche qui \textbf{due casi}:
 		& = \frac{\log t_i^j \log r_i (\log \log n)^2}{\log \log n} \\
 		& = \frac{t_i^j}{\log \log n}
 	\end{flalign*}
+	
+	\newpage
+	
+	Quindi, \textbf{complessivamente}, per tutti i vari $t_i^j$ arriva a occupare: 
+	$$ \sum_j \frac{t_i^j}{\log \log n} = \sum_j \frac{s_i^{j+1} - s_i^j}{\log \log n} = \frac{s_i^{k} - s_i^0}{\log \log n}$$
+	
+	Dove $s_i^k$ è la posizione dell'ultimo 1 all'interno del blocco considerato. Possiamo \textbf{maggiorare} questa somma con 
+	$$ \frac{p_{i+1} - p_i}{\log \log n} $$
+	in quanto $s_i^k$ è la posizione prima di $p_{i+1}$ e $s_i^0$ è la posizione subito dopo $s_i$. Per lo spazio complessivo tra tutti i livelli: 
+	$$ \sum_i \frac{p_{i+1} - p_i}{\log \log n} = \frac{p_{\frac{n}{\log n \log \log n}} - p_0}{\log \log n} 
+	\leq \frac{n}{\log \log n} = o (n)$$
+	
+	Similmente al livello precedente, anche questo caso \textbf{occupa} $o(n)$.\\
 	
 	\newpage
 	
