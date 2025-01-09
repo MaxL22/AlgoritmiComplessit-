@@ -54,7 +54,7 @@ L'input e sempre $G = (V,E)$, $w_i \in \mathbb{R}^+$, $i \in V$.
 		\STATE $P_e \leftarrow 0$, $\forall e \in E$
 		\WHILE{$\exists \hat{e} = \{\hat{i}, \hat{j}\}$ t.c. $(P_e)$ è stretto su $\hat{i}$ e $\hat{j}$}
 		\STATE Sia $\hat{e} = \{\hat{i}, \hat{j}\}$ quello che minimizza 
-		$$\Delta \leftarrow \min \left(w_{\hat{i}} - \sum_{e \in E, \hat{i} \in e} P_e, w_{\hat{i}} - \sum_{e \in E, \hat{j} \in e} P_e \right)$$
+		$$\Delta \leftarrow \min \left(w_{\hat{i}} - \sum_{e \in E, \hat{i} \in e} P_e, w_{\hat{j}} - \sum_{e \in E, \hat{j} \in e} P_e \right)$$
 		\STATE $P_{\hat{e}} \leftarrow P_{\hat{e} + \Delta}$
 		\ENDWHILE
 	\end{algorithmic}
