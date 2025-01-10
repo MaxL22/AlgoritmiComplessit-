@@ -205,7 +205,7 @@ Questo algoritmo \textbf{può ottenere la soluzione ottima}, ma anche \textbf{so
 $$\geq \frac{1}{\left(\begin{array}{c} n \\ 2 \end{array}\right)}$$
 
 \begin{proof} Sapendo che 
-	$$ P[E_1 \wedge E_2 \wedge \, \dots \, \wedge E_{n-1}] 
+	$$ P[E_1 \wedge E_2 \wedge \, \dots \, \wedge E_{n-2}] 
 	= P[E_1] \cdot P[E_2 | E_1] \cdot \, \dots \, \cdot P [E_{n-2} | E_1, \, \dots \, , E_{n-3}]
 	$$
 	Per la proprietà della catena di eventi. Ma ognuna di quelle probabilità è nota, per il Lemma:
@@ -243,26 +243,30 @@ Se eseguo tante volte un algoritmo che può darmi soluzioni molto brutte, ma pot
 \newpage
 
 \addcontentsline{toc}{subsection}{\protect\numberline{}\textit{Cose}}
-\subsection*{\textit{Cose}}
+\subsection*{\textit{Cose}$^\text{\textregistered}$}
 
 Una serie di \textit{Cose}$^\text{\textregistered}$ che potrebbero essere utili: 
 
 \begin{enumerate}
 	\item \textbf{Chain rule (regola della catena):} la probabilità della congiunzione di eventi si può sempre esprimere come probabilità del primo per probabilità del secondo dato il primo, fino all'ultimo
 	$$ P[E_1 \wedge E_2 \wedge \, \dots \, \wedge E_n] = P [E_1] \cdot P [E_2 | E_1] \cdot \, \dots \, \cdot P[E_n | E_1 \, \dots \, E_{n-1}] $$
+	\nn
 	
 	\item $\forall x > 1$
 	$$ \frac{1}{4} \leq \left(1 - \frac{1}{x}\right)^x \leq \frac{1}{e} $$
+	\nn
 	
 	\item \textbf{Union bound:} la probabilità dell'unione di eventi è minore della somma di probabilità degli eventi (uguale solo se sono tutti disgiunti):
 	$$ P\left[ \bigcup_i E_i \right] \leq \sum_i P[E_i] $$
+	\nn
 	
 	\item \textbf{Disuguaglianza di Markov:} avendo una variabile aleatoria $x$ non negativa e con media finita e un $\alpha > 0$, allora
 	$$ P[x \geq \alpha] \leq \frac{E[x]}{\alpha} $$
-	la probabilità che $x$ sia maggiore di $\alpha$ è minore uguale della media di $x$ diviso $\alpha$.
+	la probabilità che $x$ sia maggiore di $\alpha$ è minore uguale della media di $x$ diviso $\alpha$. \\
 	
 	\item $\forall x \in [0,1]$
 	$$ 1 - x \leq e^{-x} $$
+	\nn
 	
 	\item \textbf{Teorema delle probabilità totali:} la probabilità di un evento può essere calcolata sommando le probabilità condizionate di tale evento rispetto a un insieme completo di eventi mutuamente esclusivi.\\
 \end{enumerate}
